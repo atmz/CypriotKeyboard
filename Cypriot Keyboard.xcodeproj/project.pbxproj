@@ -1,0 +1,585 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		CB46BF1625CCCE2C00E3413A /* Cypriot_KeyboardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46BF1525CCCE2C00E3413A /* Cypriot_KeyboardApp.swift */; };
+		CB46BF1825CCCE2C00E3413A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46BF1725CCCE2C00E3413A /* ContentView.swift */; };
+		CB46BF1A25CCCE2D00E3413A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB46BF1925CCCE2D00E3413A /* Assets.xcassets */; };
+		CB46BF1D25CCCE2D00E3413A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB46BF1C25CCCE2D00E3413A /* Preview Assets.xcassets */; };
+		CB46BF2825CCCE2D00E3413A /* Cypriot_KeyboardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46BF2725CCCE2D00E3413A /* Cypriot_KeyboardTests.swift */; };
+		CB46BF3325CCCE2D00E3413A /* Cypriot_KeyboardUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46BF3225CCCE2D00E3413A /* Cypriot_KeyboardUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CB46BF2425CCCE2D00E3413A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CB46BF0A25CCCE2C00E3413A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CB46BF1125CCCE2C00E3413A;
+			remoteInfo = "Cypriot Keyboard";
+		};
+		CB46BF2F25CCCE2D00E3413A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CB46BF0A25CCCE2C00E3413A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CB46BF1125CCCE2C00E3413A;
+			remoteInfo = "Cypriot Keyboard";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		CB46BF1225CCCE2C00E3413A /* Cypriot Keyboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cypriot Keyboard.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB46BF1525CCCE2C00E3413A /* Cypriot_KeyboardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cypriot_KeyboardApp.swift; sourceTree = "<group>"; };
+		CB46BF1725CCCE2C00E3413A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		CB46BF1925CCCE2D00E3413A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CB46BF1C25CCCE2D00E3413A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		CB46BF1E25CCCE2D00E3413A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CB46BF2325CCCE2D00E3413A /* Cypriot KeyboardTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Cypriot KeyboardTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB46BF2725CCCE2D00E3413A /* Cypriot_KeyboardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cypriot_KeyboardTests.swift; sourceTree = "<group>"; };
+		CB46BF2925CCCE2D00E3413A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CB46BF2E25CCCE2D00E3413A /* Cypriot KeyboardUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Cypriot KeyboardUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB46BF3225CCCE2D00E3413A /* Cypriot_KeyboardUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cypriot_KeyboardUITests.swift; sourceTree = "<group>"; };
+		CB46BF3425CCCE2D00E3413A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CB46BF0F25CCCE2C00E3413A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB46BF2025CCCE2D00E3413A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB46BF2B25CCCE2D00E3413A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CB46BF0925CCCE2C00E3413A = {
+			isa = PBXGroup;
+			children = (
+				CB46BF1425CCCE2C00E3413A /* Cypriot Keyboard */,
+				CB46BF2625CCCE2D00E3413A /* Cypriot KeyboardTests */,
+				CB46BF3125CCCE2D00E3413A /* Cypriot KeyboardUITests */,
+				CB46BF1325CCCE2C00E3413A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		CB46BF1325CCCE2C00E3413A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CB46BF1225CCCE2C00E3413A /* Cypriot Keyboard.app */,
+				CB46BF2325CCCE2D00E3413A /* Cypriot KeyboardTests.xctest */,
+				CB46BF2E25CCCE2D00E3413A /* Cypriot KeyboardUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CB46BF1425CCCE2C00E3413A /* Cypriot Keyboard */ = {
+			isa = PBXGroup;
+			children = (
+				CB46BF1525CCCE2C00E3413A /* Cypriot_KeyboardApp.swift */,
+				CB46BF1725CCCE2C00E3413A /* ContentView.swift */,
+				CB46BF1925CCCE2D00E3413A /* Assets.xcassets */,
+				CB46BF1E25CCCE2D00E3413A /* Info.plist */,
+				CB46BF1B25CCCE2D00E3413A /* Preview Content */,
+			);
+			path = "Cypriot Keyboard";
+			sourceTree = "<group>";
+		};
+		CB46BF1B25CCCE2D00E3413A /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				CB46BF1C25CCCE2D00E3413A /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		CB46BF2625CCCE2D00E3413A /* Cypriot KeyboardTests */ = {
+			isa = PBXGroup;
+			children = (
+				CB46BF2725CCCE2D00E3413A /* Cypriot_KeyboardTests.swift */,
+				CB46BF2925CCCE2D00E3413A /* Info.plist */,
+			);
+			path = "Cypriot KeyboardTests";
+			sourceTree = "<group>";
+		};
+		CB46BF3125CCCE2D00E3413A /* Cypriot KeyboardUITests */ = {
+			isa = PBXGroup;
+			children = (
+				CB46BF3225CCCE2D00E3413A /* Cypriot_KeyboardUITests.swift */,
+				CB46BF3425CCCE2D00E3413A /* Info.plist */,
+			);
+			path = "Cypriot KeyboardUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CB46BF1125CCCE2C00E3413A /* Cypriot Keyboard */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CB46BF3725CCCE2D00E3413A /* Build configuration list for PBXNativeTarget "Cypriot Keyboard" */;
+			buildPhases = (
+				CB46BF0E25CCCE2C00E3413A /* Sources */,
+				CB46BF0F25CCCE2C00E3413A /* Frameworks */,
+				CB46BF1025CCCE2C00E3413A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Cypriot Keyboard";
+			productName = "Cypriot Keyboard";
+			productReference = CB46BF1225CCCE2C00E3413A /* Cypriot Keyboard.app */;
+			productType = "com.apple.product-type.application";
+		};
+		CB46BF2225CCCE2D00E3413A /* Cypriot KeyboardTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CB46BF3A25CCCE2D00E3413A /* Build configuration list for PBXNativeTarget "Cypriot KeyboardTests" */;
+			buildPhases = (
+				CB46BF1F25CCCE2D00E3413A /* Sources */,
+				CB46BF2025CCCE2D00E3413A /* Frameworks */,
+				CB46BF2125CCCE2D00E3413A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CB46BF2525CCCE2D00E3413A /* PBXTargetDependency */,
+			);
+			name = "Cypriot KeyboardTests";
+			productName = "Cypriot KeyboardTests";
+			productReference = CB46BF2325CCCE2D00E3413A /* Cypriot KeyboardTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		CB46BF2D25CCCE2D00E3413A /* Cypriot KeyboardUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CB46BF3D25CCCE2D00E3413A /* Build configuration list for PBXNativeTarget "Cypriot KeyboardUITests" */;
+			buildPhases = (
+				CB46BF2A25CCCE2D00E3413A /* Sources */,
+				CB46BF2B25CCCE2D00E3413A /* Frameworks */,
+				CB46BF2C25CCCE2D00E3413A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CB46BF3025CCCE2D00E3413A /* PBXTargetDependency */,
+			);
+			name = "Cypriot KeyboardUITests";
+			productName = "Cypriot KeyboardUITests";
+			productReference = CB46BF2E25CCCE2D00E3413A /* Cypriot KeyboardUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CB46BF0A25CCCE2C00E3413A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1240;
+				LastUpgradeCheck = 1240;
+				TargetAttributes = {
+					CB46BF1125CCCE2C00E3413A = {
+						CreatedOnToolsVersion = 12.4;
+					};
+					CB46BF2225CCCE2D00E3413A = {
+						CreatedOnToolsVersion = 12.4;
+						TestTargetID = CB46BF1125CCCE2C00E3413A;
+					};
+					CB46BF2D25CCCE2D00E3413A = {
+						CreatedOnToolsVersion = 12.4;
+						TestTargetID = CB46BF1125CCCE2C00E3413A;
+					};
+				};
+			};
+			buildConfigurationList = CB46BF0D25CCCE2C00E3413A /* Build configuration list for PBXProject "Cypriot Keyboard" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CB46BF0925CCCE2C00E3413A;
+			productRefGroup = CB46BF1325CCCE2C00E3413A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CB46BF1125CCCE2C00E3413A /* Cypriot Keyboard */,
+				CB46BF2225CCCE2D00E3413A /* Cypriot KeyboardTests */,
+				CB46BF2D25CCCE2D00E3413A /* Cypriot KeyboardUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CB46BF1025CCCE2C00E3413A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CB46BF1D25CCCE2D00E3413A /* Preview Assets.xcassets in Resources */,
+				CB46BF1A25CCCE2D00E3413A /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB46BF2125CCCE2D00E3413A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB46BF2C25CCCE2D00E3413A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CB46BF0E25CCCE2C00E3413A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CB46BF1825CCCE2C00E3413A /* ContentView.swift in Sources */,
+				CB46BF1625CCCE2C00E3413A /* Cypriot_KeyboardApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB46BF1F25CCCE2D00E3413A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CB46BF2825CCCE2D00E3413A /* Cypriot_KeyboardTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB46BF2A25CCCE2D00E3413A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CB46BF3325CCCE2D00E3413A /* Cypriot_KeyboardUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CB46BF2525CCCE2D00E3413A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CB46BF1125CCCE2C00E3413A /* Cypriot Keyboard */;
+			targetProxy = CB46BF2425CCCE2D00E3413A /* PBXContainerItemProxy */;
+		};
+		CB46BF3025CCCE2D00E3413A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CB46BF1125CCCE2C00E3413A /* Cypriot Keyboard */;
+			targetProxy = CB46BF2F25CCCE2D00E3413A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		CB46BF3525CCCE2D00E3413A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		CB46BF3625CCCE2D00E3413A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CB46BF3825CCCE2D00E3413A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"Cypriot Keyboard/Preview Content\"";
+				DEVELOPMENT_TEAM = 5577AM3Y3M;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "Cypriot Keyboard/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "alextoumazis.Cypriot-Keyboard";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CB46BF3925CCCE2D00E3413A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"Cypriot Keyboard/Preview Content\"";
+				DEVELOPMENT_TEAM = 5577AM3Y3M;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "Cypriot Keyboard/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "alextoumazis.Cypriot-Keyboard";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		CB46BF3B25CCCE2D00E3413A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5577AM3Y3M;
+				INFOPLIST_FILE = "Cypriot KeyboardTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "alextoumazis.Cypriot-KeyboardTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Cypriot Keyboard.app/Cypriot Keyboard";
+			};
+			name = Debug;
+		};
+		CB46BF3C25CCCE2D00E3413A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5577AM3Y3M;
+				INFOPLIST_FILE = "Cypriot KeyboardTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "alextoumazis.Cypriot-KeyboardTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Cypriot Keyboard.app/Cypriot Keyboard";
+			};
+			name = Release;
+		};
+		CB46BF3E25CCCE2D00E3413A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5577AM3Y3M;
+				INFOPLIST_FILE = "Cypriot KeyboardUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "alextoumazis.Cypriot-KeyboardUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Cypriot Keyboard";
+			};
+			name = Debug;
+		};
+		CB46BF3F25CCCE2D00E3413A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5577AM3Y3M;
+				INFOPLIST_FILE = "Cypriot KeyboardUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "alextoumazis.Cypriot-KeyboardUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Cypriot Keyboard";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CB46BF0D25CCCE2C00E3413A /* Build configuration list for PBXProject "Cypriot Keyboard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CB46BF3525CCCE2D00E3413A /* Debug */,
+				CB46BF3625CCCE2D00E3413A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CB46BF3725CCCE2D00E3413A /* Build configuration list for PBXNativeTarget "Cypriot Keyboard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CB46BF3825CCCE2D00E3413A /* Debug */,
+				CB46BF3925CCCE2D00E3413A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CB46BF3A25CCCE2D00E3413A /* Build configuration list for PBXNativeTarget "Cypriot KeyboardTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CB46BF3B25CCCE2D00E3413A /* Debug */,
+				CB46BF3C25CCCE2D00E3413A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CB46BF3D25CCCE2D00E3413A /* Build configuration list for PBXNativeTarget "Cypriot KeyboardUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CB46BF3E25CCCE2D00E3413A /* Debug */,
+				CB46BF3F25CCCE2D00E3413A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CB46BF0A25CCCE2C00E3413A /* Project object */;
+}
