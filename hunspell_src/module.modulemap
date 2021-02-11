@@ -1,0 +1,5 @@
+module hunspell [system][extern_c] {
+ header "hunspell.h"
+ export *
+}
+
