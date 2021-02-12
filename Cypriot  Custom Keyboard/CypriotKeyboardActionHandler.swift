@@ -87,17 +87,17 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
     func handleS(for gesture: KeyboardGesture, on action: KeyboardAction, sender: Any?) {
         guard let context = cypriotInputViewController?.context else { return }
             //todo: move elswhere
-        if(action == .character("🇬🇧")) {
+        if(action == .character("🔄")) {
             context.textDocumentProxy.deleteBackward()
-            context.primaryLanguage = "en_US"
-        }
-        if(action == .character("🇬🇷")) {
-            context.textDocumentProxy.deleteBackward()
+            if context.primaryLanguage == "el_GR" {
+                context.primaryLanguage = "en_US"
+            } else {
             context.primaryLanguage = "el_GR"
+            }
         }
             if(action == .character("σ")) {
-                context.textDocumentProxy.deleteBackward()
-                context.textDocumentProxy.insertText("ς")
+                //context.textDocumentProxy.deleteBackward()
+                //context.textDocumentProxy.insertText("ς")
             }
             else {
                 //todo: change s after more letters are typed

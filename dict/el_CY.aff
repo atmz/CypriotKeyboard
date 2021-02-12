@@ -46,14 +46,16 @@ SET UTF-8
 # that the word you are looking for exists).
 TRY άόίϊΐέήύϋΰώιηυωοεατνρσκμπλςγδθφβζξψχ
 
-MAP 5
+MAP 8
+MAP ηήύυιί(ει)(οι)(εί)(οί)
+MAP j(τζ)
+MAP (αί)(αι)(αϊ)(άι)
 MAP αά
 MAP εέ
 MAP ωώοό
-MAP ηήύυιί(ει)(οι)(εί)(οί)
 MAP σς
-MAP j(τζ)
 MAP wω
+
 
 # Do we have to put the accented characters in here or the MAP above is enough?
 # ANSWER: Looks like it is not! Maybe the map is only useful for the
@@ -62,7 +64,8 @@ MAP wω
 # Because of the automatic generation of the following REP there are some
 # combinations of letters that the greek language never uses, but I don't
 # think they will do any harm.
-REP 525
+
+REP 485
 REP σ ς
 REP α ά
 REP ά α
@@ -506,12 +509,6 @@ REP έι η
 REP έι ή
 REP έι ι
 REP έι ί
-REP ει ϊ
-REP έι ϊ
-REP εί ϊ
-REP ει ΐ
-REP έι ΐ
-REP εί ΐ
 REP έι οι
 REP έι οί
 REP έι υ
@@ -536,16 +533,8 @@ REP έφ εφ
 REP εφ έφ
 REP ή εί
 REP ή οί
-REP ϊ ει
-REP ΐ ει
 REP ί εί
-REP ϊ εί
-REP ΐ εί
-REP ϊ οι
-REP ΐ οι
 REP ί οί
-REP ϊ οί
-REP ΐ οί
 REP όι ει
 REP όι εί
 REP οί εί
@@ -555,42 +544,23 @@ REP οί ή
 REP όι ι
 REP όι ί
 REP οί ί
-REP οι ϊ
-REP όι ϊ
-REP οί ϊ
-REP οι ΐ
-REP όι ΐ
-REP οί ΐ
 REP όι οι
 REP οί οι
 REP οι οί
 REP όι οί
-REP όι υ
-REP όι ύ
-REP οί ύ
-REP οι ϋ
-REP όι ϋ
-REP οί ϋ
-REP οι ΰ
-REP όι ΰ
-REP οί ΰ
 REP όυ ου
 REP ού ου
 REP ου ού
 REP όυ ού
-REP ϋ ει
-REP ΰ ει
-REP ύ εί
-REP ϋ εί
-REP ΰ εί
-REP ϋ οι
-REP ΰ οι
-REP ύ οί
-REP ϋ οί
-REP ΰ οί
+
 
 
 FLAG num
+
+SFX 9 Y 1
+SFX 9 0 α .
+SFX 7 Y 1
+SFX 7 0 ε .
 SFX 1140 Y 1
 SFX 1140 0 ρομαι .
 SFX 3320 Y 1
@@ -7803,10 +7773,6 @@ SFX 581 Y 1
 SFX 581 0 ή .
 SFX 142 Y 1
 SFX 142 0 ί .
-SFX 9 Y 1
-SFX 9 0 α .
-SFX 7 Y 1
-SFX 7 0 ε .
 SFX 1610 Y 1
 SFX 1610 0 ζ .
 SFX 319 Y 1

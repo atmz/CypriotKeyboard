@@ -43,7 +43,9 @@ class KeyboardViewController: KeyboardInputViewController {
             inputViewController: self)
         context.keyboardInputSetProvider = CypriotKeyboardInputSetProvider()
         context.keyboardAppearanceProvider = StandardKeyboardAppearanceProvider()
-        context.keyboardLayoutProvider = StandardKeyboardLayoutProvider()
+        context.keyboardLayoutProvider = StandardKeyboardLayoutProvider(
+            leftSpaceAction: .keyboardType(.emojis),
+            rightSpaceAction: .character("🔄"))
         context.primaryLanguage = "el_GR"
     }
     
@@ -64,6 +66,7 @@ class KeyboardViewController: KeyboardInputViewController {
     }
     
     public var currentGuess: String = ""
+    public var autocompleteCount: Int = 0
     
     // MARK: - Autocomplete
     
@@ -74,16 +77,21 @@ class KeyboardViewController: KeyboardInputViewController {
     override func performAutocomplete() {
         guard let word = textDocumentProxy.currentWord else { return resetAutocomplete() }
         self.currentGuess = ""
+        self.autocompleteCount += 1
+        //autompleteLock serves to prevent race conditions/out of order autocompletes by ingoring results if a newer autocomoplete has started
+        let autompleteLock = self.autocompleteCount
         autocompleteProvider.asyncAutocompleteSuggestions(for: word) { [weak self] result in
             switch result {
             case .failure(let error): print(error.localizedDescription)
             case .success(let result):
-                self?.autocompleteContext.suggestions = result
-                if result.count>0{
-                    if result.count==3 {
-                        self?.currentGuess = result[1].replacement
-                    } else {
-                        self?.currentGuess = result[0].replacement
+                if self?.autocompleteCount == autompleteLock {
+                    self?.autocompleteContext.suggestions = result
+                    if result.count>0{
+                        if result.count>1 {
+                            self?.currentGuess = result[1].replacement
+                        } else {
+                            self?.currentGuess = result[0].replacement
+                        }
                     }
                 }
             }

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CB22285525CF332900F0707C /* dict in Resources */ = {isa = PBXBuildFile; fileRef = CBA1827C25CE45BF0011F58F /* dict */; };
 		CB22288F25D1D91200F0707C /* CypriotKeyboardActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB22288E25D1D91200F0707C /* CypriotKeyboardActionHandler.swift */; };
 		CB22289625D262FF00F0707C /* el_CY.aff in Resources */ = {isa = PBXBuildFile; fileRef = CB22289425D262FF00F0707C /* el_CY.aff */; };
 		CB22289725D262FF00F0707C /* el_CY.dic in Resources */ = {isa = PBXBuildFile; fileRef = CB22289525D262FF00F0707C /* el_CY.dic */; };
@@ -66,7 +65,6 @@
 		CB606AE025D5B11E00C15A67 /* suggestmgr.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606AB425D5B0ED00C15A67 /* suggestmgr.hxx */; };
 		CB606AE125D5B11E00C15A67 /* utf_info.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606AB025D5B0ED00C15A67 /* utf_info.hxx */; };
 		CB606AE225D5B11E00C15A67 /* w_char.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606A9F25D5B0ED00C15A67 /* w_char.hxx */; };
-		CBA1827D25CE45BF0011F58F /* dict in Resources */ = {isa = PBXBuildFile; fileRef = CBA1827C25CE45BF0011F58F /* dict */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -163,7 +161,6 @@
 		CB606AB525D5B0ED00C15A67 /* phonet.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = phonet.hxx; sourceTree = "<group>"; };
 		CB606AB625D5B0ED00C15A67 /* filemgr.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = filemgr.hxx; sourceTree = "<group>"; };
 		CB606AEB25D5B15000C15A67 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
-		CBA1827C25CE45BF0011F58F /* dict */ = {isa = PBXFileReference; lastKnownFileType = folder; path = dict; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -206,7 +203,6 @@
 				CB606AEC25D5B15700C15A67 /* hunspell */,
 				CB22289425D262FF00F0707C /* el_CY.aff */,
 				CB22289525D262FF00F0707C /* el_CY.dic */,
-				CBA1827C25CE45BF0011F58F /* dict */,
 				CB46BF1425CCCE2C00E3413A /* Cypriot Keyboard */,
 				CB46BF2625CCCE2D00E3413A /* Cypriot KeyboardTests */,
 				CB46BF3125CCCE2D00E3413A /* Cypriot KeyboardUITests */,
@@ -463,7 +459,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CB606AC325D5B0EE00C15A67 /* hunvisapi.h.in in Resources */,
-				CBA1827D25CE45BF0011F58F /* dict in Resources */,
 				CB46BF1D25CCCE2D00E3413A /* Preview Assets.xcassets in Resources */,
 				CB46BF1A25CCCE2D00E3413A /* Assets.xcassets in Resources */,
 			);
@@ -490,7 +485,6 @@
 				CB606AC425D5B0EE00C15A67 /* hunvisapi.h.in in Resources */,
 				CB22289625D262FF00F0707C /* el_CY.aff in Resources */,
 				CB22289725D262FF00F0707C /* el_CY.dic in Resources */,
-				CB22285525CF332900F0707C /* dict in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

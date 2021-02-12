@@ -25,8 +25,6 @@ class CypriotAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
         
         let dicPath = Bundle.main.path(forResource: "el_CY", ofType: "dic")
         let affPath = Bundle.main.path(forResource: "el_CY", ofType: "aff")
-        //el_speller = Hunspell_create(affPath, dicPath)
-        //let latin_affPath = Bundle.main.path(forResource: "el_CY_latin", ofType: "aff")
         self.speller = nil
         DispatchQueue.global().async {
             self.speller = Hunspell_create(affPath, dicPath)
@@ -76,6 +74,16 @@ private extension AutocompleteSuggestionProvider {
         let suggestionsToShow = min(2, hunspellSuggestions.count)
         switch suggestionsToShow {
         case 2:
+            if hunspellSuggestions[1]==text {
+                //slight hack to cover case where hunspell's second suggestion is
+                // an exact match
+                //e.g. για->["γεια", "για"]
+                return [
+                    suggestion(text, true),
+                    suggestion(hunspellSuggestions[1]),
+                    suggestion(hunspellSuggestions[0])
+                ]
+            }
             return [
                 suggestion(text, true),
                 suggestion(hunspellSuggestions[0]),

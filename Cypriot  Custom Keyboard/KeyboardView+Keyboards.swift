@@ -48,7 +48,7 @@ private extension KeyboardView {
     
     func buttonBuilder(action: KeyboardAction, size: CGSize) -> AnyView {
         switch action {
-        case .space: return AnyView(SystemKeyboardSpaceButtonContent(localeText: "English", spaceText: "space"))
+        case .space: return AnyView(SystemKeyboardSpaceButtonContent(localeText: "Cypriot", spaceText: "space"))
         default: return SystemKeyboard.standardButtonBuilder(action: action, keyboardSize: size)
         }
     }
