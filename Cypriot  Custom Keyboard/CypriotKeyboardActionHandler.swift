@@ -30,7 +30,7 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
         triggerAudioFeedback(for: gesture, on: action, sender: sender)
         triggerHapticFeedback(for: gesture, on: action, sender: sender)
         triggerAccent(for: gesture, on: action, sender: sender)
-        handleS(for: gesture, on: action, sender: sender)
+        handleSwitch(for: gesture, on: action, sender: sender)
         triggerSpaceAutocomplete(for: gesture, on: action, sender: sender)
         triggerAutocomplete()
         tryEndSentence(after: gesture, on: action)
@@ -84,15 +84,15 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
             }
     }
     
-    func handleS(for gesture: KeyboardGesture, on action: KeyboardAction, sender: Any?) {
+    func handleSwitch(for gesture: KeyboardGesture, on action: KeyboardAction, sender: Any?) {
         guard let context = cypriotInputViewController?.context else { return }
             //todo: move elswhere
         if(action == .character("🔄")) {
             context.textDocumentProxy.deleteBackward()
-            if context.primaryLanguage == "el_GR" {
-                context.primaryLanguage = "en_US"
+            if context.primaryLanguage == "en_US" {
+                context.primaryLanguage = "el_GR"
             } else {
-            context.primaryLanguage = "el_GR"
+                context.primaryLanguage = "en_US"
             }
         }
             if(action == .character("σ")) {

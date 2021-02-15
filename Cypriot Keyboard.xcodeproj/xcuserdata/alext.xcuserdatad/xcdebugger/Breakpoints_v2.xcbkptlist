@@ -30,8 +30,8 @@
             filePath = "Cypriot  Custom Keyboard/KeyboardViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "83"
-            endingLineNumber = "83"
+            startingLineNumber = "82"
+            endingLineNumber = "82"
             landmarkName = "performAutocomplete()"
             landmarkType = "7">
             <Locations>
@@ -96,8 +96,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "109"
             endingLineNumber = "109"
-            landmarkName = "handleS(for:on:sender:)"
-            landmarkType = "7">
+            landmarkName = "CypriotKeyboardActionHandler"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -114,22 +114,6 @@
             endingLineNumber = "27"
             landmarkName = "alphabeticInputSet(for:)"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "EC4BB6C3-FA99-4673-B613-00875B0DC5F5"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Cypriot  Custom Keyboard/CypriotAutocompleteSuggestionProvider.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "111"
-            endingLineNumber = "111"
-            landmarkName = "AutocompleteSuggestionProvider"
-            landmarkType = "21">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -193,6 +177,22 @@
             startingLineNumber = "4429"
             endingLineNumber = "4429"
             landmarkName = "AffixMgr::parse_affix(line, at, af, dupflags)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "56ED3FE9-D66C-4076-9DC5-1DE7A08D5A05"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Cypriot  Custom Keyboard/CypriotKeyboardActionHandler.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "92"
+            endingLineNumber = "92"
+            landmarkName = "handleS(for:on:sender:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -434,6 +434,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				el,
 				Base,
 			);
 			mainGroup = CB46BF0925CCCE2C00E3413A;

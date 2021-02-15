@@ -44,8 +44,7 @@ class KeyboardViewController: KeyboardInputViewController {
         context.keyboardInputSetProvider = CypriotKeyboardInputSetProvider()
         context.keyboardAppearanceProvider = StandardKeyboardAppearanceProvider()
         context.keyboardLayoutProvider = StandardKeyboardLayoutProvider(
-            leftSpaceAction: .keyboardType(.emojis),
-            rightSpaceAction: .character("🔄"))
+            leftSpaceAction: .character("🔄"))
         context.primaryLanguage = "el_GR"
     }
     

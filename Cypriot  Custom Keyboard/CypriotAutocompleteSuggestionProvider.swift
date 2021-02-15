@@ -101,34 +101,6 @@ private extension AutocompleteSuggestionProvider {
             ]
         }
     }
-    /*
-    func suggestions(for text: String, hunspellSuggestions:[String]) -> [DemoAutocompleteSuggestion] {
-        let suggestionsToShow = min(text.count>7 ? 2 : 3, hunspellSuggestions.count)
-        switch suggestionsToShow {
-        case 3:
-            return [
-                suggestion(hunspellSuggestions[1]),
-                suggestion(hunspellSuggestions[0]), // best suggestion in middle
-                suggestion(hunspellSuggestions[2])
-            ]
-        case 2:
-            return [
-                suggestion(hunspellSuggestions[0]),
-                suggestion(hunspellSuggestions[1])
-            ]
-            
-        case 1:
-            return [
-                suggestion(hunspellSuggestions[0]),
-                suggestion(text, true)
-            ]
-        default:
-            return [
-                suggestion(text, true)
-            ]
-        }
-    }
- */
     
     func suggestion(_ word: String, _ verbatim: Bool = false,_ subtitle: String? = nil) -> DemoAutocompleteSuggestion {
         DemoAutocompleteSuggestion(replacement: word, title:(verbatim ? ("\""+word+"\""):word), subtitle: subtitle)
@@ -142,6 +114,11 @@ private extension AutocompleteSuggestionProvider {
             .replacingOccurrences(of: "ps", with: "ψ")
             .replacingOccurrences(of: "ks", with: "ξ")
             .replacingOccurrences(of: "sh", with: "σι")
+            .replacingOccurrences(of: "Th", with: "Θ")
+            .replacingOccurrences(of: "Ef", with: "Ευ")
+            .replacingOccurrences(of: "Ps", with: "Ψ")
+            .replacingOccurrences(of: "Ks", with: "Ξ")
+            .replacingOccurrences(of: "Sh", with: "Σι")
             .replacingOccurrences(of: "a", with: "α")
             .replacingOccurrences(of: "i", with: "ι")
             .replacingOccurrences(of: "e", with: "ε")
@@ -167,12 +144,6 @@ private extension AutocompleteSuggestionProvider {
             .replacingOccurrences(of: "b", with: "μπ")
             .replacingOccurrences(of: "n", with: "ν")
             .replacingOccurrences(of: "m", with: "μ")
-            
-            .replacingOccurrences(of: "Th", with: "Θ")
-            .replacingOccurrences(of: "Ef", with: "Ευ")
-            .replacingOccurrences(of: "Ps", with: "Ψ")
-            .replacingOccurrences(of: "Ks", with: "Ξ")
-            .replacingOccurrences(of: "Sh", with: "Σι")
             .replacingOccurrences(of: "A", with: "Α")
             .replacingOccurrences(of: "I", with: "Ι")
             .replacingOccurrences(of: "E", with: "Ε")
