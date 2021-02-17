@@ -51,6 +51,32 @@ public struct DemoAutocompleteSuggestion: AutocompleteSuggestion {
     public var additionalInfo: [String: Any] { [:] }
 }
 
+func getOverrideMatch(for text:String) -> String?{
+    let overrides = [
+        "me":"με",
+        "με":"με",
+        "gia":"για",
+        "yia":"για",
+        "για":"για",
+        "na":"να",
+        "να":"να",
+        "sou":"σου",
+        "σου":"σου",
+        "mou":"μου",
+        "μου":"μου",
+        "pou":"που",
+        "που":"που",
+        "en":"εν",
+        "εν":"εν",
+        "η":"η",
+        "h":"η",
+    ]
+    if let override = overrides[text] {
+        return override
+    }
+    return nil
+}
+
 private extension AutocompleteSuggestionProvider {
 
     
@@ -74,35 +100,23 @@ private extension AutocompleteSuggestionProvider {
         let suggestionsToShow = min(2, hunspellSuggestions.count)
         switch suggestionsToShow {
         case 2:
-            if  greekText == "για" || greekText == "να" || greekText == "σου" || greekText == "που"    {
-                //ηαψκ
+            if let override = getOverrideMatch(for: text)    {
                 //e.g. για->["γεια", "για"]
-                return [
-                    suggestion(text, true),
-                    suggestion(greekText, false),
-                    suggestion(hunspellSuggestions[0])
-                ]
-            }
-            /*
-            if  hunspellSuggestions.contains(text) {
-                //slight hack to cover case where hunspell has a suggestion match
-                // often this isn't the first match for some reason
-                //e.g. για->["γεια", "για"]
-                return [
-                    suggestion(hunspellSuggestions[1]),
-                    suggestion(text, false),
-                    suggestion(hunspellSuggestions[0])
-                ]
-            } else if hunspellSuggestions.contains(greekText) {
-                    //slight hack to cover case where hunspell has a suggestion match
-                    // often this isn't the first match for some reason
-                    //e.g. gia->["γεια", "για"]
+                if text == override {
+                    return [
+                        hunspellSuggestions[1] != text ? suggestion(hunspellSuggestions[1]) : suggestion(hunspellSuggestions[2]),
+                        suggestion(text, false),
+                        hunspellSuggestions[0] != text ? suggestion(hunspellSuggestions[0]) : suggestion(hunspellSuggestions[3]),
+                    ]
+                    
+                } else {
                     return [
                         suggestion(text, true),
-                        suggestion(greekText),
-                        suggestion(hunspellSuggestions[0])
+                        suggestion(override, false),
+                        hunspellSuggestions[0] != override ? suggestion(hunspellSuggestions[0]) : suggestion(hunspellSuggestions[1])
                     ]
-                }*/
+                }
+            }
             return [
                 suggestion(text, true),
                 suggestion(hunspellSuggestions[0]),
