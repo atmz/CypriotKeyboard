@@ -74,16 +74,35 @@ private extension AutocompleteSuggestionProvider {
         let suggestionsToShow = min(2, hunspellSuggestions.count)
         switch suggestionsToShow {
         case 2:
-            if hunspellSuggestions[1]==text {
-                //slight hack to cover case where hunspell's second suggestion is
-                // an exact match
+            if  greekText == "για" || greekText == "να" || greekText == "σου" || greekText == "που"    {
+                //ηαψκ
                 //e.g. για->["γεια", "για"]
                 return [
                     suggestion(text, true),
-                    suggestion(hunspellSuggestions[1]),
+                    suggestion(greekText, false),
                     suggestion(hunspellSuggestions[0])
                 ]
             }
+            /*
+            if  hunspellSuggestions.contains(text) {
+                //slight hack to cover case where hunspell has a suggestion match
+                // often this isn't the first match for some reason
+                //e.g. για->["γεια", "για"]
+                return [
+                    suggestion(hunspellSuggestions[1]),
+                    suggestion(text, false),
+                    suggestion(hunspellSuggestions[0])
+                ]
+            } else if hunspellSuggestions.contains(greekText) {
+                    //slight hack to cover case where hunspell has a suggestion match
+                    // often this isn't the first match for some reason
+                    //e.g. gia->["γεια", "για"]
+                    return [
+                        suggestion(text, true),
+                        suggestion(greekText),
+                        suggestion(hunspellSuggestions[0])
+                    ]
+                }*/
             return [
                 suggestion(text, true),
                 suggestion(hunspellSuggestions[0]),
