@@ -65,6 +65,7 @@
 		CB606AE025D5B11E00C15A67 /* suggestmgr.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606AB425D5B0ED00C15A67 /* suggestmgr.hxx */; };
 		CB606AE125D5B11E00C15A67 /* utf_info.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606AB025D5B0ED00C15A67 /* utf_info.hxx */; };
 		CB606AE225D5B11E00C15A67 /* w_char.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606A9F25D5B0ED00C15A67 /* w_char.hxx */; };
+		CB7A966F25DCA0E7009432BB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CB7A967125DCA0E7009432BB /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -161,6 +162,8 @@
 		CB606AB525D5B0ED00C15A67 /* phonet.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = phonet.hxx; sourceTree = "<group>"; };
 		CB606AB625D5B0ED00C15A67 /* filemgr.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = filemgr.hxx; sourceTree = "<group>"; };
 		CB606AEB25D5B15000C15A67 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		CB7A967025DCA0E7009432BB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CB7A967625DCA0F2009432BB /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,6 +203,7 @@
 		CB46BF0925CCCE2C00E3413A = {
 			isa = PBXGroup;
 			children = (
+				CB7A967125DCA0E7009432BB /* Localizable.strings */,
 				CB606AEC25D5B15700C15A67 /* hunspell */,
 				CB22289425D262FF00F0707C /* el_CY.aff */,
 				CB22289525D262FF00F0707C /* el_CY.dic */,
@@ -434,8 +438,8 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
-				el,
 				Base,
+				el,
 			);
 			mainGroup = CB46BF0925CCCE2C00E3413A;
 			packageReferences = (
@@ -460,6 +464,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CB606AC325D5B0EE00C15A67 /* hunvisapi.h.in in Resources */,
+				CB7A966F25DCA0E7009432BB /* Localizable.strings in Resources */,
 				CB46BF1D25CCCE2D00E3413A /* Preview Assets.xcassets in Resources */,
 				CB46BF1A25CCCE2D00E3413A /* Assets.xcassets in Resources */,
 			);
@@ -588,6 +593,18 @@
 			targetProxy = CB46BF4C25CCCE7200E3413A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		CB7A967125DCA0E7009432BB /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CB7A967025DCA0E7009432BB /* en */,
+				CB7A967625DCA0F2009432BB /* el */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		CB46BF3525CCCE2D00E3413A /* Debug */ = {

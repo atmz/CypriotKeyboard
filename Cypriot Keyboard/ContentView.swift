@@ -6,10 +6,28 @@
 //
 
 import SwiftUI
+func isKeyboardExtensionEnabled() -> Bool {
+ guard let appBundleIdentifier = Bundle.main.bundleIdentifier else {
+     fatalError("isKeyboardExtensionEnabled(): Cannot retrieve bundle identifier.")
+ }
 
+ guard let keyboards = UserDefaults.standard.dictionaryRepresentation()["AppleKeyboards"] as? [String] else {
+     // There is no key `AppleKeyboards` in NSUserDefaults. That happens sometimes.
+     return false
+ }
+
+ let keyboardExtensionBundleIdentifierPrefix = appBundleIdentifier + "."
+ for keyboard in keyboards {
+     if keyboard.hasPrefix(keyboardExtensionBundleIdentifierPrefix) {
+         return true
+     }
+ }
+    return false
+}
+    
 struct ContentView: View {
     @State var textTyped: String = ""
-    @State private var showInstall = false
+    @State private var showInstall = !isKeyboardExtensionEnabled()
     @State private var showGreek = true
 
     var body: some View {
@@ -17,37 +35,27 @@ struct ContentView: View {
             Text("🇨🇾 Κύπριακο Keyboard")
                 .padding()
                 .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
-            if(showGreek){
-                Text("Tap 🔄 below to switch to English")
-                    .padding()
-            } else {
-                Text("Πατήστε 🔄 για Κυπριακά")
-                    .padding()
-            }
-            Button("🔄"){showGreek.toggle()}
-                .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
-                .padding()
         HStack(alignment: .top, spacing: 0) {
             Spacer(minLength: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/)
-            Button(showGreek ? "Εφάρμογη":"Installation"){showInstall=true}
+            Button(NSLocalizedString("Installation", comment: "Installation")){showInstall=true}
             Spacer(minLength: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/)
-            Button(showGreek ? "Χρήση":"Use"){showInstall=false}
+            Button(NSLocalizedString("Use", comment: "Use")){showInstall=false}
             Spacer(minLength: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/)
             }
         .padding()
         if(showInstall) {
-            Text(showGreek ? "1. Άνοιξε 'Ρυθμίσεις'" : "1. Open 'Settings'")
-            Text(showGreek ? "2. Πάτα 'Γενικά'" : "2. Tap 'General'")
-            Text(showGreek ? "3. Πάτα 'Πληκτρολόγιο'" : "3. Tap Keyboard")
-            Text(showGreek ? "4.  Πάτα 'Πληκτρολόγια'" : "4. Tap Keyboards")
-            Text(showGreek ? "5. Πάτα 'Προσθήκη νέου πληκτρολογίου'" : "5. Tap Add New Keyboard")
-            Text(showGreek ? "6. Διάλεξε 'Κυπριακό Keyboard'" : "6. Tap 'Κυπριακό Keyboard'")
+            Text(NSLocalizedString("1. Open 'Settings'", comment: "1. Open 'Settings'")).padding()
+            Text(NSLocalizedString("2. Tap 'General'", comment: "2. Tap 'General'")).padding()
+            Text(NSLocalizedString("3. Tap Keyboard", comment: "3. Tap Keyboard")).padding()
+            Text(NSLocalizedString("4. Tap Keyboards", comment: "4. Tap Keyboards")).padding()
+            Text(NSLocalizedString("5. Tap Add New Keyboard", comment: "5. Tap Add New Keyboard")).padding()
+            Text(NSLocalizedString( "6. Tap 'Κυπριακά'", comment: "6. Tap 'Κυπριακά'"))
         } else {
-            Text(showGreek ? "Πάτα 🌐 για να αλλάξεις γλώσσα/πληκτρολόγιο" : "Click 🌐 to switch keyboard to the Cypriot Keyboard").multilineTextAlignment(.leading).padding(.top)
-            Text(showGreek ? "Πάτα 🔄 για να αλλάξεις μεταξή Ελληνηκό και Λατιωικό αλφάβητο" : "Click 🔄 to switch between Latin and Greek alphabets").multilineTextAlignment(.leading).padding([.top, .leading, .trailing])
-            Text(showGreek ? "Η περιοχή πουπάνω που το πληκτρολόγιο δείχνει προτεινόμενες λέξεις. Όταν πατήσεις Σπαις η μεσαία λεξη διαλέγεται" : "The bar above the keyboard shows the current suggestions. When you pless 'Space', the middle suggestion will be used").multilineTextAlignment(.leading).padding([.top, .leading, .trailing])
+            Text(NSLocalizedString("Click 🌐 to switch keyboard to the Cypriot Keyboard", comment: "Click 🌐 to switch keyboard to the Cypriot Keyboard")).multilineTextAlignment(.leading).padding(.top)
+            Text(NSLocalizedString("Click 🔄 to switch between Latin and Greek alphabets", comment: "Click 🔄 to switch between Latin and Greek alphabets")).multilineTextAlignment(.leading).padding([.top, .leading, .trailing])
+            Text(NSLocalizedString( "The bar above the keyboard shows the current suggestions. When you pless 'Space', the middle suggestion will be used", comment: "The bar above the keyboard shows the current suggestions. When you pless 'Space', the middle suggestion will be used")).multilineTextAlignment(.leading).padding([.top, .leading, .trailing])
         }
-            TextField(showGreek ? "Δοκιμάστε δαμέ" : "Test Here", text: $textTyped)
+            TextField(NSLocalizedString("Test Here", comment: "Test Here"), text: $textTyped)
             Spacer()
         }
     }
