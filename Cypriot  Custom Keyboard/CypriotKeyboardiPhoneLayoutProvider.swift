@@ -14,8 +14,8 @@ class CypriotKeyboardiPhoneLayoutProvider : iPhoneKeyboardLayoutProvider {
         let needsInputSwitcher = context.needsInputModeSwitchKey
         if let action = keyboardSwitchActionForBottomRow(for: context) { result.append(action) }
         if needsInputSwitcher { result.append(.nextKeyboard) }
-        result.append(.space)
         result.append(.character("🔄"))
+        result.append(.space)
         result.append(.return) // TODO: Should be "primary"
         return result
     }
