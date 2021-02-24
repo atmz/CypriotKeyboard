@@ -7,7 +7,6 @@
 //
 import UIKit
 import KeyboardKit
-import KeyboardKitSwiftUI
 import SwiftUI
 import Combine
 
@@ -33,34 +32,45 @@ import Combine
  */
 class KeyboardViewController: KeyboardInputViewController {
     
-    
     // MARK: - View Controller Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        keyboardActionHandler = cyKeyboardActionHandler
+        keyboardAppearance = StandardKeyboardAppearance(context: keyboardContext)
+        keyboardContext.primaryLanguage = "el_GR"
+        keyboardContext.locale = Locale(identifier: "el_GR")
+        keyboardContext.locales = [
+            keyboardContext.locale
+        ]
+        keyboardInputSetProvider  = StandardKeyboardInputSetProvider(
+            context: keyboardContext,
+            providers: [CypriotKeyboardInputSetProvider(context:keyboardContext)]
+        )
+        keyboardLayoutProvider  = CypriotKeyboardiPhoneLayoutProvider(inputSetProvider: keyboardInputSetProvider)
+        // Setup a secondary callout action provider with multiple locales
+        keyboardSecondaryCalloutActionProvider = StandardSecondaryCalloutActionProvider(
+            context: keyboardContext,
+            providers: [
+                CypriotSecondaryCalloutActionProvider()])
+        
         setup(with: keyboardView)
-        context.actionHandler = CypriotKeyboardActionHandler(
-            inputViewController: self)
-        context.keyboardInputSetProvider = CypriotKeyboardInputSetProvider()
-        context.keyboardAppearanceProvider = StandardKeyboardAppearanceProvider()
-        context.keyboardLayoutProvider = StandardKeyboardLayoutProvider(
-            leftSpaceAction: .character("🔄"))
-        context.primaryLanguage = "el_GR"
     }
     
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        context.traitCollection = traitCollection
-    }
     
     
     // MARK: - Properties
     
-    private let toastContext = KeyboardToastContext()
+   public lazy var cyKeyboardActionHandler = CypriotKeyboardActionHandler(
+    inputViewController: self)
     
+    private let toastContext = KeyboardToastContext()
     private var keyboardView: some View {
-        KeyboardView()
-            .environmentObject(autocompleteContext)
+
+        KeyboardView(
+            actionHandler: cyKeyboardActionHandler,
+            appearance: keyboardAppearance,
+            layoutProvider: keyboardLayoutProvider)
             .environmentObject(toastContext)
     }
     
@@ -69,7 +79,6 @@ class KeyboardViewController: KeyboardInputViewController {
     
     // MARK: - Autocomplete
     
-    private lazy var autocompleteContext = ObservableAutocompleteContext()
     
     private lazy var autocompleteProvider = CypriotAutocompleteSuggestionProvider()
     

@@ -24,15 +24,18 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
     }
     
     override open func handle(_ gesture: KeyboardGesture, on action: KeyboardAction, sender: Any?) {
-        guard let gestureAction = self.action(for: gesture, on: action, sender: sender) else { return }
-        gestureAction()
-        triggerAnimation(for: gesture, on: action, sender: sender)
+        
+        guard let gestureAction = self.action(for: gesture, on: action) else { return }
+        gestureAction(cypriotInputViewController)
+        //  triggerSpaceAutocomplete(for: gesture, on: action, sender: sender)
+        handleSwitch(for: gesture, on: action, sender: sender)
+        handleS(for: gesture, on: action, sender: sender)
+        triggerAccent(for: gesture, on: action, sender: sender)
         triggerAudioFeedback(for: gesture, on: action, sender: sender)
         triggerHapticFeedback(for: gesture, on: action, sender: sender)
-        triggerAccent(for: gesture, on: action, sender: sender)
-        handleSwitch(for: gesture, on: action, sender: sender)
-        triggerSpaceAutocomplete(for: gesture, on: action, sender: sender)
-        triggerAutocomplete()
+        autocompleteAction()
+        tryEndSentence(after: gesture, on: action)
+        tryRegisterEmoji(after: gesture, on: action)
         tryEndSentence(after: gesture, on: action)
         tryChangeKeyboardType(after: gesture, on: action)
         tryRegisterEmoji(after: gesture, on: action)
@@ -42,7 +45,7 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
      func triggerSpaceAutocomplete(for gesture: KeyboardGesture, on action: KeyboardAction, sender: Any?) {
         if action != .space { return }
         //todo: also handle punctuation
-        guard let context = cypriotInputViewController?.context else { return }
+        guard let context = cypriotInputViewController?.keyboardContext else { return }
         
         guard let guess = cypriotInputViewController?.currentGuess else { return }
         guard guess != "" else { return }
@@ -52,83 +55,51 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
     }
     
     func triggerAccent(for gesture: KeyboardGesture, on action: KeyboardAction, sender: Any?) {
-        guard let context = cypriotInputViewController?.context else { return }
-            if(action == .character("΄")) {
-                context.textDocumentProxy.deleteBackward()
-                let word = context.textDocumentProxy.trimmedDocumentContextBeforeInput
-                guard let char = word?.last else { return }
-                let substitutions = [
-                    "α": "ά",
-                    "ε": "έ",
-                    "ι": "ί",
-                    "η": "ή",
-                    "υ": "ύ",
-                    "ο": "ό",
-                    "ω": "ώ",
-                    "Α": "Ά",
-                    "Ε": "Έ",
-                    "Ι": "Ί",
-                    "Η": "Ή",
-                    "Υ": "Ύ",
-                    "Ο": "Ό",
-                    "Ω": "Ώ",
-                ]
-                if let newchar = substitutions[String(char)] {
-                    context.textDocumentProxy.deleteBackward()
-                    context.textDocumentProxy.insertText(newchar)
-                } else {
-                    //Not sure if this is best behavior, but this matches standard keyboard
-                    context.textDocumentProxy.insertText("΄")
-
+        guard let context = cypriotInputViewController?.keyboardContext else { return }
+        if(action == .character("΄") || action == .character("˘")) {
+            context.textDocumentProxy.deleteBackward()
+            let word = context.textDocumentProxy.currentWord
+            guard let char = word?.last else { return }
+            if ["α","ε","ι","η","υ","ο","ω"].contains(char.lowercased()) {
+                if var newWord = word  {
+                    newWord+="\u{301}"
+                    print(newWord)
+                    context.textDocumentProxy.replaceCurrentWord(with: newWord)
+                   // context.textDocumentProxy.insertText(newchar)
                 }
             }
+            if ["σ","ζ","ξ","ψ"].contains(char.lowercased()) {
+                if var newWord = word  {
+                    newWord+="\u{306}"
+                    print(newWord)
+                    context.textDocumentProxy.replaceCurrentWord(with: newWord)
+                   // context.textDocumentProxy.insertText(newchar)
+                }
+            }
+           
+        }
     }
     
     func handleSwitch(for gesture: KeyboardGesture, on action: KeyboardAction, sender: Any?) {
-        guard let context = cypriotInputViewController?.context else { return }
-            //todo: move elswhere
+        guard let context = cypriotInputViewController?.keyboardContext else { return }
         if(action == .character("🔄")) {
             context.textDocumentProxy.deleteBackward()
-            if context.primaryLanguage == "en_US" {
-                context.primaryLanguage = "el_GR"
+            if context.locale == Locale.init(identifier: "en_US"){
+                context.locale = Locale.init(identifier: "el_GR")
             } else {
-                context.primaryLanguage = "en_US"
+                context.locale = Locale.init(identifier: "en_US")
             }
         }
-            if(action == .character("σ")) {
-                //context.textDocumentProxy.deleteBackward()
-                //context.textDocumentProxy.insertText("ς")
-            }
-            else {
-                //todo: change s after more letters are typed
-            }
     }
- 
-    /*func triggerAccent(for gesture: KeyboardGesture, on action: KeyboardAction, sender: Any?) {
-        guard let context = cypriotInputViewController?.context else { return }
-        if !isAccentWaiting {
-            if(action == .character("΄")) {
-                self.isAccentWaiting = true
-                context.textDocumentProxy.deleteBackward()
+
+    func handleS(for gesture: KeyboardGesture, on action: KeyboardAction, sender: Any?) {
+        guard let context = cypriotInputViewController?.keyboardContext else { return }
+        if let newWord = context.textDocumentProxy.currentWord?.replacingOccurrences(of: "ς", with: "σ") {
+            context.textDocumentProxy.replaceCurrentWord(with: newWord)
             }
-            return
+        if(action == .character("σ")) {
+            context.textDocumentProxy.deleteBackward()
+            context.textDocumentProxy.insertText("ς")
         }
-        self.isAccentWaiting = false
-        let substitutions = [
-            "α": "ά",
-            "ε": "έ",
-            "ι": "ί",
-            "η": "ή",
-            "υ": "ύ",
-            "ο": "ό",
-            "ω": "ώ",
-        ]
-        for key in substitutions.keys {
-            if action == .character(key) {
-                    context.textDocumentProxy.deleteBackward()
-                    context.textDocumentProxy.insertText("έ")
-                    return
-                }
-        }
-    }*/
+    }
 }

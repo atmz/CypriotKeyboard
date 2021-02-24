@@ -46,7 +46,7 @@ SET UTF-8
 # that the word you are looking for exists).
 TRY άόίϊΐέήύϋΰώιηυωοεατνρσκμπλςγδθφβζξψχ
 
-MAP 8
+MAP 9
 MAP ηήύυιί(ει)(οι)(εί)(οί)
 MAP j(τζ)
 MAP (αί)(αι)(αϊ)(άι)
@@ -55,6 +55,8 @@ MAP εέ
 MAP ωώοό
 MAP σς
 MAP wω
+MAP (τž)(τζ)
+
 
 
 # Do we have to put the accented characters in here or the MAP above is enough?
@@ -65,7 +67,8 @@ MAP wω
 # combinations of letters that the greek language never uses, but I don't
 # think they will do any harm.
 
-REP 485
+REP 486
+REP τζ τž
 REP σ ς
 REP α ά
 REP ά α
