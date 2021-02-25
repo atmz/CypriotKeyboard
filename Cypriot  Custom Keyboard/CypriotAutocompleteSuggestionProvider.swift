@@ -723,9 +723,11 @@ private extension AutocompleteSuggestionProvider {
     
     private func greekify(text:String)  -> String {
         return text
-            .replacingOccurrences(of: "sh", with: "σ̆σ̆")
-            .replacingOccurrences(of: "j", with: "τž")
-            .replacingOccurrences(of: "ch", with: "τσ̆")
+            //.replacingOccurrences(of: "sh", with: "σ̆σ̆")
+            .replacingOccurrences(of: "sh", with: "σι")
+            //.replacingOccurrences(of: "j", with: "τž")
+            .replacingOccurrences(of: "j", with: "τζ")
+            //.replacingOccurrences(of: "ch", with: "τσ̆")
             .replacingOccurrences(of: "ev", with: "ευ")
             .replacingOccurrences(of: "ps", with: "ψ")
             .replacingOccurrences(of: "ks", with: "ξ")

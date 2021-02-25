@@ -27,7 +27,7 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
         
         guard let gestureAction = self.action(for: gesture, on: action) else { return }
         gestureAction(cypriotInputViewController)
-        //  triggerSpaceAutocomplete(for: gesture, on: action, sender: sender)
+        triggerSpaceAutocomplete(for: gesture, on: action, sender: sender)
         handleSwitch(for: gesture, on: action, sender: sender)
         handleS(for: gesture, on: action, sender: sender)
         triggerAccent(for: gesture, on: action, sender: sender)
@@ -43,14 +43,33 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
 
     
      func triggerSpaceAutocomplete(for gesture: KeyboardGesture, on action: KeyboardAction, sender: Any?) {
-        if action != .space { return }
+        if  action != .space { return }
         //todo: also handle punctuation
         guard let context = cypriotInputViewController?.keyboardContext else { return }
         
         guard let guess = cypriotInputViewController?.currentGuess else { return }
         guard guess != "" else { return }
+        var replace = ""
         context.textDocumentProxy.deleteBackward()
-        context.textDocumentProxy.replaceCurrentWord(with: guess)
+        if context.locale == Locale.init(identifier: "el_GR") {
+            // Only replace in Greek if accent-only change
+            if let currentWord = context.textDocumentProxy.currentWord {
+                let accentlessWord = currentWord.folding(options: .diacriticInsensitive, locale: context.locale)
+                let accentlessGuess = guess.folding(options: .diacriticInsensitive, locale: context.locale)
+                // If words are the same without accents, and guess has accents, replace
+                // with guess.
+                if accentlessWord == accentlessGuess && accentlessGuess != guess {
+                    replace = guess
+                }
+            }
+        } else {
+            replace = guess
+        }
+        if replace != ""
+        {
+            context.textDocumentProxy.replaceCurrentWord(with: replace)
+            
+        }
         context.textDocumentProxy.insertText(" ")
     }
     
@@ -65,7 +84,6 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
                     newWord+="\u{301}"
                     print(newWord)
                     context.textDocumentProxy.replaceCurrentWord(with: newWord)
-                   // context.textDocumentProxy.insertText(newchar)
                 }
             }
             if ["σ","ζ","ξ","ψ"].contains(char.lowercased()) {
@@ -73,7 +91,6 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
                     newWord+="\u{306}"
                     print(newWord)
                     context.textDocumentProxy.replaceCurrentWord(with: newWord)
-                   // context.textDocumentProxy.insertText(newchar)
                 }
             }
            

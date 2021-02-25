@@ -93,12 +93,14 @@ class KeyboardViewController: KeyboardInputViewController {
             case .failure(let error): print(error.localizedDescription)
             case .success(let result):
                 if self?.autocompleteCount == autompleteLock {
-                    self?.autocompleteContext.suggestions = result
-                    if result.count>0{
-                        if result.count>1 {
-                            self?.currentGuess = result[1].replacement
-                        } else {
-                            self?.currentGuess = result[0].replacement
+                    DispatchQueue.main.async {
+                        self?.autocompleteContext.suggestions = result
+                        if result.count>0{
+                            if result.count>1 {
+                                self?.currentGuess = result[1].replacement
+                            } else {
+                                self?.currentGuess = result[0].replacement
+                            }
                         }
                     }
                 }

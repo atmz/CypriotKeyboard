@@ -16,8 +16,13 @@ public class CypriotSecondaryCalloutActionProvider: BaseSecondaryCalloutActionPr
     
     public override func secondaryCalloutActions(for action: KeyboardAction) -> [KeyboardAction] {
         var actions = super.secondaryCalloutActions(for: action)
-        if action.isΣ {
-            actions.insert(.character("σ̌σ̌"), at: 2)
+        if action.isσLower {
+            actions.insert(.character("σ̌σ̌"), at: 3)
+            actions.insert(.character("ς̆"), at: 4)
+            return actions
+        }
+        if action.isιLower {
+            actions.insert(.character("ι-"), at: 2)
             return actions
         }
         return actions
@@ -36,11 +41,13 @@ public class CypriotSecondaryCalloutActionProvider: BaseSecondaryCalloutActionPr
             
         case "%": return "%‰"
         case "=": return "=≠≈"
-        case "ζ": return "ζζ̌"
-        case "ψ": return "ψψ̌"
+        case "ζ": return "ζζ̆"
+        case "ψ": return "ψψ̆"
         case "ξ": return "ξξ̌"
-        case "σ": return "σςσ̌"
+        case "σ": return "σςσ̆"
         case "α": return "αά"
+        case "ο": return "οόὀὄ"
+        case "ι" : return "ιί"
         
         default: return ""
         }
@@ -49,9 +56,15 @@ public class CypriotSecondaryCalloutActionProvider: BaseSecondaryCalloutActionPr
 
 private extension KeyboardAction {
     
-    var isΣ: Bool {
+    var isσLower: Bool {
         switch self {
         case .character(let char): return char == "σ"
+        default: return false
+        }
+    }
+    var isιLower: Bool {
+        switch self {
+        case .character(let char): return char == "ι"
         default: return false
         }
     }
