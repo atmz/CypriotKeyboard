@@ -74,7 +74,7 @@ class KeyboardViewController: KeyboardInputViewController {
             .environmentObject(toastContext)
     }
     
-    public var currentGuess: String = ""
+    public var currentGuess: AutocompleteSuggestion? = nil
     public var autocompleteCount: Int = 0
     
     // MARK: - Autocomplete
@@ -84,7 +84,7 @@ class KeyboardViewController: KeyboardInputViewController {
     
     override func performAutocomplete() {
         guard let word = textDocumentProxy.currentWord else { return resetAutocomplete() }
-        self.currentGuess = ""
+        self.currentGuess = nil
         self.autocompleteCount += 1
         //autompleteLock serves to prevent race conditions/out of order autocompletes by ingoring results if a newer autocomoplete has started
         let autompleteLock = self.autocompleteCount
@@ -97,9 +97,9 @@ class KeyboardViewController: KeyboardInputViewController {
                         self?.autocompleteContext.suggestions = result
                         if result.count>0{
                             if result.count>1 {
-                                self?.currentGuess = result[1].replacement
+                                self?.currentGuess = result[1]
                             } else {
-                                self?.currentGuess = result[0].replacement
+                                self?.currentGuess = result[0]
                             }
                         }
                     }

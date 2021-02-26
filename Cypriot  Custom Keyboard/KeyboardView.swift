@@ -54,11 +54,20 @@ private extension KeyboardView {
     }
     
     func autocompleteBarButton(for suggestion: AutocompleteSuggestion) -> AnyView {
-        guard let subtitle = suggestion.subtitle else { return AutocompleteToolbar.standardButton(for: suggestion) }
-        return AnyView(VStack(spacing: 0) {
+        let shouldHighlight = suggestion.additionalInfo.keys.contains("willReplace")
+        if shouldHighlight {
+            return AnyView(VStack(spacing: 0) {
+                Text(suggestion.title).font(.callout)
+            }.frame(maxWidth: .infinity, maxHeight: 42) .background(RoundedRectangle(cornerRadius: 5.0).fill(Color.init(white: 0.95))))
+        } else {
+            return AutocompleteToolbar.standardButton(for: suggestion)
+        }
+      /*
+         guard let subtitle = suggestion.subtitle else { return AutocompleteToolbar.standardButton(for: suggestion) }
+         return AnyView(VStack(spacing: 0) {
             Text(suggestion.title).font(.callout)
             Text(subtitle).font(.footnote)
-        }.frame(maxWidth: .infinity))
+        }.frame(maxWidth: .infinity))*/
     }
     
     func autocompleteBarButtonBuilder(suggestion: AutocompleteSuggestion) -> AnyView {

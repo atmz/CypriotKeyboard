@@ -605,12 +605,12 @@ class CypriotAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
     }
 }
 
-public struct DemoAutocompleteSuggestion: AutocompleteSuggestion {
+public struct CypriotAutocompleteSuggestion: AutocompleteSuggestion {
     
     public var replacement: String
     public var title: String
     public var subtitle: String?
-    public var additionalInfo: [String: Any] { [:] }
+    public var additionalInfo: [String: Any] 
 }
 
 func getOverrideMatch(for text:String) -> String?{
@@ -644,7 +644,22 @@ func getOverrideMatch(for text:String) -> String?{
 private extension AutocompleteSuggestionProvider {
 
     
-    func suggestions(for text: String, speller:OpaquePointer?, commonWords:[String]) -> [DemoAutocompleteSuggestion] {
+    func shouldReplace(text: String, greekText: String, guess: String)-> Bool{
+        // we don't have context here, this will only be true if all characters in the
+        // word are greek
+        if(text == greekText) {
+            // Only replace in Greek if accent-only change
+            let accentlessWord = text.folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR"))
+            let accentlessGuess = guess.folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR"))
+            // If words are the same without accents, and guess has accents, replace
+            // with guess.
+            return accentlessWord == accentlessGuess && accentlessGuess != guess
+        } else {
+            return true
+        }
+    }
+    
+    func suggestions(for text: String, speller:OpaquePointer?, commonWords:[String]) -> [CypriotAutocompleteSuggestion] {
         guard speller != nil else { return [] }
         let greekText = greekify(text: text)
         var suggestions_ptr: UnsafeMutablePointer<UnsafeMutablePointer<CChar>?>? = nil
@@ -671,53 +686,49 @@ private extension AutocompleteSuggestionProvider {
         let suggestionsToShow = min(2, hunspellSuggestions.count)
         switch suggestionsToShow {
         case 2:
-           /* if let override = getOverrideMatch(for: text)    {
-                //e.g. για->["γεια", "για"]
-                    if text == override {
-                        print("exact match")
-                        return [
-                            hunspellSuggestions[1] != text ? suggestion(hunspellSuggestions[1]) : suggestion(hunspellSuggestions[2]),
-                            suggestion(text, false),
-                            hunspellSuggestions[0] != text ? suggestion(hunspellSuggestions[0]) : suggestion(hunspellSuggestions[3]),
-                        ]
-                    } else {
-                        return [
-                            suggestion(text, true),
-                            suggestion(override, false),
-                            hunspellSuggestions[0] != override ? suggestion(hunspellSuggestions[0]) : suggestion(hunspellSuggestions[1])
-                        ]
-                    }
-                } else */
+            // Common word match, ignore hunspell ordering and suggest it
             if let commonMatchString = commonMatch {
                     print("common match")
                     print(commonMatchString)
                 return [
-                    suggestion(text, true),
-                    suggestion(commonMatchString),
+                    suggestion(text, verbatim:true),
+                    suggestion(commonMatchString, willReplace:shouldReplace(text: text, greekText: greekText, guess: commonMatchString)),
                     hunspellSuggestions[0] != commonMatchString ? suggestion(hunspellSuggestions[0]) : suggestion(hunspellSuggestions[1])
                 ]
-                
-              }
+            // Second suggestion is exact match except for accents, use it
+            } else if (shouldReplace(text: text, greekText: greekText, guess: hunspellSuggestions[1]) && !shouldReplace(text: text, greekText: greekText, guess: hunspellSuggestions[0]) )
+            {
+                return [
+                suggestion(text, verbatim:true),
+                suggestion(hunspellSuggestions[1], willReplace:true),
+                suggestion(hunspellSuggestions[0])
+                ]
+            }
             return [
-                suggestion(text, true),
-                suggestion(hunspellSuggestions[0]),
+                suggestion(text, verbatim:true),
+                suggestion(hunspellSuggestions[0], willReplace:shouldReplace(text: text, greekText: greekText, guess: hunspellSuggestions[0])),
                 suggestion(hunspellSuggestions[1])
             ]
             
         case 1:
             return [
-                suggestion(text, true),
-                suggestion(hunspellSuggestions[0])
+                suggestion(text, verbatim:true),
+                suggestion(hunspellSuggestions[0], willReplace:shouldReplace(text: text, greekText: greekText, guess: hunspellSuggestions[0]))
             ]
         default:
             return [
-                suggestion(text, true)
+                suggestion(text, verbatim:true)
             ]
         }
     }
     
-    func suggestion(_ word: String, _ verbatim: Bool = false,_ subtitle: String? = nil) -> DemoAutocompleteSuggestion {
-        DemoAutocompleteSuggestion(replacement: word, title:(verbatim ? ("\""+word+"\""):word), subtitle: subtitle)
+    func suggestion(_ word: String, verbatim: Bool = false, subtitle: String? = nil, willReplace : Bool = false) -> CypriotAutocompleteSuggestion {
+        if willReplace {
+            return
+                CypriotAutocompleteSuggestion(replacement: word, title:(verbatim ? ("\""+word+"\""):word), subtitle: subtitle, additionalInfo:["willReplace":willReplace])
+        } else {
+           return CypriotAutocompleteSuggestion(replacement: word, title:(verbatim ? ("\""+word+"\""):word), subtitle: subtitle, additionalInfo:[:])
+        }
     }
     
     
