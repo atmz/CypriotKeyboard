@@ -17,7 +17,7 @@ public class CypriotSecondaryCalloutActionProvider: BaseSecondaryCalloutActionPr
     public override func secondaryCalloutActions(for action: KeyboardAction) -> [KeyboardAction] {
         var actions = super.secondaryCalloutActions(for: action)
         if action.isσLower {
-            actions.insert(.character("σ̌σ̌"), at: 3)
+            actions.insert(.character("σ̆σ̆"), at: 3)
             actions.insert(.character("ς̆"), at: 4)
             return actions
         }

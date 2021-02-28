@@ -687,11 +687,15 @@ private extension AutocompleteSuggestionProvider {
                 commonMatch = suggestion
                 break
             }
+            if(shouldReplace(text: text, greekText: greekText, guess: suggestion)) {
+                commonMatch = suggestion
+                break
+            }
         }
         let suggestionsToShow = min(2, hunspellSuggestions.count)
         switch suggestionsToShow {
         case 2:
-            // Common word match, ignore hunspell ordering and suggest it
+            // Common word match or match except for accents, ignore hunspell ordering and suggest it
             if let commonMatchString = commonMatch {
                     print("common match")
                     print(commonMatchString)
@@ -701,14 +705,7 @@ private extension AutocompleteSuggestionProvider {
                     hunspellSuggestions[0] != commonMatchString ? suggestion(hunspellSuggestions[0]) : suggestion(hunspellSuggestions[1])
                 ]
             // Second suggestion is exact match except for accents, use it
-            } else if (shouldReplace(text: text, greekText: greekText, guess: hunspellSuggestions[1]) && !shouldReplace(text: text, greekText: greekText, guess: hunspellSuggestions[0]) )
-            {
-                return [
-                suggestion(text, verbatim:true),
-                suggestion(hunspellSuggestions[1], willReplace:true),
-                suggestion(hunspellSuggestions[0])
-                ]
-            }
+            } 
             return [
                 suggestion(text, verbatim:true),
                 suggestion(hunspellSuggestions[0], willReplace:shouldReplace(text: text, greekText: greekText, guess: hunspellSuggestions[0])),
