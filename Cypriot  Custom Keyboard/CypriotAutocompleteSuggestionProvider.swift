@@ -665,11 +665,16 @@ private extension AutocompleteSuggestionProvider {
         var suggestions_ptr: UnsafeMutablePointer<UnsafeMutablePointer<CChar>?>? = nil
         let suggestions_ptr_0 = suggestions_ptr
         print(greekText)
-        let suggestCount = Hunspell_suggest(speller,&suggestions_ptr, greekText)
+        let isCapitalFirst = greekText != greekText.lowercased() && greekText.suffix(greekText.count-1) == greekText.lowercased().suffix(greekText.count-1)
+        let suggestCount = Hunspell_suggest(speller,&suggestions_ptr, isCapitalFirst ? greekText.lowercased() : greekText)
         var hunspellSuggestions: [String] = []
         if suggestions_ptr != nil {
             while let s = suggestions_ptr?.pointee, hunspellSuggestions.count<suggestCount {
-                hunspellSuggestions.append(String(cString: s))
+                var suggestionString = String(cString: s)
+                if isCapitalFirst {
+                    suggestionString = suggestionString.prefix(1).uppercased() + suggestionString.suffix(suggestionString.count-1)
+                }
+                hunspellSuggestions.append(suggestionString)
                     free(s)
                     suggestions_ptr=suggestions_ptr?.advanced(by: 1)
             }

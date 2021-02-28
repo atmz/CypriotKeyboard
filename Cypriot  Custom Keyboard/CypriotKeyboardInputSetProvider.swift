@@ -28,8 +28,8 @@ open class CypriotKeyboardInputSetProvider: KeyboardInputSetProvider, DeviceSpec
     public var localeKey: String = "el_GR"
     
     public func numericInputSet() -> NumericKeyboardInputSet {
-        let phoneCenter: [String] = "-/:;()".chars + ["kr"] + "&@“".chars
-        let padCenter: [String] = "@#".chars + ["kr"] + "&*()’”+•".chars
+        let phoneCenter: [String] = "-/:·()€&@“".chars
+        let padCenter: [String] = "@#€&*()’”+·".chars
         return NumericKeyboardInputSet(rows: [
             row(phone: "1234567890", pad: "1234567890`"),
             row(device.userInterfaceIdiom == .phone ? phoneCenter : padCenter),
@@ -40,7 +40,7 @@ open class CypriotKeyboardInputSetProvider: KeyboardInputSetProvider, DeviceSpec
     public func symbolicInputSet() -> SymbolicKeyboardInputSet {
         SymbolicKeyboardInputSet(rows: [
             row(phone: "[]{}#%^*+=", pad: "1234567890´"),
-            row(phone: "_\\|~<>€$¥•", pad: "€$£^[]{}—˚…"),
+            row(phone: "_\\;~<>$£¥·", pad: "€$£^[]{}—˚…"),
             row(phone: ".,?!’", pad: "§|~≠\\<>!?")
         ])
     }

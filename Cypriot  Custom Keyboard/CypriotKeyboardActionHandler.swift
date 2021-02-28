@@ -34,7 +34,6 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
         triggerAudioFeedback(for: gesture, on: action, sender: sender)
         triggerHapticFeedback(for: gesture, on: action, sender: sender)
         autocompleteAction()
-        tryEndSentence(after: gesture, on: action)
         tryRegisterEmoji(after: gesture, on: action)
         tryEndSentence(after: gesture, on: action)
         tryChangeKeyboardType(after: gesture, on: action)
@@ -43,9 +42,24 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
 
     
      func triggerSpaceAutocomplete(for gesture: KeyboardGesture, on action: KeyboardAction, sender: Any?) {
-        if  action != .space { return }
-        //todo: also handle punctuation
         guard let context = cypriotInputViewController?.keyboardContext else { return }
+        let text = context.textDocumentProxy.documentContextBeforeInput
+        guard let char = text?.last else { return }
+        if  (!(action == .character(".")) &&
+            !(action == .character(",")) &&
+                !(action == .character(";")) &&
+                !(action == .character(":")) &&
+                !(action == .character("·")) &&
+                !(action == .character("!")) &&
+                !(action == .character("?")) &&
+                !(action == .character("]")) &&
+                !(action == .character(")")) &&
+                !(action == .character("\"")) &&
+             !(action == .space)
+        )
+                { return }
+        //todo: also handle punctuation
+
         
         guard let guess = cypriotInputViewController?.currentGuess else { return }
         guard  guess.additionalInfo.keys.contains("willReplace") else { return }
@@ -71,7 +85,7 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
         {*/
         context.textDocumentProxy.replaceCurrentWord(with: guess.replacement)
 
-        context.textDocumentProxy.insertText(" ")
+        context.textDocumentProxy.insertText(String(char))
     }
     
     func triggerAccent(for gesture: KeyboardGesture, on action: KeyboardAction, sender: Any?) {
@@ -111,10 +125,17 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
     }
 
     func handleS(for gesture: KeyboardGesture, on action: KeyboardAction, sender: Any?) {
+        if(!action.isInputAction || action == .character("🔄")) {
+            return
+        }
         guard let context = cypriotInputViewController?.keyboardContext else { return }
-        if let newWord = context.textDocumentProxy.currentWord?.replacingOccurrences(of: "ς", with: "σ") {
-            context.textDocumentProxy.replaceCurrentWord(with: newWord)
-            }
+        let word = context.textDocumentProxy.currentWord
+        guard let char = word?.last else { return }
+        if char.isLetter {
+            if let newWord = context.textDocumentProxy.currentWord?.replacingOccurrences(of: "ς", with: "σ") {
+                context.textDocumentProxy.replaceCurrentWord(with: newWord)
+                }
+        }
         if(action == .character("σ")) {
             context.textDocumentProxy.deleteBackward()
             context.textDocumentProxy.insertText("ς")
