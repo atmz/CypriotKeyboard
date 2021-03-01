@@ -101,7 +101,7 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
                     context.textDocumentProxy.replaceCurrentWord(with: newWord)
                 }
             }
-            if ["σ","ζ","ξ","ψ"].contains(char.lowercased()) {
+            if ["σ","ζ","ξ","ψ","ς"].contains(char.lowercased()) {
                 if var newWord = word  {
                     newWord+="\u{306}"
                     print(newWord)
@@ -132,7 +132,7 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
         let word = context.textDocumentProxy.currentWord
         guard let char = word?.last else { return }
         if char.isLetter {
-            if let newWord = context.textDocumentProxy.currentWord?.replacingOccurrences(of: "ς", with: "σ") {
+            if let newWord = context.textDocumentProxy.currentWord?.replacingOccurrences(of: "ς", with: "σ").replacingOccurrences(of: "ς̆", with: "σ̆") {
                 context.textDocumentProxy.replaceCurrentWord(with: newWord)
                 }
         }

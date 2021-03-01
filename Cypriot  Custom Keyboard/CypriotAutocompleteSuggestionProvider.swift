@@ -361,6 +361,7 @@ class CypriotAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
                        "ξέρουν",
                        "ξέρω",
                        "ξανά",
+                       "οι",
                        "οικογένεια",
                        "ολάν",
                        "οποία",
@@ -483,16 +484,16 @@ class CypriotAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
                        "τελευταία",
                        "τελικά",
                        "τες",
-                       "τζαι",
-                       "τζαιρόν",
-                       "τζείνα",
-                       "τζείνη",
-                       "τζείνην",
-                       "τζείνοι",
-                       "τζείνον",
-                       "τζείνος",
-                       "τζείνους",
-                       "τζι",
+                       "τζ̆αι",
+                       "τζ̆αιρόν",
+                       "τζ̆είνα",
+                       "τζ̆είνη",
+                       "τζ̆είνην",
+                       "τζ̆είνοι",
+                       "τζ̆είνον",
+                       "τζ̆είνος",
+                       "τζ̆είνους",
+                       "τζ̆ι",
                        "τζιαι",
                        "τζιαιρόν",
                        "τζιαμέ",
@@ -682,12 +683,15 @@ private extension AutocompleteSuggestionProvider {
             print(hunspellSuggestions)
         }
         var commonMatch : String? = nil
+        
         for suggestion in hunspellSuggestions {
-            if commonWords.contains(suggestion) {
+            if(shouldReplace(text: text, greekText: greekText, guess: suggestion)) {
                 commonMatch = suggestion
                 break
             }
-            if(shouldReplace(text: text, greekText: greekText, guess: suggestion)) {
+        }
+        for suggestion in hunspellSuggestions {
+            if commonWords.contains(suggestion.lowercased()) {
                 commonMatch = suggestion
                 break
             }
@@ -705,7 +709,7 @@ private extension AutocompleteSuggestionProvider {
                     hunspellSuggestions[0] != commonMatchString ? suggestion(hunspellSuggestions[0]) : suggestion(hunspellSuggestions[1])
                 ]
             // Second suggestion is exact match except for accents, use it
-            } 
+            }
             return [
                 suggestion(text, verbatim:true),
                 suggestion(hunspellSuggestions[0], willReplace:shouldReplace(text: text, greekText: greekText, guess: hunspellSuggestions[0])),

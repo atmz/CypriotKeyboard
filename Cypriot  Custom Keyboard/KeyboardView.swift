@@ -8,6 +8,7 @@
 
 import SwiftUI
 import KeyboardKit
+import UIKit
 
 /**
  This view is the main view that is used by the extension by
@@ -56,8 +57,7 @@ private extension KeyboardView {
     func autocompleteBarButton(for suggestion: AutocompleteSuggestion) -> AnyView {
         let shouldHighlight = suggestion.additionalInfo.keys.contains("willReplace")
         if shouldHighlight {
-            let highlightColor = UITraitCollection().userInterfaceStyle == .dark  ? Color.init(white: 0.95) : Color.init(white: 0.30)
-            
+            let highlightColor = Color(UIColor.systemGray3)
             return AnyView(VStack(spacing: 0) {
                 Text(suggestion.title).font(.callout)
             }.frame(maxWidth: .infinity, maxHeight: 42) .background(RoundedRectangle(cornerRadius: 5.0).fill(highlightColor)))

@@ -46,17 +46,16 @@ SET UTF-8
 # that the word you are looking for exists).
 TRY άόίϊΐέήύϋΰώιηυωοεατνρσσ̆κμπλςγδθφβζζ̆ξψχ
 
-MAP 8
+MAP 7
 MAP ηήύυιί(ει)(οι)(εί)(οί)
 MAP j(τζ)(τ)(τζ̆)
-MAP (αί)(αι)(αϊ)(άι)
 MAP αά
-MAP εέ
+MAP εέ(αί)(αι)(αϊ)(άι)
 MAP ωώοό
 MAP σςσ̆
 MAP wω
 
-
+FORBIDDENWORD τζ̆ε
 # Do we have to put the accented characters in here or the MAP above is enough?
 # ANSWER: Looks like it is not! Maybe the map is only useful for the
 # suggestion order...
