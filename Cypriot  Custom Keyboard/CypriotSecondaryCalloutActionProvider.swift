@@ -22,7 +22,7 @@ public class CypriotSecondaryCalloutActionProvider: BaseSecondaryCalloutActionPr
             return actions
         }
         if action.isιLower {
-            actions.insert(.character("ι-"), at: 2)
+            actions.insert(.character("ι-"), at: 4)
             return actions
         }
         return actions
@@ -38,6 +38,7 @@ public class CypriotSecondaryCalloutActionProvider: BaseSecondaryCalloutActionPr
         case "?": return "?¿"
         case "!": return "!¡"
         case "'", "’": return "'’‘`"
+        case "΄": return "΄ ̈΅"
             
         case "%": return "%‰"
         case "=": return "=≠≈"
@@ -46,8 +47,12 @@ public class CypriotSecondaryCalloutActionProvider: BaseSecondaryCalloutActionPr
         case "ξ": return "ξξ̌"
         case "σ": return "σςσ̆"
         case "α": return "αά"
+        case "ε": return "εέ"
+        case "ι" : return "ιίϊΐ"
+        case "η" : return "ηή"
+        case "υ" : return "υύϋΰ"
         case "ο": return "οόὀὄ"
-        case "ι" : return "ιί"
+        case "ω" : return "ωώ"
         
         default: return ""
         }

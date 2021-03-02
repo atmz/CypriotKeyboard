@@ -90,25 +90,45 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
     
     func triggerAccent(for gesture: KeyboardGesture, on action: KeyboardAction, sender: Any?) {
         guard let context = cypriotInputViewController?.keyboardContext else { return }
-        if(action == .character("΄") || action == .character("˘")) {
+        if(
+            action == .character("΄") ||
+            action == .character("˘") ||
+            action == .character(" ̈") ||
+            action == .character("΅")
+        ) {
             context.textDocumentProxy.deleteBackward()
             let word = context.textDocumentProxy.currentWord
             guard let char = word?.last else { return }
-            if ["α","ε","ι","η","υ","ο","ω"].contains(char.lowercased()) {
                 if var newWord = word  {
-                    newWord+="\u{301}"
+                    switch action {
+                    case .character("˘"):
+                    if ["σ","ζ","ξ","ψ","ς"].contains(char.lowercased()) {
+                        if var newWord = word  {
+                            newWord+="\u{306}"
+                        }
+                    }
+                    case .character(" ̈"):
+                        if ["ι","ί","υ","ύ"].contains(char.lowercased()) {
+                            newWord+="\u{308}"
+                        }
+                    case .character("΅"):
+                        if ["ι","υ"].contains(char.lowercased()) {
+                            newWord+="\u{308}\u{301}"
+                        }
+                        else if ["ϊ","ϋ"].contains(char.lowercased()) {
+                            newWord+="\u{301}"
+                        }
+                        else if ["ί","ύ"].contains(char.lowercased()) {
+                            newWord+="\u{308}"
+                        }
+                    default:
+                        if ["α","ε","ι","η","υ","ο","ω","ϋ","ϊ","ὀ"].contains(char.lowercased()) {
+                            newWord+="\u{301}"
+                        }
+                    }
                     print(newWord)
                     context.textDocumentProxy.replaceCurrentWord(with: newWord)
                 }
-            }
-            if ["σ","ζ","ξ","ψ","ς"].contains(char.lowercased()) {
-                if var newWord = word  {
-                    newWord+="\u{306}"
-                    print(newWord)
-                    context.textDocumentProxy.replaceCurrentWord(with: newWord)
-                }
-            }
-           
         }
     }
     

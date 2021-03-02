@@ -33,15 +33,15 @@ open class CypriotKeyboardInputSetProvider: KeyboardInputSetProvider, DeviceSpec
         return NumericKeyboardInputSet(rows: [
             row(phone: "1234567890", pad: "1234567890`"),
             row(device.userInterfaceIdiom == .phone ? phoneCenter : padCenter),
-            row(phone: ".,?!’", pad: "%_-=/;:,.")
+            row(phone: ".,;!’", pad: "%_-=/;:,.")
         ])
     }
     
     public func symbolicInputSet() -> SymbolicKeyboardInputSet {
         SymbolicKeyboardInputSet(rows: [
             row(phone: "[]{}#%^*+=", pad: "1234567890´"),
-            row(phone: "_\\;~<>$£¥·", pad: "€$£^[]{}—˚…"),
-            row(phone: ".,?!’", pad: "§|~≠\\<>!?")
+            row(phone: "_\\?~<>$£¥·", pad: "€$£^[]{}—˚…"),
+            row(phone: ".,;!’", pad: "§|~≠\\<>!?")
         ])
     }
     
