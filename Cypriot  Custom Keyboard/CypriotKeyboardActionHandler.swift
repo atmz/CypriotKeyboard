@@ -103,9 +103,7 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
                     switch action {
                     case .character("˘"):
                     if ["σ","ζ","ξ","ψ","ς"].contains(char.lowercased()) {
-                        if var newWord = word  {
-                            newWord+="\u{306}"
-                        }
+                        newWord+="\u{306}"
                     }
                     case .character(" ̈"):
                         if ["ι","ί","υ","ύ"].contains(char.lowercased()) {

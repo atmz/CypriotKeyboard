@@ -19,5 +19,12 @@ class CypriotKeyboardiPhoneLayoutProvider : iPhoneKeyboardLayoutProvider {
         result.append(.return) // TODO: Should be "primary"
         return result
     }
+    var charButtonWidth: KeyboardLayoutItemWidth { .percentage(0.1) }
     
+    override func itemSizeWidth(for context: KeyboardContext, action: KeyboardAction, row: Int, index: Int) -> KeyboardLayoutItemWidth {
+        switch action {
+        case .character: return charButtonWidth
+        default: return super.itemSizeWidth(for: context, action: action, row: row, index: index)
+        }
+    }
 }
