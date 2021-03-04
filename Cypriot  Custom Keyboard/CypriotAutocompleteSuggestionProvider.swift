@@ -17,6 +17,7 @@ import hunspell
  */
 class CypriotAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
     
+    
     let commonWords = ["άλλα",
                        "άλλες",
                        "άλλη",
@@ -43,7 +44,6 @@ class CypriotAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
                        "έκαμεν",
                        "έκαμνεν",
                        "έκανε",
-                       "έν",
                        "ένα",
                        "έναν",
                        "ένας",
@@ -114,7 +114,6 @@ class CypriotAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
                        "γίνεται",
                        "γεναίκα",
                        "γενικά",
-                       "γι",
                        "για",
                        "γιατί",
                        "γινεί",
@@ -122,7 +121,6 @@ class CypriotAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
                        "γράψω",
                        "γυναίκα",
                        "γυναίκες",
-                       "γω",
                        "γύρω",
                        "δέκα",
                        "δίπλα",
@@ -178,7 +176,6 @@ class CypriotAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
                        "εμείς",
                        "εν",
                        "εννά",
-                       "εννα",
                        "εντάξει",
                        "εντελώς",
                        "ενός",
@@ -200,7 +197,6 @@ class CypriotAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
                        "θέση",
                        "θα",
                        "θκυο",
-                       "θκυό",
                        "θωρεί",
                        "θωρώ",
                        "ιδέα",
@@ -240,7 +236,6 @@ class CypriotAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
                        "καλόν",
                        "καμιά",
                        "καμιάν",
-                       "καν",
                        "κανένα",
                        "κανέναν",
                        "κανένας",
@@ -250,8 +245,6 @@ class CypriotAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
                        "καταλάβω",
                        "καφέ",
                        "κεφάλι",
-                       "κι",
-                       "κλπ",
                        "κοινωνία",
                        "κοντά",
                        "κοπελλούθκια",
@@ -388,7 +381,6 @@ class CypriotAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
                        "παιδί",
                        "παιδιά",
                        "παλιά",
-                       "παν",
                        "παρά",
                        "παρέα",
                        "παραπάνω",
@@ -529,7 +521,6 @@ class CypriotAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
                        "τύπος",
                        "τύπου",
                        "τώρα",
-                       "υγ",
                        "υπάρχει",
                        "υπάρχουν",
                        "φάει",
@@ -593,15 +584,16 @@ class CypriotAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
             self.speller = Hunspell_create(affPath, dicPath)
         }
     }
+    
     func autocompleteSuggestions(for text: String, completion: (AutocompleteResult) -> Void) {
         guard text.count > 0 else { return completion(.success([])) }
-        completion(.success(self.suggestions(for: text, speller:self.speller, commonWords: self.commonWords)))
+        completion(.success(self.suggestions(for: text, speller:self.speller, isFirstWordInSentence:false, commonWords: self.commonWords)))
     }
     
-    func asyncAutocompleteSuggestions(for text: String,  completion: @escaping AutocompleteResponse) {
+    func asyncAutocompleteSuggestions(for text: String, isFirstWordInSentence: Bool, completion: @escaping AutocompleteResponse) {
         guard text.count > 0 else { return completion(.success([])) }
         DispatchQueue.global().async {
-            completion(.success(self.suggestions(for: text, speller:self.speller, commonWords: self.commonWords)))
+            completion(.success(self.suggestions(for: text, speller:self.speller, isFirstWordInSentence:isFirstWordInSentence, commonWords: self.commonWords)))
         }
     }
 }
@@ -677,28 +669,55 @@ private extension AutocompleteSuggestionProvider {
         }
     }
     
-    func suggestions(for text: String, speller:OpaquePointer?, commonWords:[String]) -> [CypriotAutocompleteSuggestion] {
+    func suggestions(for text: String, speller:OpaquePointer?, isFirstWordInSentence:Bool, commonWords:[String]) -> [CypriotAutocompleteSuggestion] {
         guard speller != nil else { return [] }
         let greekText = greekify(text: text)
         var suggestions_ptr: UnsafeMutablePointer<UnsafeMutablePointer<CChar>?>? = nil
         let suggestions_ptr_0 = suggestions_ptr
-        print(greekText)
+        
+        /* Three cases to consider:
+         a) If word is lowercase, check lowercase suggestions
+         b) if word is not the first word in the sentence and starts with an uppercase letter,
+         check 'proper noun' suggestions
+         c) For first word in sentence, we can't tell so check both and interleave
+         */
         let isCapitalFirst = greekText != greekText.lowercased() && greekText.suffix(greekText.count-1) == greekText.lowercased().suffix(greekText.count-1)
-        let suggestCount = Hunspell_suggest(speller,&suggestions_ptr, isCapitalFirst ? greekText.lowercased() : greekText)
+        let shouldCheckLowercase = isFirstWordInSentence && isCapitalFirst
+        
+        let suggestCount = Hunspell_suggest(speller,&suggestions_ptr, greekText)
+        
+        print(greekText, isFirstWordInSentence, shouldCheckLowercase)
         var hunspellSuggestions: [String] = []
         if suggestions_ptr != nil {
             while let s = suggestions_ptr?.pointee, hunspellSuggestions.count<suggestCount {
-                var suggestionString = String(cString: s)
-                if isCapitalFirst {
-                    suggestionString = suggestionString.prefix(1).uppercased() + suggestionString.suffix(suggestionString.count-1)
-                }
-                hunspellSuggestions.append(suggestionString)
-                    free(s)
-                    suggestions_ptr=suggestions_ptr?.advanced(by: 1)
+                hunspellSuggestions.append( String(cString: s))
+                free(s)
+                suggestions_ptr=suggestions_ptr?.advanced(by: 1)
             }
             free(suggestions_ptr_0)
             print(hunspellSuggestions)
         }
+        // Case where we also should check lowercase
+        if(shouldCheckLowercase) {
+            var suggestions_ptr: UnsafeMutablePointer<UnsafeMutablePointer<CChar>?>? = nil
+            let suggestions_ptr_0_lowercase = suggestions_ptr
+            let suggestCount = Hunspell_suggest(speller,&suggestions_ptr, greekText.lowercased())
+            if suggestions_ptr != nil {
+                var i = 0
+                while let s = suggestions_ptr?.pointee, i<suggestCount {
+                    var suggestionString = String(cString: s)
+                    suggestionString = suggestionString.prefix(1).uppercased() + suggestionString.suffix(suggestionString.count-1)
+                        // Interleave lowercase/uppercase suggestions
+                        hunspellSuggestions.insert(suggestionString, at: i*2)
+                        free(s)
+                        suggestions_ptr=suggestions_ptr?.advanced(by: 1)
+                        i+=1
+                }
+                free(suggestions_ptr_0_lowercase)
+                print(hunspellSuggestions)
+            }
+        }
+        
         var priorityMatch : String? = nil
         
         for suggestion in hunspellSuggestions {
@@ -761,69 +780,94 @@ private extension AutocompleteSuggestionProvider {
     private func greekify(text:String)  -> String {
         return text
             .replacingOccurrences(of: "sh", with: "σ̆")
-            //.replacingOccurrences(of: "sh", with: "σι")
-            //.replacingOccurrences(of: "j", with: "τž")
-            .replacingOccurrences(of: "j", with: "τζ̆")
+            .replacingOccurrences(of: "Sh", with: "Σ̆")
+            
             .replacingOccurrences(of: "ch", with: "τσ̆")
-            .replacingOccurrences(of: "ev", with: "ευ")
+            .replacingOccurrences(of: "Ch", with: "Τσ̆")
+            
             .replacingOccurrences(of: "ps", with: "ψ")
-            .replacingOccurrences(of: "ks", with: "ξ")
-        //.replacingOccurrences(of: "sh", with: "σι")
-            .replacingOccurrences(of: "Th", with: "Θ")
-            .replacingOccurrences(of: "Ef", with: "Ευ")
             .replacingOccurrences(of: "Ps", with: "Ψ")
+            .replacingOccurrences(of: "ks", with: "ξ")
             .replacingOccurrences(of: "Ks", with: "Ξ")
-            .replacingOccurrences(of: "Sh", with: "Σι")
+            
+            .replacingOccurrences(of: "Th", with: "Θ")
+            .replacingOccurrences(of: "th", with: "θ")
+            
+            .replacingOccurrences(of: "j", with: "τζ̆")
+            .replacingOccurrences(of: "J", with: "Τζ̆")
+            
             .replacingOccurrences(of: "a", with: "α")
-            .replacingOccurrences(of: "i", with: "ι")
-            .replacingOccurrences(of: "e", with: "ε")
-            .replacingOccurrences(of: "o", with: "ο")
-            .replacingOccurrences(of: "u", with: "υ")
-            .replacingOccurrences(of: "y", with: "γ")
-            .replacingOccurrences(of: "w", with: "ω")
-            .replacingOccurrences(of: "r", with: "ρ")
-            .replacingOccurrences(of: "t", with: "τ")
-            .replacingOccurrences(of: "p", with: "π")
-            .replacingOccurrences(of: "s", with: "σ")
-            .replacingOccurrences(of: "d", with: "δ")
-            .replacingOccurrences(of: "f", with: "φ")
-            .replacingOccurrences(of: "g", with: "γ")
-            .replacingOccurrences(of: "h", with: "η")
-            .replacingOccurrences(of: "j", with: "τζ")
-            .replacingOccurrences(of: "k", with: "κ")
-            .replacingOccurrences(of: "l", with: "λ")
-            .replacingOccurrences(of: "z", with: "ζ")
-            .replacingOccurrences(of: "x", with: "χ")
-            .replacingOccurrences(of: "c", with: "κ")
-            .replacingOccurrences(of: "v", with: "β")
-            .replacingOccurrences(of: "b", with: "μπ")
-            .replacingOccurrences(of: "n", with: "ν")
-            .replacingOccurrences(of: "m", with: "μ")
             .replacingOccurrences(of: "A", with: "Α")
+            
+            .replacingOccurrences(of: "i", with: "ι")
             .replacingOccurrences(of: "I", with: "Ι")
+            
+            .replacingOccurrences(of: "e", with: "ε")
             .replacingOccurrences(of: "E", with: "Ε")
+            
+            .replacingOccurrences(of: "o", with: "ο")
             .replacingOccurrences(of: "O", with: "Ο")
+            
+            .replacingOccurrences(of: "u", with: "υ")
             .replacingOccurrences(of: "U", with: "Υ")
+            
+            .replacingOccurrences(of: "y", with: "γ")
             .replacingOccurrences(of: "Y", with: "Γ")
+            
+            .replacingOccurrences(of: "w", with: "ω")
             .replacingOccurrences(of: "W", with: "Ω")
+            
+            .replacingOccurrences(of: "r", with: "ρ")
             .replacingOccurrences(of: "R", with: "Ρ")
+            
+            .replacingOccurrences(of: "t", with: "τ")
             .replacingOccurrences(of: "T", with: "Τ")
+            
+            .replacingOccurrences(of: "p", with: "π")
             .replacingOccurrences(of: "P", with: "Π")
+            
+            .replacingOccurrences(of: "s", with: "σ")
             .replacingOccurrences(of: "S", with: "Σ")
+            
+            .replacingOccurrences(of: "d", with: "δ")
             .replacingOccurrences(of: "D", with: "Δ")
+            
+            .replacingOccurrences(of: "f", with: "φ")
             .replacingOccurrences(of: "F", with: "Φ")
+            
+            .replacingOccurrences(of: "g", with: "γ")
             .replacingOccurrences(of: "G", with: "Γ")
+            
+            .replacingOccurrences(of: "h", with: "η")
             .replacingOccurrences(of: "H", with: "Η")
-            .replacingOccurrences(of: "J", with: "Τζ")
+            
+            .replacingOccurrences(of: "k", with: "κ")
             .replacingOccurrences(of: "K", with: "Κ")
+            
+            .replacingOccurrences(of: "l", with: "λ")
             .replacingOccurrences(of: "L", with: "Λ")
+            
+            .replacingOccurrences(of: "z", with: "ζ")
             .replacingOccurrences(of: "Z", with: "Ζ")
+            
+            .replacingOccurrences(of: "x", with: "χ")
             .replacingOccurrences(of: "X", with: "Χ")
+            
+            .replacingOccurrences(of: "c", with: "κ")
             .replacingOccurrences(of: "C", with: "Κ")
+            
+            .replacingOccurrences(of: "v", with: "β")
             .replacingOccurrences(of: "V", with: "Β")
+            
+            .replacingOccurrences(of: "b", with: "μπ")
             .replacingOccurrences(of: "B", with: "Μπ")
+            
+            .replacingOccurrences(of: "n", with: "ν")
             .replacingOccurrences(of: "N", with: "Ν")
+            
+            .replacingOccurrences(of: "m", with: "μ")
             .replacingOccurrences(of: "M", with: "Μ")
+            
     }
     
 }

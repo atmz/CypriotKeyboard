@@ -44,7 +44,7 @@ SET UTF-8
 # unlikely for a word that differs in one accented char plus some other mistake
 # to pop up in the possible suggestions (there has to be a closer match granted
 # that the word you are looking for exists).
-TRY άόίϊΐέήύϋΰώιηυωοεατνρσσ̆κμπλςγδθφβζζ̆ξψχ
+TRY άόίϊΐέήύϋΰώιηυωοεατνρσσ̆κμπλςγδθφβζ̆ζξψχ
 
 MAP 7
 MAP ηήύυιί(ει)(οι)(εί)(οί)ΐϊϋΰ
@@ -56,7 +56,6 @@ MAP ωώοό
 MAP σςσ̆
 
 FORBIDDENWORD τζ̆ε
-
 
 # Do we have to put the accented characters in here or the MAP above is enough?
 # ANSWER: Looks like it is not! Maybe the map is only useful for the

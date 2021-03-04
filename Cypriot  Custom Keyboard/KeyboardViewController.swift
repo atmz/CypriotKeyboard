@@ -82,13 +82,17 @@ class KeyboardViewController: KeyboardInputViewController {
     
     private lazy var autocompleteProvider = CypriotAutocompleteSuggestionProvider()
     
+    private func isFirstWordInSentence(word: String) -> Bool{
+        guard let currentSentence = textDocumentProxy.currentSentenceBeforeInput else { return true }
+        return currentSentence.trimmed() == word.trimmed()
+    }
     override func performAutocomplete() {
         guard let word = textDocumentProxy.currentWord else { return resetAutocomplete() }
         self.currentGuess = nil
         self.autocompleteCount += 1
         //autompleteLock serves to prevent race conditions/out of order autocompletes by ingoring results if a newer autocomoplete has started
         let autompleteLock = self.autocompleteCount
-        autocompleteProvider.asyncAutocompleteSuggestions(for: word) { [weak self] result in
+        autocompleteProvider.asyncAutocompleteSuggestions(for: word, isFirstWordInSentence: isFirstWordInSentence(word: word)) { [weak self] result in
             switch result {
             case .failure(let error): print(error.localizedDescription)
             case .success(let result):
@@ -112,4 +116,29 @@ class KeyboardViewController: KeyboardInputViewController {
         autocompleteContext.suggestions = []
     }
     
+}
+
+public extension UITextDocumentProxy {
+    
+    /**
+     The last ended sentence right before the cursor, if any.
+     */
+    var currentSentenceBeforeInput: String? {
+        guard !isCursorAtNewSentence else { return nil }
+        guard let context = documentContextBeforeInput else { return nil }
+        let components = context.split(by: sentenceDelimiters).filter { !$0.isEmpty }
+        return components.last
+    }
+}
+
+private extension String {
+    
+    func split(by separators: [String]) -> [String] {
+        let separators = CharacterSet(charactersIn: separators.joined())
+        return components(separatedBy: separators)
+    }
+    
+    func trimmed() -> String {
+        trimmingCharacters(in: .whitespaces)
+    }
 }
