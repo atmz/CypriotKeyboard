@@ -55,7 +55,8 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
                 !(action == .character("]")) &&
                 !(action == .character(")")) &&
                 !(action == .character("\"")) &&
-             !(action == .space)
+                !(action == .space) &&
+                !(action == .return)
         )
                 { return }
         //todo: also handle punctuation
