@@ -639,8 +639,8 @@ private extension AutocompleteSuggestionProvider {
     func countSyllables(text: String) -> Int {
         var count = 0
         let vowels = "αειυηοω"
-        var last=Character(" ")
-        for letter in text {
+        var last=Character("Q")
+        for letter in text.lowercased() {
             if vowels.contains(letter) && !vowels.contains(last) {
                 count+=1
             }
@@ -726,6 +726,20 @@ private extension AutocompleteSuggestionProvider {
                 break
             }
         }
+        //add prefix check?
+        // hunspell sucks with this
+        /*
+        for suggestion in hunspellSuggestions{
+            if suggestion.count-1 == greekText.count {
+                let trimmedSuggestion = String(suggestion.prefix(suggestion.count-1))
+                print("trimmedSuggestion", suggestion,trimmedSuggestion)
+                if(shouldReplace(text: text, greekText: greekText, guess: trimmedSuggestion)) {
+                    priorityMatch = suggestion
+                    break
+                }
+            }
+        }*/
+        
         if text != greekText {
             //if we're not in greek, there will be more variation and we use common words
             for suggestion in hunspellSuggestions {
