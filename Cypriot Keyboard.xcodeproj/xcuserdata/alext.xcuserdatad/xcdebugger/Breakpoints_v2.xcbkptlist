@@ -78,8 +78,8 @@
             filePath = "Cypriot  Custom Keyboard/CypriotAutocompleteSuggestionProvider.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "670"
-            endingLineNumber = "670"
+            startingLineNumber = "687"
+            endingLineNumber = "687"
             landmarkName = "suggestions(for:speller:commonWords:)"
             landmarkType = "7">
          </BreakpointContent>

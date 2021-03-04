@@ -644,12 +644,29 @@ func getOverrideMatch(for text:String) -> String?{
 
 private extension AutocompleteSuggestionProvider {
 
+    func countSyllables(text: String) -> Int {
+        var count = 0
+        let vowels = "αειυηοω"
+        var last=Character(" ")
+        for letter in text {
+            if vowels.contains(letter) && !vowels.contains(last) {
+                count+=1
+            }
+            last = letter
+        }
+        return count
+            
+        
+    }
     
     func shouldReplace(text: String, greekText: String, guess: String)-> Bool{
         // we don't have context here, this will only be true if all characters in the
         // word are greek
         if(text == greekText) {
-            // Only replace in Greek if accent-only change
+            // Only replace in Greek if accent-only change, and >1 syllable
+            if countSyllables(text:text)<2 {
+                return false
+            }
             let accentlessWord = text.folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR"))
             let accentlessGuess = guess.folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR"))
             // If words are the same without accents, and guess has accents, replace
@@ -682,31 +699,34 @@ private extension AutocompleteSuggestionProvider {
             free(suggestions_ptr_0)
             print(hunspellSuggestions)
         }
-        var commonMatch : String? = nil
+        var priorityMatch : String? = nil
         
         for suggestion in hunspellSuggestions {
             if(shouldReplace(text: text, greekText: greekText, guess: suggestion)) {
-                commonMatch = suggestion
+                priorityMatch = suggestion
                 break
             }
         }
-        for suggestion in hunspellSuggestions {
-            if commonWords.contains(suggestion.lowercased()) {
-                commonMatch = suggestion
-                break
+        if text != greekText {
+            //if we're not in greek, there will be more variation and we use common words
+            for suggestion in hunspellSuggestions {
+                if commonWords.contains(suggestion.lowercased()) {
+                    priorityMatch = suggestion
+                    break
+                }
             }
         }
         let suggestionsToShow = min(2, hunspellSuggestions.count)
         switch suggestionsToShow {
         case 2:
             // Common word match or match except for accents, ignore hunspell ordering and suggest it
-            if let commonMatchString = commonMatch {
+            if let priorityMatchString = priorityMatch {
                     print("common match")
-                    print(commonMatchString)
+                    print(priorityMatchString)
                 return [
                     suggestion(text, verbatim:true),
-                    suggestion(commonMatchString, willReplace:shouldReplace(text: text, greekText: greekText, guess: commonMatchString)),
-                    hunspellSuggestions[0] != commonMatchString ? suggestion(hunspellSuggestions[0]) : suggestion(hunspellSuggestions[1])
+                    suggestion(priorityMatchString, willReplace:shouldReplace(text: text, greekText: greekText, guess: priorityMatchString)),
+                    hunspellSuggestions[0] != priorityMatchString ? suggestion(hunspellSuggestions[0]) : suggestion(hunspellSuggestions[1])
                 ]
             // Second suggestion is exact match except for accents, use it
             }
@@ -740,11 +760,11 @@ private extension AutocompleteSuggestionProvider {
     
     private func greekify(text:String)  -> String {
         return text
-            //.replacingOccurrences(of: "sh", with: "σ̆σ̆")
-            .replacingOccurrences(of: "sh", with: "σι")
+            .replacingOccurrences(of: "sh", with: "σ̆")
+            //.replacingOccurrences(of: "sh", with: "σι")
             //.replacingOccurrences(of: "j", with: "τž")
-            .replacingOccurrences(of: "j", with: "τζ")
-            //.replacingOccurrences(of: "ch", with: "τσ̆")
+            .replacingOccurrences(of: "j", with: "τζ̆")
+            .replacingOccurrences(of: "ch", with: "τσ̆")
             .replacingOccurrences(of: "ev", with: "ευ")
             .replacingOccurrences(of: "ps", with: "ψ")
             .replacingOccurrences(of: "ks", with: "ξ")
