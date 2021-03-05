@@ -55,7 +55,7 @@ struct ContentView: View {
             Text(NSLocalizedString("Click 🔄 to switch between Latin and Greek alphabets", comment: "Click 🔄 to switch between Latin and Greek alphabets")).multilineTextAlignment(.leading).padding([.top, .leading, .trailing])
             Text(NSLocalizedString( "The bar above the keyboard shows the current suggestions. When you pless 'Space', the middle suggestion will be used", comment: "The bar above the keyboard shows the current suggestions. When you pless 'Space', the middle suggestion will be used")).multilineTextAlignment(.leading).padding([.top, .leading, .trailing])
         }
-            TextField(NSLocalizedString("Test Here", comment: "Test Here"), text: $textTyped)
+            TextField(NSLocalizedString("Test Here", comment: "Test Here"), text: $textTyped).padding([ .leading])
             Spacer()
         }
     }
