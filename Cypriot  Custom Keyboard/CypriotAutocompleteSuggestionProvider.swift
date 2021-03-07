@@ -708,7 +708,8 @@ private extension AutocompleteSuggestionProvider {
                     var suggestionString = String(cString: s)
                     suggestionString = suggestionString.prefix(1).uppercased() + suggestionString.suffix(suggestionString.count-1)
                         // Interleave lowercase/uppercase suggestions
-                        hunspellSuggestions.insert(suggestionString, at: i*2)
+                    let insertPoint = (i*2 >= hunspellSuggestions.count) ? hunspellSuggestions.endIndex : i*2
+                        hunspellSuggestions.insert(suggestionString, at: insertPoint)
                         free(s)
                         suggestions_ptr=suggestions_ptr?.advanced(by: 1)
                         i+=1
