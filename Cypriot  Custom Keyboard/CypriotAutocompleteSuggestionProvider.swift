@@ -8,13 +8,6 @@
 import Foundation
 import KeyboardKit
 import hunspell
-
-/**
- This demo provider simply returns the current word suffixed
- with "ly", "er" and "ter".
- 
- This class is shared between the demo app and all keyboards.
- */
 class CypriotAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
     
     
@@ -575,6 +568,7 @@ class CypriotAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
     
     
     var speller : OpaquePointer?
+    
     init() {
         
         let dicPath = Bundle.main.path(forResource: "el_CY", ofType: "dic")
@@ -647,8 +641,6 @@ private extension AutocompleteSuggestionProvider {
             last = letter
         }
         return count
-            
-        
     }
     
     func shouldReplace(text: String, greekText: String, guess: String)-> Bool{
@@ -661,9 +653,9 @@ private extension AutocompleteSuggestionProvider {
             }
             let accentlessWord = text.folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR"))
             let accentlessGuess = guess.folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR"))
-            // If words are the same without accents, and guess has accents, replace
-            // with guess.
-            return accentlessWord == accentlessGuess && accentlessGuess != guess
+            // If words are the same without accents, and guess has accents,
+            // and word does not have accents, replace with guess.
+            return accentlessWord == accentlessGuess && accentlessGuess != guess && accentlessWord == text
         } else {
             return true
         }
@@ -708,11 +700,13 @@ private extension AutocompleteSuggestionProvider {
                     var suggestionString = String(cString: s)
                     suggestionString = suggestionString.prefix(1).uppercased() + suggestionString.suffix(suggestionString.count-1)
                         // Interleave lowercase/uppercase suggestions
-                    let insertPoint = (i*2 >= hunspellSuggestions.count) ? hunspellSuggestions.endIndex : i*2
-                        hunspellSuggestions.insert(suggestionString, at: insertPoint)
-                        free(s)
-                        suggestions_ptr=suggestions_ptr?.advanced(by: 1)
-                        i+=1
+                    if !hunspellSuggestions.contains(suggestionString) {
+                        let insertPoint = (i*2 >= hunspellSuggestions.count) ? hunspellSuggestions.endIndex : i*2
+                            hunspellSuggestions.insert(suggestionString, at: insertPoint)
+                            free(s)
+                            suggestions_ptr=suggestions_ptr?.advanced(by: 1)
+                    }
+                    i+=1
                 }
                 free(suggestions_ptr_0_lowercase)
                 print(hunspellSuggestions)

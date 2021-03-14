@@ -80,7 +80,7 @@ class KeyboardViewController: KeyboardInputViewController {
     // MARK: - Autocomplete
     
     
-    private lazy var autocompleteProvider = CypriotAutocompleteSuggestionProvider()
+    private var autocompleteProvider = CypriotAutocompleteSuggestionProvider()
     
     private func isFirstWordInSentence(word: String) -> Bool{
         guard let currentSentence = textDocumentProxy.currentSentenceBeforeInput else { return true }
