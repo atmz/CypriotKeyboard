@@ -28,7 +28,6 @@ func isKeyboardExtensionEnabled() -> Bool {
 struct ContentView: View {
     @State var textTyped: String = ""
     @State private var showInstall = !isKeyboardExtensionEnabled()
-    @State private var showGreek = true
 
     var body: some View {
         VStack {
@@ -44,19 +43,20 @@ struct ContentView: View {
             }
         .padding()
         if(showInstall) {
-            Text(NSLocalizedString("1. Open 'Settings'", comment: "1. Open 'Settings'")).padding()
-            Text(NSLocalizedString("2. Tap 'General'", comment: "2. Tap 'General'")).padding()
-            Text(NSLocalizedString("3. Tap Keyboard", comment: "3. Tap Keyboard")).padding()
-            Text(NSLocalizedString("4. Tap Keyboards", comment: "4. Tap Keyboards")).padding()
-            Text(NSLocalizedString("5. Tap Add New Keyboard", comment: "5. Tap Add New Keyboard")).padding()
-            Text(NSLocalizedString( "6. Tap 'Κυπριακά'", comment: "6. Tap 'Κυπριακά'"))
+            Text(NSLocalizedString("1. Open 'Settings'", comment: "1. Open 'Settings'")).padding(.top)
+            Text(NSLocalizedString("2. Tap 'General'", comment: "2. Tap 'General'")).padding(.top)
+            Text(NSLocalizedString("3. Tap Keyboard", comment: "3. Tap Keyboard")).padding(.top)
+            Text(NSLocalizedString("4. Tap Keyboards", comment: "4. Tap Keyboards")).padding(.top)
+            Text(NSLocalizedString("5. Tap Add New Keyboard", comment: "5. Tap Add New Keyboard")).padding(.top)
+            Text(NSLocalizedString( "6. Tap 'Κυπριακά'", comment: "6. Tap 'Κυπριακά'")).padding(.top)
         } else {
-            Text(NSLocalizedString("Click 🌐 to switch keyboard to the Cypriot Keyboard", comment: "Click 🌐 to switch keyboard to the Cypriot Keyboard")).multilineTextAlignment(.leading).padding(.top)
-            Text(NSLocalizedString("Click 🔄 to switch between Latin and Greek alphabets", comment: "Click 🔄 to switch between Latin and Greek alphabets")).multilineTextAlignment(.leading).padding([.top, .leading, .trailing])
-            Text(NSLocalizedString( "The bar above the keyboard shows the current suggestions. When you pless 'Space', the middle suggestion will be used", comment: "The bar above the keyboard shows the current suggestions. When you pless 'Space', the middle suggestion will be used")).multilineTextAlignment(.leading).padding([.top, .leading, .trailing])
+            Text(NSLocalizedString("Click 🌐 to switch keyboard to the Cypriot Keyboard", comment: "Click 🌐 to switch keyboard to the Cypriot Keyboard")).multilineTextAlignment(.leading).padding()
+            Text(NSLocalizedString("Click 🔄 to switch between Latin and Greek alphabets", comment: "Click 🔄 to switch between Latin and Greek alphabets")).multilineTextAlignment(.leading).padding()
+            Text(NSLocalizedString( "The bar above the keyboard shows the current suggestions. When you pless 'Space', the middle suggestion will be used", comment: "The bar above the keyboard shows the current suggestions. When you pless 'Space', the middle suggestion will be used")).multilineTextAlignment(.leading).padding()
         }
             TextField(NSLocalizedString("Test Here", comment: "Test Here"), text: $textTyped).padding([ .leading])
             Spacer()
+            Text(NSLocalizedString("Credits", comment: "Credits")).font(.footnote).multilineTextAlignment(.leading).padding([.top, .leading, .trailing])
         }
     }
 }

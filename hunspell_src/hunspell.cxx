@@ -1040,6 +1040,11 @@ std::vector<std::string> HunspellImpl::suggest_internal(const std::string& word,
       good |= pSMgr->suggest(slst, scw.c_str(), &onlycmpdsug);
       if (clock() > timelimit + TIMELIMIT_GLOBAL)
           return slst;
+        std::string initcap(scw);
+        mkinitcap2(initcap, sunicw);
+        good |= pSMgr->suggest(slst, initcap.c_str(), &onlycmpdsug);
+        if (clock() > timelimit + TIMELIMIT_GLOBAL)
+            return slst;
       if (abbv) {
         std::string wspace(scw);
         wspace.push_back('.');

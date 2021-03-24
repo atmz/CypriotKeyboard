@@ -10,7 +10,7 @@ import KeyboardKit
 class CypriotKeyboardiPhoneLayoutProvider : iPhoneKeyboardLayoutProvider {
     override func bottomActions(for context: KeyboardContext) -> KeyboardActionRow {
         var result = KeyboardActions()
-        let portrait = context.deviceOrientation.isPortrait
+        //let portrait = context.deviceOrientation.isPortrait
         let needsInputSwitcher = context.needsInputModeSwitchKey
         if let action = keyboardSwitchActionForBottomRow(for: context) { result.append(action) }
         if needsInputSwitcher { result.append(.nextKeyboard) }

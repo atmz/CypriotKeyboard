@@ -65,27 +65,8 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
         guard let guess = cypriotInputViewController?.currentGuess else { return }
         guard  guess.additionalInfo.keys.contains("willReplace") else { return }
 
-       // var replace = ""
         context.textDocumentProxy.deleteBackward()
-        /*
-        if context.locale == Locale.init(identifier: "el_GR") {
-            // Only replace in Greek if accent-only change
-            if let currentWord = context.textDocumentProxy.currentWord {
-                let accentlessWord = currentWord.folding(options: .diacriticInsensitive, locale: context.locale)
-                let accentlessGuess = guess.replacement.folding(options: .diacriticInsensitive, locale: context.locale)
-                // If words are the same without accents, and guess has accents, replace
-                // with guess.
-                if accentlessWord == accentlessGuess && accentlessGuess != guess {
-                    replace = guess
-                }
-            }
-        } else {
-            replace = guess
-        }
-        if replace != ""
-        {*/
         context.textDocumentProxy.replaceCurrentWord(with: guess.replacement)
-
         context.textDocumentProxy.insertText(String(char))
     }
     
@@ -137,8 +118,10 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
             context.textDocumentProxy.deleteBackward()
             if context.locale == Locale.init(identifier: "en_US"){
                 context.locale = Locale.init(identifier: "el_GR")
+                UserDefaults.standard.setValue(false, forKey: "isLatinKeyboard")
             } else {
                 context.locale = Locale.init(identifier: "en_US")
+                UserDefaults.standard.setValue(true, forKey: "isLatinKeyboard")
             }
         }
     }

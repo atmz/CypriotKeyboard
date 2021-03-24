@@ -10,6 +10,8 @@
 		CB22288F25D1D91200F0707C /* CypriotKeyboardActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB22288E25D1D91200F0707C /* CypriotKeyboardActionHandler.swift */; };
 		CB22289625D262FF00F0707C /* el_CY.aff in Resources */ = {isa = PBXBuildFile; fileRef = CB22289425D262FF00F0707C /* el_CY.aff */; };
 		CB22289725D262FF00F0707C /* el_CY.dic in Resources */ = {isa = PBXBuildFile; fileRef = CB22289525D262FF00F0707C /* el_CY.dic */; };
+		CB369FFF2601C01C00E050D5 /* CypriotKeyboardUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB369FFE2601C01C00E050D5 /* CypriotKeyboardUtil.swift */; };
+		CB36A0002601C01C00E050D5 /* CypriotKeyboardUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB369FFE2601C01C00E050D5 /* CypriotKeyboardUtil.swift */; };
 		CB46BF1625CCCE2C00E3413A /* Cypriot_KeyboardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46BF1525CCCE2C00E3413A /* Cypriot_KeyboardApp.swift */; };
 		CB46BF1825CCCE2C00E3413A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46BF1725CCCE2C00E3413A /* ContentView.swift */; };
 		CB46BF1A25CCCE2D00E3413A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB46BF1925CCCE2D00E3413A /* Assets.xcassets */; };
@@ -109,6 +111,7 @@
 		CB22288E25D1D91200F0707C /* CypriotKeyboardActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CypriotKeyboardActionHandler.swift; sourceTree = "<group>"; };
 		CB22289425D262FF00F0707C /* el_CY.aff */ = {isa = PBXFileReference; lastKnownFileType = text; name = el_CY.aff; path = dict/el_CY.aff; sourceTree = "<group>"; };
 		CB22289525D262FF00F0707C /* el_CY.dic */ = {isa = PBXFileReference; lastKnownFileType = text; name = el_CY.dic; path = dict/el_CY.dic; sourceTree = "<group>"; };
+		CB369FFE2601C01C00E050D5 /* CypriotKeyboardUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CypriotKeyboardUtil.swift; sourceTree = "<group>"; };
 		CB46BF1225CCCE2C00E3413A /* Cypriot Keyboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cypriot Keyboard.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB46BF1525CCCE2C00E3413A /* Cypriot_KeyboardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cypriot_KeyboardApp.swift; sourceTree = "<group>"; };
 		CB46BF1725CCCE2C00E3413A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -275,6 +278,7 @@
 				CB22288E25D1D91200F0707C /* CypriotKeyboardActionHandler.swift */,
 				CB653DA925E33A4700657B82 /* CypriotSecondaryCalloutActionProvider.swift */,
 				CB512F2025E610100063C8D9 /* CypriotKeyboardiPhoneLayoutProvider.swift */,
+				CB369FFE2601C01C00E050D5 /* CypriotKeyboardUtil.swift */,
 			);
 			path = "Cypriot  Custom Keyboard";
 			sourceTree = "<group>";
@@ -522,6 +526,7 @@
 				CB46BF1825CCCE2C00E3413A /* ContentView.swift in Sources */,
 				CB606AC925D5B0EE00C15A67 /* hashmgr.cxx in Sources */,
 				CB606AB725D5B0ED00C15A67 /* replist.cxx in Sources */,
+				CB369FFF2601C01C00E050D5 /* CypriotKeyboardUtil.swift in Sources */,
 				CB46BF1625CCCE2C00E3413A /* Cypriot_KeyboardApp.swift in Sources */,
 				CB606AB925D5B0ED00C15A67 /* suggestmgr.cxx in Sources */,
 				CB606ABF25D5B0EE00C15A67 /* hunspell.cxx in Sources */,
@@ -563,6 +568,7 @@
 				CB606AC025D5B0EE00C15A67 /* hunspell.cxx in Sources */,
 				CB606AC225D5B0EE00C15A67 /* csutil.cxx in Sources */,
 				CB46BFA025CD170000E3413A /* CypriotKeyboardInputSetProvider.swift in Sources */,
+				CB36A0002601C01C00E050D5 /* CypriotKeyboardUtil.swift in Sources */,
 				CB46BF4A25CCCE7200E3413A /* KeyboardViewController.swift in Sources */,
 				CB653DAA25E33A4700657B82 /* CypriotSecondaryCalloutActionProvider.swift in Sources */,
 				CB606AB825D5B0ED00C15A67 /* replist.cxx in Sources */,
@@ -727,7 +733,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 28;
 				DEVELOPMENT_ASSET_PATHS = "\"Cypriot Keyboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				ENABLE_PREVIEWS = YES;
@@ -758,7 +764,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 28;
 				DEVELOPMENT_ASSET_PATHS = "\"Cypriot Keyboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				ENABLE_PREVIEWS = YES;
@@ -869,7 +875,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 28;
 				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Cypriot  Custom Keyboard/Info.plist";
@@ -902,7 +908,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 28;
 				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Cypriot  Custom Keyboard/Info.plist";

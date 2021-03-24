@@ -39,7 +39,11 @@ class KeyboardViewController: KeyboardInputViewController {
         keyboardActionHandler = cyKeyboardActionHandler
         keyboardAppearance = StandardKeyboardAppearance(context: keyboardContext)
         keyboardContext.primaryLanguage = "el_GR"
-        keyboardContext.locale = Locale(identifier: "el_GR")
+        if UserDefaults.standard.bool(forKey: "isLatinKeyboard") {
+            keyboardContext.locale = Locale(identifier: "en_US")
+        } else {
+            keyboardContext.locale = Locale(identifier: "el_GR")
+        }
         keyboardContext.locales = [
             keyboardContext.locale
         ]
