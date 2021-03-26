@@ -47,26 +47,18 @@
 		CB606ACA25D5B0EE00C15A67 /* hashmgr.cxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606AAA25D5B0ED00C15A67 /* hashmgr.cxx */; };
 		CB606ACB25D5B0EE00C15A67 /* hunzip.cxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606AAB25D5B0ED00C15A67 /* hunzip.cxx */; };
 		CB606ACC25D5B0EE00C15A67 /* hunzip.cxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606AAB25D5B0ED00C15A67 /* hunzip.cxx */; };
-		CB606AD125D5B11E00C15A67 /* affentry.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606AB325D5B0ED00C15A67 /* affentry.hxx */; };
-		CB606AD225D5B11E00C15A67 /* affixmgr.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606A9A25D5B0ED00C15A67 /* affixmgr.hxx */; };
-		CB606AD325D5B11E00C15A67 /* atypes.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606AB125D5B0ED00C15A67 /* atypes.hxx */; };
-		CB606AD425D5B11E00C15A67 /* baseaffix.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606AAD25D5B0ED00C15A67 /* baseaffix.hxx */; };
-		CB606AD525D5B11E00C15A67 /* csutil.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606AA625D5B0ED00C15A67 /* csutil.hxx */; };
-		CB606AD625D5B11E00C15A67 /* filemgr.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606AB625D5B0ED00C15A67 /* filemgr.hxx */; };
-		CB606AD725D5B11E00C15A67 /* hashmgr.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606A9E25D5B0ED00C15A67 /* hashmgr.hxx */; };
-		CB606AD825D5B11E00C15A67 /* htypes.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606A9B25D5B0ED00C15A67 /* htypes.hxx */; };
-		CB606AD925D5B11E00C15A67 /* hunspell.h in Sources */ = {isa = PBXBuildFile; fileRef = CB606AAE25D5B0ED00C15A67 /* hunspell.h */; };
-		CB606ADA25D5B11E00C15A67 /* hunspell.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606A9C25D5B0ED00C15A67 /* hunspell.hxx */; };
-		CB606ADB25D5B11E00C15A67 /* hunvisapi.h in Sources */ = {isa = PBXBuildFile; fileRef = CB606AAF25D5B0ED00C15A67 /* hunvisapi.h */; };
-		CB606ADC25D5B11E00C15A67 /* hunzip.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606AB225D5B0ED00C15A67 /* hunzip.hxx */; };
-		CB606ADD25D5B11E00C15A67 /* langnum.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606AAC25D5B0ED00C15A67 /* langnum.hxx */; };
-		CB606ADE25D5B11E00C15A67 /* phonet.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606AB525D5B0ED00C15A67 /* phonet.hxx */; };
-		CB606ADF25D5B11E00C15A67 /* replist.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606AA225D5B0ED00C15A67 /* replist.hxx */; };
-		CB606AE025D5B11E00C15A67 /* suggestmgr.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606AB425D5B0ED00C15A67 /* suggestmgr.hxx */; };
-		CB606AE125D5B11E00C15A67 /* utf_info.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606AB025D5B0ED00C15A67 /* utf_info.hxx */; };
-		CB606AE225D5B11E00C15A67 /* w_char.hxx in Sources */ = {isa = PBXBuildFile; fileRef = CB606A9F25D5B0ED00C15A67 /* w_char.hxx */; };
 		CB653DAA25E33A4700657B82 /* CypriotSecondaryCalloutActionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB653DA925E33A4700657B82 /* CypriotSecondaryCalloutActionProvider.swift */; };
 		CB7A966F25DCA0E7009432BB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CB7A967125DCA0E7009432BB /* Localizable.strings */; };
+		CBD5110B260BF46300F97392 /* KeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46BF8925CCFF5F00E3413A /* KeyboardView.swift */; };
+		CBD51110260BF46700F97392 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46BF4925CCCE7200E3413A /* KeyboardViewController.swift */; };
+		CBD51115260BF46B00F97392 /* CypriotKeyboardActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB22288E25D1D91200F0707C /* CypriotKeyboardActionHandler.swift */; };
+		CBD5111A260BF60300F97392 /* el_CY.dic in Resources */ = {isa = PBXBuildFile; fileRef = CB22289525D262FF00F0707C /* el_CY.dic */; };
+		CBD5111F260BF60500F97392 /* el_CY.aff in Resources */ = {isa = PBXBuildFile; fileRef = CB22289425D262FF00F0707C /* el_CY.aff */; };
+		CBE7B185260BED61002E58B7 /* KeyboardKit in Frameworks */ = {isa = PBXBuildFile; productRef = CBE7B177260BEC8A002E58B7 /* KeyboardKit */; };
+		CBE7B1A2260BEEF2002E58B7 /* CypriotKeyboardInputSetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46BF9F25CD170000E3413A /* CypriotKeyboardInputSetProvider.swift */; };
+		CBE7B1A7260BEEF5002E58B7 /* CypriotSecondaryCalloutActionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB653DA925E33A4700657B82 /* CypriotSecondaryCalloutActionProvider.swift */; };
+		CBE7B1AC260BEEF9002E58B7 /* CypriotKeyboardiPhoneLayoutProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB512F2025E610100063C8D9 /* CypriotKeyboardiPhoneLayoutProvider.swift */; };
+		CBE7B1FA260BF0A5002E58B7 /* CypriotAutocompleteSuggestionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46BF8325CCFF4000E3413A /* CypriotAutocompleteSuggestionProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -173,6 +165,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CBE7B185260BED61002E58B7 /* KeyboardKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -215,6 +208,7 @@
 				CB46BF1325CCCE2C00E3413A /* Products */,
 				CB606A9825D5B0ED00C15A67 /* Cypriot Keyboard-Bridging-Header.h */,
 				CB606A9925D5B0ED00C15A67 /* Cypriot  Custom Keyboard-Bridging-Header.h */,
+				CBE7B176260BEC8A002E58B7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -298,7 +292,6 @@
 				CB606AA325D5B0ED00C15A67 /* affixmgr.cxx */,
 				CB606A9A25D5B0ED00C15A67 /* affixmgr.hxx */,
 				CB606AB125D5B0ED00C15A67 /* atypes.hxx */,
-				CB606AAD25D5B0ED00C15A67 /* baseaffix.hxx */,
 				CB606AA525D5B0ED00C15A67 /* csutil.cxx */,
 				CB606AA625D5B0ED00C15A67 /* csutil.hxx */,
 				CB606AA825D5B0ED00C15A67 /* filemgr.cxx */,
@@ -324,8 +317,16 @@
 				CB606AB025D5B0ED00C15A67 /* utf_info.hxx */,
 				CB606A9F25D5B0ED00C15A67 /* w_char.hxx */,
 				CB606AA925D5B0ED00C15A67 /* affentry.cxx */,
+				CB606AAD25D5B0ED00C15A67 /* baseaffix.hxx */,
 			);
 			path = hunspell_src;
+			sourceTree = "<group>";
+		};
+		CBE7B176260BEC8A002E58B7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -346,6 +347,9 @@
 				CB46BF4D25CCCE7200E3413A /* PBXTargetDependency */,
 			);
 			name = "Cypriot Keyboard";
+			packageProductDependencies = (
+				CBE7B177260BEC8A002E58B7 /* KeyboardKit */,
+			);
 			productName = "Cypriot Keyboard";
 			productReference = CB46BF1225CCCE2C00E3413A /* Cypriot Keyboard.app */;
 			productType = "com.apple.product-type.application";
@@ -463,7 +467,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CBD5111A260BF60300F97392 /* el_CY.dic in Resources */,
 				CB606AC325D5B0EE00C15A67 /* hunvisapi.h.in in Resources */,
+				CBD5111F260BF60500F97392 /* el_CY.aff in Resources */,
 				CB7A966F25DCA0E7009432BB /* Localizable.strings in Resources */,
 				CB46BF1D25CCCE2D00E3413A /* Preview Assets.xcassets in Resources */,
 				CB46BF1A25CCCE2D00E3413A /* Assets.xcassets in Resources */,
@@ -501,30 +507,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CB606AD125D5B11E00C15A67 /* affentry.hxx in Sources */,
-				CB606AD225D5B11E00C15A67 /* affixmgr.hxx in Sources */,
-				CB606AD325D5B11E00C15A67 /* atypes.hxx in Sources */,
-				CB606AD425D5B11E00C15A67 /* baseaffix.hxx in Sources */,
-				CB606AD525D5B11E00C15A67 /* csutil.hxx in Sources */,
-				CB606AD625D5B11E00C15A67 /* filemgr.hxx in Sources */,
-				CB606AD725D5B11E00C15A67 /* hashmgr.hxx in Sources */,
-				CB606AD825D5B11E00C15A67 /* htypes.hxx in Sources */,
-				CB606AD925D5B11E00C15A67 /* hunspell.h in Sources */,
-				CB606ADA25D5B11E00C15A67 /* hunspell.hxx in Sources */,
-				CB606ADB25D5B11E00C15A67 /* hunvisapi.h in Sources */,
-				CB606ADC25D5B11E00C15A67 /* hunzip.hxx in Sources */,
-				CB606ADD25D5B11E00C15A67 /* langnum.hxx in Sources */,
-				CB606ADE25D5B11E00C15A67 /* phonet.hxx in Sources */,
-				CB606ADF25D5B11E00C15A67 /* replist.hxx in Sources */,
-				CB606AE025D5B11E00C15A67 /* suggestmgr.hxx in Sources */,
-				CB606AE125D5B11E00C15A67 /* utf_info.hxx in Sources */,
-				CB606AE225D5B11E00C15A67 /* w_char.hxx in Sources */,
+				CBE7B1AC260BEEF9002E58B7 /* CypriotKeyboardiPhoneLayoutProvider.swift in Sources */,
+				CBE7B1A7260BEEF5002E58B7 /* CypriotSecondaryCalloutActionProvider.swift in Sources */,
+				CBE7B1FA260BF0A5002E58B7 /* CypriotAutocompleteSuggestionProvider.swift in Sources */,
+				CBD5110B260BF46300F97392 /* KeyboardView.swift in Sources */,
+				CBD51115260BF46B00F97392 /* CypriotKeyboardActionHandler.swift in Sources */,
+				CBE7B1A2260BEEF2002E58B7 /* CypriotKeyboardInputSetProvider.swift in Sources */,
 				CB606ABB25D5B0ED00C15A67 /* phonet.cxx in Sources */,
 				CB606ACB25D5B0EE00C15A67 /* hunzip.cxx in Sources */,
 				CB606ABD25D5B0ED00C15A67 /* affixmgr.cxx in Sources */,
 				CB606AC725D5B0EE00C15A67 /* affentry.cxx in Sources */,
 				CB46BF1825CCCE2C00E3413A /* ContentView.swift in Sources */,
 				CB606AC925D5B0EE00C15A67 /* hashmgr.cxx in Sources */,
+				CBD51110260BF46700F97392 /* KeyboardViewController.swift in Sources */,
 				CB606AB725D5B0ED00C15A67 /* replist.cxx in Sources */,
 				CB369FFF2601C01C00E050D5 /* CypriotKeyboardUtil.swift in Sources */,
 				CB46BF1625CCCE2C00E3413A /* Cypriot_KeyboardApp.swift in Sources */,
@@ -660,7 +655,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -715,7 +710,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -733,12 +728,12 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 28;
+				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_ASSET_PATHS = "\"Cypriot Keyboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Cypriot Keyboard/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -746,9 +741,12 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/hunspell_src/hunspell/.libs",
+					"$(PROJECT_DIR)/hunspell_src",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "alextoumazis.Cypriot-Keyboard";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
+				"SWIFT_INCLUDE_PATHS[arch=*]" = "${SRCROOT}";
 				SWIFT_OBJC_BRIDGING_HEADER = "Cypriot Keyboard-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -764,12 +762,12 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 28;
+				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_ASSET_PATHS = "\"Cypriot Keyboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Cypriot Keyboard/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -777,9 +775,12 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/hunspell_src/hunspell/.libs",
+					"$(PROJECT_DIR)/hunspell_src",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "alextoumazis.Cypriot-Keyboard";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
+				"SWIFT_INCLUDE_PATHS[arch=*]" = "${SRCROOT}";
 				SWIFT_OBJC_BRIDGING_HEADER = "Cypriot Keyboard-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -875,10 +876,11 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 28;
+				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Cypriot  Custom Keyboard/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -908,10 +910,11 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 28;
+				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Cypriot  Custom Keyboard/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -998,6 +1001,11 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		CB46BF5825CCCF9500E3413A /* KeyboardKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CB46BF5725CCCF9500E3413A /* XCRemoteSwiftPackageReference "KeyboardKit" */;
+			productName = KeyboardKit;
+		};
+		CBE7B177260BEC8A002E58B7 /* KeyboardKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CB46BF5725CCCF9500E3413A /* XCRemoteSwiftPackageReference "KeyboardKit" */;
 			productName = KeyboardKit;

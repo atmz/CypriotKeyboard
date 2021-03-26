@@ -44,7 +44,7 @@ SET UTF-8
 # unlikely for a word that differs in one accented char plus some other mistake
 # to pop up in the possible suggestions (there has to be a closer match granted
 # that the word you are looking for exists).
-TRY άόίϊΐέήύϋΰώιηυωοεατνρσσ̆κμπλςγδθφβζ̆ζξψχ
+TRY άόίϊΐέήύϋΰώσ̆ζ̆ιηυωοεατνρσκμπλςγδθφβζξψχ
 
 MAP 7
 MAP ηήύυιί(ει)(οι)(εί)(οί)ΐϊϋΰ

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+
 func isKeyboardExtensionEnabled() -> Bool {
  guard let appBundleIdentifier = Bundle.main.bundleIdentifier else {
      fatalError("isKeyboardExtensionEnabled(): Cannot retrieve bundle identifier.")
@@ -49,14 +50,21 @@ struct ContentView: View {
             Text(NSLocalizedString("4. Tap Keyboards", comment: "4. Tap Keyboards")).padding(.top)
             Text(NSLocalizedString("5. Tap Add New Keyboard", comment: "5. Tap Add New Keyboard")).padding(.top)
             Text(NSLocalizedString( "6. Tap 'Κυπριακά'", comment: "6. Tap 'Κυπριακά'")).padding(.top)
+            Spacer()
+            ZStack {
+                Color(red: 0.79, green: 0.8, blue: 0.83)
+                        .ignoresSafeArea()
+                KeyboardViewController()
+                
+            }.frame( minHeight: 300, maxHeight: 400)
         } else {
             Text(NSLocalizedString("Click 🌐 to switch keyboard to the Cypriot Keyboard", comment: "Click 🌐 to switch keyboard to the Cypriot Keyboard")).multilineTextAlignment(.leading).padding()
             Text(NSLocalizedString("Click 🔄 to switch between Latin and Greek alphabets", comment: "Click 🔄 to switch between Latin and Greek alphabets")).multilineTextAlignment(.leading).padding()
             Text(NSLocalizedString( "The bar above the keyboard shows the current suggestions. When you pless 'Space', the middle suggestion will be used", comment: "The bar above the keyboard shows the current suggestions. When you pless 'Space', the middle suggestion will be used")).multilineTextAlignment(.leading).padding()
-        }
             TextField(NSLocalizedString("Test Here", comment: "Test Here"), text: $textTyped).padding([ .leading])
             Spacer()
             Text(NSLocalizedString("Credits", comment: "Credits")).font(.footnote).multilineTextAlignment(.leading).padding([.top, .leading, .trailing])
+        }
         }
     }
 }

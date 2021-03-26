@@ -8,6 +8,20 @@
 import Foundation
 
 class CypriotKeyboardHelper {
+    
+    static func countSyllables(text: String) -> Int {
+        var count = 0
+        let vowels = "αειυηοω"
+        var last=Character("Q")
+        for letter in text.lowercased() {
+            if vowels.contains(letter) && !vowels.contains(last) {
+                count+=1
+            }
+            last = letter
+        }
+        return count
+    }
+    
     static func getOverrideMatch(for text:String) -> String?{
         let overrides = [
             "me":"με",

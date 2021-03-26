@@ -49,24 +49,12 @@ public struct CypriotAutocompleteSuggestion: AutocompleteSuggestion {
 
 private extension AutocompleteSuggestionProvider {
 
-    func countSyllables(text: String) -> Int {
-        var count = 0
-        let vowels = "αειυηοω"
-        var last=Character("Q")
-        for letter in text.lowercased() {
-            if vowels.contains(letter) && !vowels.contains(last) {
-                count+=1
-            }
-            last = letter
-        }
-        return count
-    }
     
     func shouldReplace(text: String, greekText: String, guess: String)-> Bool{
         // This will only be true if all characters in the word are greek
         if(text == greekText) {
             // In Greek, we only auto-replace accent-only changes
-            if countSyllables(text:text)<2 {
+            if CypriotKeyboardHelper.countSyllables(text:text)<2 {
                 // if short, don't auto-replace -- one-syllable words don't need accents
                 return false
             }
