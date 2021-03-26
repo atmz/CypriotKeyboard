@@ -24,6 +24,9 @@ class CypriotAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
             self.speller = Hunspell_create(affPath, dicPath)
         }
     }
+    deinit {
+        Hunspell_destroy(self.speller)
+    }
     
     func autocompleteSuggestions(for text: String, completion: (AutocompleteResult) -> Void) {
         guard text.count > 0 else { return completion(.success([])) }

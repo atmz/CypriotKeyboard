@@ -733,7 +733,7 @@
 				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Cypriot Keyboard/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -767,7 +767,7 @@
 				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Cypriot Keyboard/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -880,7 +880,7 @@
 				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Cypriot  Custom Keyboard/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -914,7 +914,7 @@
 				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Cypriot  Custom Keyboard/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
