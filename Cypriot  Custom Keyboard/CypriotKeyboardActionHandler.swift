@@ -79,36 +79,34 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
             action == .character("΅")
         ) {
             context.textDocumentProxy.deleteBackward()
-            let word = context.textDocumentProxy.currentWord
+            let word = context.textDocumentProxy.currentWordPreCursorPart
             guard let char = word?.last else { return }
-                if var newWord = word  {
-                    switch action {
-                    case .character("˘"):
-                    if ["σ","ζ","ξ","ψ","ς"].contains(char.lowercased()) {
-                        newWord+="\u{306}"
-                    }
-                    case .character(" ̈"):
-                        if ["ι","ί","υ","ύ"].contains(char.lowercased()) {
-                            newWord+="\u{308}"
-                        }
-                    case .character("΅"):
-                        if ["ι","υ"].contains(char.lowercased()) {
-                            newWord+="\u{308}\u{301}"
-                        }
-                        else if ["ϊ","ϋ"].contains(char.lowercased()) {
-                            newWord+="\u{301}"
-                        }
-                        else if ["ί","ύ"].contains(char.lowercased()) {
-                            newWord+="\u{308}"
-                        }
-                    default:
-                        if ["α","ε","ι","η","υ","ο","ω","ϋ","ϊ","ὀ"].contains(char.lowercased()) {
-                            newWord+="\u{301}"
-                        }
-                    }
-                    print(newWord)
-                    context.textDocumentProxy.replaceCurrentWord(with: newWord)
+            let charString = String(char)
+            switch action {
+                case .character("˘"):
+                if ["σ","ζ","ξ","ψ","ς"].contains(char.lowercased()) {
+                    context.textDocumentProxy.insertText("\u{306}")
                 }
+                case .character(" ̈"):
+                    if ["ι","ί","υ","ύ"].contains(char.lowercased()) {
+                        context.textDocumentProxy.insertText("\u{308}")
+                    }
+                case .character("΅"):
+                    if ["ι","υ"].contains(char.lowercased()) {
+                        context.textDocumentProxy.insertText("\u{308}\u{301}")
+                    }
+                    else if ["ϊ","ϋ"].contains(char.lowercased()) {
+                        context.textDocumentProxy.insertText("\u{301}")
+                    }
+                    else if ["ί","ύ"].contains(char.lowercased()) {
+                        context.textDocumentProxy.insertText("\u{308}")
+                    }
+                default:
+                    if ["α","ε","ι","η","υ","ο","ω","ϋ","ϊ","ὀ"].contains(char.lowercased()) {
+                        context.textDocumentProxy.insertText("\u{301}")
+                    }
+                }
+            
         }
     }
     
@@ -130,17 +128,37 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
         if(!action.isInputAction || action == .character("🔄")) {
             return
         }
+        //todo :: something here breaks inserting letters
         guard let context = cypriotInputViewController?.keyboardContext else { return }
-        let word = context.textDocumentProxy.currentWord
-        guard let char = word?.last else { return }
+        guard let word = context.textDocumentProxy.currentWordPreCursorPart  else { return }
+        guard let char = word.last else { return }
+        let wordWithoutChar = word.prefix(word.count-1)
         if char.isLetter {
-            if let newWord = context.textDocumentProxy.currentWord?.replacingOccurrences(of: "ς", with: "σ").replacingOccurrences(of: "ς̆", with: "σ̆") {
-                context.textDocumentProxy.replaceCurrentWord(with: newWord)
+            // as we type, if letter before last is final s, make it normal s
+            // this does have an adge case with cursor movement where it wont work, but close enough
+            if wordWithoutChar.last == "ς" {
+                context.textDocumentProxy.deleteBackward()
+                context.textDocumentProxy.deleteBackward()
+                context.textDocumentProxy.insertText("σ")
+                context.textDocumentProxy.insertText(String(char))
+            }
+            if wordWithoutChar.last == "ς̆" {
+                context.textDocumentProxy.deleteBackward()
+                context.textDocumentProxy.deleteBackward()
+                context.textDocumentProxy.insertText("σ̆")
+                context.textDocumentProxy.insertText(String(char))
+            }
+            if context.textDocumentProxy.currentWordPostCursorPart==nil {
+                //if we're at the end of a word, turn s into final s
+                if char == "σ" {
+                    context.textDocumentProxy.deleteBackward()
+                    context.textDocumentProxy.insertText("ς")
                 }
-        }
-        if(action == .character("σ")) {
-            context.textDocumentProxy.deleteBackward()
-            context.textDocumentProxy.insertText("ς")
+                if char == "σ̆" {
+                    context.textDocumentProxy.deleteBackward()
+                    context.textDocumentProxy.insertText("ς̆")
+                }
+            }
         }
     }
 }

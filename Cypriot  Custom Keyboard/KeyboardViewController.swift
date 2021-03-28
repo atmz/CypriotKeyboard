@@ -53,7 +53,7 @@ final class KeyboardViewController: KeyboardInputViewController, UIViewControlle
             context: keyboardContext,
             providers: [CypriotKeyboardInputSetProvider(context:keyboardContext)]
         )
-        keyboardLayoutProvider  = CypriotKeyboardiPhoneLayoutProvider(inputSetProvider: keyboardInputSetProvider)
+        keyboardLayoutProvider  = CypriotKeyboardLayoutProvider(inputSetProvider: keyboardInputSetProvider)
         // Setup a secondary callout action provider with multiple locales
         keyboardSecondaryCalloutActionProvider = StandardSecondaryCalloutActionProvider(
             context: keyboardContext,

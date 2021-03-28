@@ -52,7 +52,7 @@ struct ContentView: View {
             Text(NSLocalizedString( "6. Tap 'Κυπριακά'", comment: "6. Tap 'Κυπριακά'")).padding(.top)
             Spacer()
             ZStack {
-                Color(red: 0.79, green: 0.8, blue: 0.83)
+                Color(.systemGray3)
                         .ignoresSafeArea()
                 KeyboardViewController()
                 

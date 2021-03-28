@@ -120,11 +120,17 @@ private extension AutocompleteSuggestionProvider {
         } else {
             // 2b. if we're not in greek, we always autoreplace and so we want to bias towards common words if we don't have a good match
             for suggestion in hunspellSuggestions {
-                if CypriotKeyboardHelper.isCommonWord(word:suggestion.lowercased()) {
-                    if priorityMatch==nil || greekText.lowercased() == suggestion.lowercased().folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR")) {
-                        //If first suggestion, or is perfect match (in lowercase, without accents), set priorityMatch
-                        priorityMatch = suggestion
-                    }
+                if priorityMatch==nil && CypriotKeyboardHelper.isCommonWord(word:suggestion.lowercased()) {
+                    //if common, set priorityMatch
+                    priorityMatch = suggestion
+                    break
+                }
+            }
+            for suggestion in hunspellSuggestions {
+                if greekText.lowercased() == suggestion.lowercased().folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR")) {
+                    //If is perfect match (in lowercase, without accents), set priorityMatch and break
+                    priorityMatch = suggestion
+                    break;
                 }
             }
         }
