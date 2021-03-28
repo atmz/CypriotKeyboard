@@ -54,7 +54,7 @@ open class CypriotKeyboardInputSetProvider: KeyboardInputSetProvider, DeviceSpec
     }
     
     public func alphabeticInputSet() -> AlphabeticKeyboardInputSet {
-        let lastLetter = context.textDocumentProxy.currentWord?.last
+        let lastLetter = context.textDocumentProxy.currentWordPreCursorPart?.last
         return AlphabeticKeyboardInputSet(rows: [
             ["σ","ζ","ξ","ψ","ς"].contains(lastLetter?.lowercased()) ?  row("ερτυθιοπ˘") : row("ερτυθιοπ΄"),
             row("ασδφγηξκλ"),
