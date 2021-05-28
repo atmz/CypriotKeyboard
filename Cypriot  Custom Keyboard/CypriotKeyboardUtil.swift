@@ -139,7 +139,9 @@ class CypriotKeyboardHelper {
              .replacingOccurrences(of: "N", with: "Ν")
              
              .replacingOccurrences(of: "m", with: "μ")
-             .replacingOccurrences(of: "M", with: "Μ")
+            .replacingOccurrences(of: "M", with: "Μ")
+            
+            .replacingOccurrences(of: "3", with: "ξ")
              
      }
     

@@ -123,13 +123,18 @@ private extension AutocompleteSuggestionProvider {
                 if priorityMatch==nil && CypriotKeyboardHelper.isCommonWord(word:suggestion.lowercased()) {
                     //if common, set priorityMatch
                     priorityMatch = suggestion
+                    print("common match", suggestion)
                     break
                 }
             }
+           // print("greekText", greekText)
             for suggestion in hunspellSuggestions {
-                if greekText.lowercased() == suggestion.lowercased().folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR")) {
+                let suggestionToCompare = CypriotKeyboardHelper.countSyllables(text:greekText)<2 ? suggestion.lowercased() : suggestion.lowercased().folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR"))
+                //print("suggestionToCompare", suggestionToCompare)
+                if greekText.lowercased() == suggestionToCompare {
                     //If is perfect match (in lowercase, without accents), set priorityMatch and break
                     priorityMatch = suggestion
+                    print("perfect match", suggestion)
                     break;
                 }
             }
@@ -156,7 +161,7 @@ private extension AutocompleteSuggestionProvider {
             }
             return [
                 suggestion(text, verbatim:true),
-                suggestion(hunspellSuggestions[0]),
+                suggestion(hunspellSuggestions[0], willReplace:shouldReplace(text: text, greekText: greekText, guess: hunspellSuggestions[0])),
                 suggestion(hunspellSuggestions[1]),
                 suggestion(hunspellSuggestions[2]),
             ]
@@ -173,7 +178,7 @@ private extension AutocompleteSuggestionProvider {
             }
             return [
                 suggestion(text, verbatim:true),
-                suggestion(hunspellSuggestions[0]),
+                suggestion(hunspellSuggestions[0], willReplace:shouldReplace(text: text, greekText: greekText, guess: hunspellSuggestions[0])),
                 suggestion(hunspellSuggestions[1])
             ]
                 
