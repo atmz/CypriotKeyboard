@@ -740,7 +740,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 33;
+				CURRENT_PROJECT_VERSION = 35;
 				DEVELOPMENT_ASSET_PATHS = "\"Cypriot Keyboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				ENABLE_PREVIEWS = YES;
@@ -755,6 +755,7 @@
 					"$(PROJECT_DIR)/hunspell_src/hunspell/.libs",
 					"$(PROJECT_DIR)/hunspell_src",
 				);
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "alextoumazis.Cypriot-Keyboard";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
@@ -774,7 +775,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 33;
+				CURRENT_PROJECT_VERSION = 35;
 				DEVELOPMENT_ASSET_PATHS = "\"Cypriot Keyboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				ENABLE_PREVIEWS = YES;
@@ -789,6 +790,7 @@
 					"$(PROJECT_DIR)/hunspell_src/hunspell/.libs",
 					"$(PROJECT_DIR)/hunspell_src",
 				);
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "alextoumazis.Cypriot-Keyboard";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
@@ -888,7 +890,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 33;
+				CURRENT_PROJECT_VERSION = 35;
 				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Cypriot  Custom Keyboard/Info.plist";
@@ -922,7 +924,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 33;
+				CURRENT_PROJECT_VERSION = 35;
 				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Cypriot  Custom Keyboard/Info.plist";
