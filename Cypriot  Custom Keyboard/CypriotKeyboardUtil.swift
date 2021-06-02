@@ -51,6 +51,7 @@ class CypriotKeyboardHelper {
     }
     
     static func greekify(text:String)  -> String {
+ 
          return text
              .replacingOccurrences(of: "sh", with: "σ̆")
              .replacingOccurrences(of: "Sh", with: "Σ̆")
