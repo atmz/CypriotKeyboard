@@ -46,14 +46,15 @@ SET UTF-8
 # that the word you are looking for exists).
 TRY άόίϊΐέήύϋΰώσ̆ζ̆ιηυωοεατνρσκμπλςγδθφβζξψχ
 
-MAP 7
+MAP 8
 MAP ηήύυιί(ει)(οι)(εί)(οί)ΐϊϋΰ
 MAP j(τζ)(τ)(τζ̆)
 MAP αά
 MAP (άι)(αϊ)(αΐ)
 MAP εέ(αί)(αι)(άι)
 MAP ωώοό
-MAP σςσ̆
+MAP σςσ̆(σι)
+MAP (σ̆σ̆)(σσ)
 
 FORBIDDENWORD τζ̆ε
 
@@ -65,7 +66,7 @@ FORBIDDENWORD τζ̆ε
 # combinations of letters that the greek language never uses, but I don't
 # think they will do any harm.
 
-REP 488
+REP 497
 REP σ ς
 REP σ σ̆
 REP α ά
@@ -79,6 +80,14 @@ REP ξ κσ
 REP χ ξ
 REP τζ τζ̆
 REP σ σ̆σ̆
+REP σ̆ ση
+REP σ̆ σή
+REP θ τη
+REP θ τή
+REP τ ττ
+REP λ λλ
+REP π ππ
+REP κ κκ
 REP άΰ άβ
 REP άΰ άυ
 REP άΰ άϋ

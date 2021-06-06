@@ -63,6 +63,7 @@ struct ContentView: View {
             Text(NSLocalizedString( "The bar above the keyboard shows the current suggestions. When you pless 'Space', the middle suggestion will be used", comment: "The bar above the keyboard shows the current suggestions. When you pless 'Space', the middle suggestion will be used")).multilineTextAlignment(.leading).padding()
             TextField(NSLocalizedString("Test Here", comment: "Test Here"), text: $textTyped).padding([ .leading])
             Spacer()
+            Text(NSLocalizedString("Alex", comment: "Alex")).font(.footnote).multilineTextAlignment(.leading).padding([.top, .leading, .trailing])
             Text(NSLocalizedString("Credits", comment: "Credits")).font(.footnote).multilineTextAlignment(.leading).padding([.top, .leading, .trailing])
         }
         }
