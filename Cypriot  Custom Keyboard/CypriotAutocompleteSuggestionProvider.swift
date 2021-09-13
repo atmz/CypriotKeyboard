@@ -75,7 +75,9 @@ private extension AutocompleteSuggestionProvider {
                 && accentlessWord == text // and word does not have accents, replace with guess.
         } else {
             // if Greeklish, we *always* want to auto-replace
-            return true
+            let score = CypriotKeyboardHelper.distanceMeasure(transliteratedWord: guess, greekWord: greekText)
+            print(guess,greekText,score)
+            return score>=0.6
         }
     }
     

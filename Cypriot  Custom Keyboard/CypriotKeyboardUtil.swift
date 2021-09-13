@@ -7,6 +7,13 @@
 
 import Foundation
 
+
+extension String {
+    subscript(index: Int) -> Character {
+        return self[self.index(self.startIndex, offsetBy: index)]
+    }
+}
+
 class CypriotKeyboardHelper {
     
     static func countSyllables(text: String) -> Int {
@@ -20,6 +27,43 @@ class CypriotKeyboardHelper {
             last = letter
         }
         return count
+    }
+    
+    static private func normalizeGreekWord(greekWord: String)-> String{
+        // Convert greek word to something more comparable with a transliterated string.
+        // Implementation details linked to greekify, since it will be comparing against greekify strings
+        return greekWord
+            .lowercased()
+            //First, check for compound letters that can be reduced to 'i' or 'e' before we remove tonous
+            .replacingOccurrences(of: "ει", with: "ι")
+            .replacingOccurrences(of: "εί", with: "ι")
+            .replacingOccurrences(of: "οι", with: "ι")
+            .replacingOccurrences(of: "οί", with: "ι")
+            // get rid of tonous
+            .folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR"))
+            //replace other letters
+            .replacingOccurrences(of: "η", with: "ι")
+    }
+    
+    
+    static func distanceMeasure(transliteratedWord: String, greekWord: String) -> Double {
+        var score = 0.0
+        
+        let a = greekWord.lowercased().folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR"))
+        let b = transliteratedWord.lowercased().folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR"))
+
+        let aCount = a.count
+        let bCount = b.count
+        if (aCount < 1 || bCount < 1) {
+            return 0.0
+        }
+        
+        for i in 1...aCount {
+            if i <= bCount && a[i - 1] == b[i - 1] {
+                score+=1
+            }
+        }
+        return score/Double(aCount)
     }
     
     static func getOverrideMatch(for text:String) -> String?{
@@ -66,7 +110,16 @@ class CypriotKeyboardHelper {
              
              .replacingOccurrences(of: "Th", with: "Θ")
              .replacingOccurrences(of: "th", with: "θ")
-             
+            
+        //"γι" is pronounced "yi", but other uses of "γ" are "g"s
+            .replacingOccurrences(of: "yi", with: "γι")
+            .replacingOccurrences(of: "Yi", with: "Γι")
+            
+            //th can be theta or τη - todo: better solution
+            .replacingOccurrences(of: "ths", with: "τησ")
+            .replacingOccurrences(of: "Ths", with: "Τησ")
+        
+            
              .replacingOccurrences(of: "j", with: "τζ̆")
              .replacingOccurrences(of: "J", with: "Τζ̆")
              
@@ -84,9 +137,9 @@ class CypriotKeyboardHelper {
              
              .replacingOccurrences(of: "u", with: "υ")
              .replacingOccurrences(of: "U", with: "Υ")
-             
-             .replacingOccurrences(of: "y", with: "γ")
-             .replacingOccurrences(of: "Y", with: "Γ")
+            
+            .replacingOccurrences(of: "y", with: "υ")
+            .replacingOccurrences(of: "Y", with: "Υ")
              
              .replacingOccurrences(of: "w", with: "ω")
              .replacingOccurrences(of: "W", with: "Ω")
