@@ -1,7 +1,7 @@
-#  el_GR.aff 
+#  el_GR.aff
 #  greek affix file
-#  for hunspell 
-#  GPL 
+#  for hunspell
+#  GPL
 #
 #
 #  LOG etc:
@@ -31,12 +31,12 @@
 #
 #  Based on an older job :
 #  greek.aff file
-#  for ispell 
+#  for ispell
 #  Papakostas Evripidis evris@source.gr ep@rocketmail.com 1999
-#  
+#
 #  Based on an older job :
 #  ellhnika.aff for Greek language by Μήταλας Γιάννης and Σερασκέρης Νίκος
-#  Καρλόβασι, Σάμος ,24-9-97  
+#  Καρλόβασι, Σάμος ,24-9-97
 
 SET UTF-8
 # You are likely to forget the accent, so accented characters come first. If

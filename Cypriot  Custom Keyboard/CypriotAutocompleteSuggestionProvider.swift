@@ -77,18 +77,21 @@ private extension AutocompleteSuggestionProvider {
             // if Greeklish, we *always* want to auto-replace
             let score = CypriotKeyboardHelper.distanceMeasure(transliteratedWord: guess, greekWord: greekText)
             print(guess,greekText,score)
-            return score>=0.6
+            return score<3.0
         }
     }
     
     func suggestions(for text: String, speller:OpaquePointer?, isFirstWordInSentence:Bool) -> [CypriotAutocompleteSuggestion] {
         guard speller != nil else { return [] }
-        let greekText = CypriotKeyboardHelper.greekify(text: text)
+        let isPunctFirst = !(text.first?.isLetter ?? true)
+        let greekText = isPunctFirst ? CypriotKeyboardHelper.greekify(text: String(text.suffix(text.count-1))) : CypriotKeyboardHelper.greekify(text: text)
+    
         var suggestions_ptr: UnsafeMutablePointer<UnsafeMutablePointer<CChar>?>? = nil
         var suggestions_ptr_0 = suggestions_ptr
         
         
         let isCapitalFirst = greekText != greekText.lowercased() && greekText.suffix(greekText.count-1) == greekText.lowercased().suffix(greekText.count-1)
+
         let shouldCheckLowercase = isFirstWordInSentence && isCapitalFirst //If first word in sentence, treat as lowercase
         
         // 1. Get suggestions from hunspell engine
@@ -102,6 +105,9 @@ private extension AutocompleteSuggestionProvider {
                 if shouldCheckLowercase { //If we've forced lowercase, fix capitalization
                     suggestionString = suggestionString.prefix(1).uppercased() + suggestionString.suffix(suggestionString.count-1)
                 }
+                if isPunctFirst {
+                    suggestionString = text.prefix(1) + suggestionString
+                }
                 hunspellSuggestions.append( suggestionString )
                 suggestions_ptr=suggestions_ptr?.advanced(by: 1)
             }
@@ -110,11 +116,15 @@ private extension AutocompleteSuggestionProvider {
         }
         
         var priorityMatch : String? = nil
+        var nextPriorityMatch : String? = nil
         
         if text == greekText {
         // 2a. In greek: determine if any suggestions are eligible for auto-replace, and if so, tag the first as priorityMatch
             for suggestion in hunspellSuggestions {
                 if(shouldReplace(text: text, greekText: greekText, guess: suggestion)) {
+                    if priorityMatch != nil && priorityMatch != suggestion{
+                        nextPriorityMatch = priorityMatch
+                    }
                     priorityMatch = suggestion
                     break
                 }
@@ -124,6 +134,9 @@ private extension AutocompleteSuggestionProvider {
             for suggestion in hunspellSuggestions {
                 if priorityMatch==nil && CypriotKeyboardHelper.isCommonWord(word:suggestion.lowercased()) {
                     //if common, set priorityMatch
+                    if priorityMatch != nil && priorityMatch != suggestion{
+                        nextPriorityMatch = priorityMatch
+                    }
                     priorityMatch = suggestion
                     print("common match", suggestion)
                     break
@@ -135,6 +148,9 @@ private extension AutocompleteSuggestionProvider {
                 //print("suggestionToCompare", suggestionToCompare)
                 if greekText.lowercased() == suggestionToCompare {
                     //If is perfect match (in lowercase, without accents), set priorityMatch and break
+                    if priorityMatch != nil && priorityMatch != suggestion{
+                        nextPriorityMatch = priorityMatch
+                    }
                     priorityMatch = suggestion
                     print("perfect match", suggestion)
                     break;
@@ -149,11 +165,21 @@ private extension AutocompleteSuggestionProvider {
         
         let suggestionsToShow = min(maxSuggestions, hunspellSuggestions.count) //But, we can't show more suggestions than we have
         //TODO: lots of duplicated code here, should refactor
+        
+
         switch suggestionsToShow {
         case 3:
             // Common word match or match except for accents, ignore hunspell ordering and suggest it
             if let priorityMatchString = priorityMatch {
                     print(priorityMatchString)
+                if let nextMatchString = nextPriorityMatch {
+                    return [
+                        suggestion(text, verbatim:true),
+                        suggestion(priorityMatchString, willReplace:shouldReplace(text: text, greekText: greekText, guess: priorityMatchString)),
+                        suggestion(nextMatchString),
+                        hunspellSuggestions[0] != priorityMatchString &&  hunspellSuggestions[0] != nextMatchString ? suggestion(hunspellSuggestions[0]) : hunspellSuggestions[1] != priorityMatchString &&  hunspellSuggestions[1] != nextMatchString ? suggestion(hunspellSuggestions[1]) : suggestion(hunspellSuggestions[2])
+                    ]
+                }
                 return [
                     suggestion(text, verbatim:true),
                     suggestion(priorityMatchString, willReplace:shouldReplace(text: text, greekText: greekText, guess: priorityMatchString)),
@@ -172,6 +198,13 @@ private extension AutocompleteSuggestionProvider {
             // Common word match or match except for accents, ignore hunspell ordering and suggest it
             if let priorityMatchString = priorityMatch {
                     print(priorityMatchString)
+                if let nextMatchString = nextPriorityMatch {
+                    return [
+                        suggestion(text, verbatim:true),
+                        suggestion(priorityMatchString, willReplace:shouldReplace(text: text, greekText: greekText, guess: priorityMatchString)),
+                        suggestion(nextMatchString)
+                    ]
+                }
                 return [
                     suggestion(text, verbatim:true),
                     suggestion(priorityMatchString, willReplace:shouldReplace(text: text, greekText: greekText, guess: priorityMatchString)),
