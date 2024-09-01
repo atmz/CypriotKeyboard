@@ -1,7 +1,7 @@
-#  el_GR.aff
+#  el_GR.aff 
 #  greek affix file
-#  for hunspell
-#  GPL
+#  for hunspell 
+#  GPL 
 #
 #
 #  LOG etc:
@@ -31,12 +31,12 @@
 #
 #  Based on an older job :
 #  greek.aff file
-#  for ispell
+#  for ispell 
 #  Papakostas Evripidis evris@source.gr ep@rocketmail.com 1999
-#
+#  
 #  Based on an older job :
 #  ellhnika.aff for Greek language by Μήταλας Γιάννης and Σερασκέρης Νίκος
-#  Καρλόβασι, Σάμος ,24-9-97
+#  Καρλόβασι, Σάμος ,24-9-97  
 
 SET UTF-8
 # You are likely to forget the accent, so accented characters come first. If
@@ -46,15 +46,14 @@ SET UTF-8
 # that the word you are looking for exists).
 TRY άόίϊΐέήύϋΰώσ̆ζ̆ιηυωοεατνρσκμπλςγδθφβζξψχ
 
-MAP 8
+MAP 7
 MAP ηήύυιί(ει)(οι)(εί)(οί)ΐϊϋΰ
 MAP j(τζ)(τ)(τζ̆)
 MAP αά
 MAP (άι)(αϊ)(αΐ)
 MAP εέ(αί)(αι)(άι)
 MAP ωώοό
-MAP σςσ̆(σι)
-MAP (σ̆σ̆)(σσ)
+MAP σςσ̆
 
 FORBIDDENWORD τζ̆ε
 
@@ -66,7 +65,7 @@ FORBIDDENWORD τζ̆ε
 # combinations of letters that the greek language never uses, but I don't
 # think they will do any harm.
 
-REP 497
+REP 488
 REP σ ς
 REP σ σ̆
 REP α ά
@@ -80,14 +79,6 @@ REP ξ κσ
 REP χ ξ
 REP τζ τζ̆
 REP σ σ̆σ̆
-REP σ̆ ση
-REP σ̆ σή
-REP θ τη
-REP θ τή
-REP τ ττ
-REP λ λλ
-REP π ππ
-REP κ κκ
 REP άΰ άβ
 REP άΰ άυ
 REP άΰ άϋ

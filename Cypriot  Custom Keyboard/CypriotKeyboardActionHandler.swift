@@ -38,6 +38,7 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
         tryEndSentence(after: gesture, on: action)
         tryChangeKeyboardType(after: gesture, on: action)
         tryRegisterEmoji(after: gesture, on: action)
+        cypriotInputViewController?.setLastAction(a: action);
     }
 
     
@@ -64,6 +65,10 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
         
         guard let guess = cypriotInputViewController?.currentGuess else { return }
         guard  guess.additionalInfo.keys.contains("willReplace") else { return }
+        
+        // if we just did a backspace, we shouldn't autoreplace
+        // for the case where we select an autocompletem
+         guard cypriotInputViewController?.lastAction != .backspace else {return}
 
         context.textDocumentProxy.deleteBackward()
         context.textDocumentProxy.replaceCurrentWord(with: guess.replacement)
@@ -81,7 +86,7 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
             context.textDocumentProxy.deleteBackward()
             let word = context.textDocumentProxy.currentWordPreCursorPart
             guard let char = word?.last else { return }
-            let charString = String(char)
+           // let charString = String(char)
             switch action {
                 case .character("˘"):
                 if ["σ","ζ","ξ","ψ","ς"].contains(char.lowercased()) {
