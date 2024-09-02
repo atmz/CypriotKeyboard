@@ -30,7 +30,7 @@ import Combine
  album, you have to add a `NSPhotoLibraryAddUsageDescription`
  key to the `host` application's `Info.plist`.
  */
-final class KeyboardViewController: KeyboardInputViewController, UIViewControllerRepresentable {
+final class KeyboardViewController: KeyboardInputViewController {
     
 
     
@@ -132,15 +132,15 @@ final class KeyboardViewController: KeyboardInputViewController, UIViewControlle
     }
     
     //stuff needed for SwiftUI/container app:
-    
-    typealias UIViewControllerType = KeyboardViewController
-    public func makeUIViewController(context: UIViewControllerRepresentableContext<KeyboardViewController>) -> KeyboardViewController {
-        return KeyboardViewController()
-    }
-
-    public func updateUIViewController(_ uiViewController: KeyboardViewController, context: UIViewControllerRepresentableContext<KeyboardViewController>) {
-        //
-    }
+//    
+//    typealias UIViewControllerType = KeyboardViewController
+//    public func makeUIViewController(context: UIViewControllerRepresentableContext<KeyboardViewController>) -> KeyboardViewController {
+//        return KeyboardViewController()
+//    }
+//
+//    public func updateUIViewController(_ uiViewController: KeyboardViewController, context: UIViewControllerRepresentableContext<KeyboardViewController>) {
+//        //
+//    }
 }
 
 public extension UITextDocumentProxy {

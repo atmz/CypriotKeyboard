@@ -1,16 +1,15 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "KeyboardKit",
-        "repositoryURL": "https://github.com/danielsaidi/KeyboardKit.git",
-        "state": {
-          "branch": null,
-          "revision": "8b0ad37ad640b19a535c1db02aea9b0218ed17d5",
-          "version": "4.5.2"
-        }
+  "originHash" : "dd6eda40f54a326d8db8ddb750933cdffeb2957e0b3dd335e84b2ac79d8ffd4a",
+  "pins" : [
+    {
+      "identity" : "keyboardkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/danielsaidi/KeyboardKit.git",
+      "state" : {
+        "revision" : "8b0ad37ad640b19a535c1db02aea9b0218ed17d5",
+        "version" : "4.5.2"
       }
-    ]
-  },
-  "version": 1
+    }
+  ],
+  "version" : 3
 }

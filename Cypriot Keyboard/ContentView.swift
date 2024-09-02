@@ -68,12 +68,6 @@ struct ContentView: View {
             Text(NSLocalizedString("5. Tap Add New Keyboard", comment: "5. Tap Add New Keyboard")).padding(.top)
             Text(NSLocalizedString( "6. Tap 'Κυπριακά'", comment: "6. Tap 'Κυπριακά'")).padding(.top)
             Spacer()
-            ZStack {
-                Color(.systemGray3)
-                        .ignoresSafeArea()
-                KeyboardViewController()
-                
-            }.frame( minHeight: 300, maxHeight: 400)
         } else {
             Text(NSLocalizedString("Click 🌐 to switch keyboard to the Cypriot Keyboard", comment: "Click 🌐 to switch keyboard to the Cypriot Keyboard")).multilineTextAlignment(.leading).padding()
             Text(NSLocalizedString("Click 🔄 to switch between Latin and Greek alphabets", comment: "Click 🔄 to switch between Latin and Greek alphabets")).multilineTextAlignment(.leading).padding()

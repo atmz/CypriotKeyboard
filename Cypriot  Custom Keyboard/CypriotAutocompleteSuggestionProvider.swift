@@ -9,17 +9,49 @@ import Foundation
 import KeyboardKit
 import hunspell
 class CypriotAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
+    var locale: Locale
     
+    var canIgnoreWords: Bool
     
+    var ignoredWords: [String]
     
+    func hasIgnoredWord(_ word: String) -> Bool {
+        return false
+    }
     
+    func ignoreWord(_ word: String) {
+        return
+    }
+    
+    func removeIgnoredWord(_ word: String) {
+        return
+    }
+    
+    var canLearnWords: Bool
+    
+    func hasLearnedWord(_ word: String) -> Bool {
+        return false
+    }
+    
+    func learnWord(_ word: String) {
+        return
+    }
+    
+    func unlearnWord(_ word: String) {
+        return
+    }
+
     var speller : OpaquePointer?
     
     init() {
         
         let dicPath = Bundle.main.path(forResource: "el_CY", ofType: "dic")
         let affPath = Bundle.main.path(forResource: "el_CY", ofType: "aff")
+        self.canLearnWords = false
+        self.canIgnoreWords = false
+        self.ignoredWords = []
         self.speller = nil
+        self.locale = Locale(identifier: "el_GR")
         DispatchQueue.global().async {
             self.speller = Hunspell_create(affPath, dicPath)
         }
@@ -42,8 +74,13 @@ class CypriotAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
 }
 
 public struct CypriotAutocompleteSuggestion: AutocompleteSuggestion {
+    public var text: String
     
-    public var replacement: String
+    public var isAutocomplete: Bool
+    
+    public var isUnknown: Bool
+    
+    
     public var title: String
     public var subtitle: String?
     public var additionalInfo: [String: Any] 
@@ -231,10 +268,9 @@ private extension AutocompleteSuggestionProvider {
     
     func suggestion(_ word: String, verbatim: Bool = false, subtitle: String? = nil, willReplace : Bool = false) -> CypriotAutocompleteSuggestion {
         if willReplace {
-            return
-                CypriotAutocompleteSuggestion(replacement: word, title:(verbatim ? ("\""+word+"\""):word), subtitle: subtitle, additionalInfo:["willReplace":willReplace])
+            return CypriotAutocompleteSuggestion(text: word, isAutocomplete:false, isUnknown: verbatim, title:word, subtitle: subtitle, additionalInfo:["willReplace":willReplace])
         } else {
-           return CypriotAutocompleteSuggestion(replacement: word, title:(verbatim ? ("\""+word+"\""):word), subtitle: subtitle, additionalInfo:[:])
+           return CypriotAutocompleteSuggestion(text: word, isAutocomplete:false, isUnknown: verbatim, title:word, subtitle: subtitle, additionalInfo:[:])
         }
     }
     

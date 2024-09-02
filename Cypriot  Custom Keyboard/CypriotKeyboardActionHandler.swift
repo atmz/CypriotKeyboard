@@ -23,16 +23,16 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
         )
     }
     
-    override open func handle(_ gesture: KeyboardGesture, on action: KeyboardAction, sender: Any?) {
+    override open func handle(_ gesture: KeyboardGesture, on action: KeyboardAction) {
         
         guard let gestureAction = self.action(for: gesture, on: action) else { return }
         gestureAction(cypriotInputViewController)
-        triggerSpaceAutocomplete(for: gesture, on: action, sender: sender)
-        handleSwitch(for: gesture, on: action, sender: sender)
-        handleS(for: gesture, on: action, sender: sender)
-        triggerAccent(for: gesture, on: action, sender: sender)
-        triggerAudioFeedback(for: gesture, on: action, sender: sender)
-        triggerHapticFeedback(for: gesture, on: action, sender: sender)
+        triggerSpaceAutocomplete(for: gesture, on: action)
+        handleSwitch(for: gesture, on: action)
+        handleS(for: gesture, on: action)
+        triggerAccent(for: gesture, on: action)
+        triggerAudioFeedback(for: gesture, on: action)
+        triggerHapticFeedback(for: gesture, on: action)
         autocompleteAction()
         tryRegisterEmoji(after: gesture, on: action)
         tryEndSentence(after: gesture, on: action)
@@ -42,7 +42,7 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
     }
 
     
-     func triggerSpaceAutocomplete(for gesture: KeyboardGesture, on action: KeyboardAction, sender: Any?) {
+     func triggerSpaceAutocomplete(for gesture: KeyboardGesture, on action: KeyboardAction) {
         guard let context = cypriotInputViewController?.keyboardContext else { return }
         let text = context.textDocumentProxy.documentContextBeforeInput
         guard let char = text?.last else { return }
@@ -71,11 +71,11 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
          guard cypriotInputViewController?.lastAction != .backspace else {return}
 
         context.textDocumentProxy.deleteBackward()
-        context.textDocumentProxy.replaceCurrentWord(with: guess.replacement)
+        context.textDocumentProxy.replaceCurrentWord(with: guess.text)
         context.textDocumentProxy.insertText(String(char))
     }
     
-    func triggerAccent(for gesture: KeyboardGesture, on action: KeyboardAction, sender: Any?) {
+    func triggerAccent(for gesture: KeyboardGesture, on action: KeyboardAction) {
         guard let context = cypriotInputViewController?.keyboardContext else { return }
         if(
             action == .character("΄") ||
@@ -115,7 +115,7 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
         }
     }
     
-    func handleSwitch(for gesture: KeyboardGesture, on action: KeyboardAction, sender: Any?) {
+    func handleSwitch(for gesture: KeyboardGesture, on action: KeyboardAction) {
         guard let context = cypriotInputViewController?.keyboardContext else { return }
         if(action == .character("🔄")) {
             context.textDocumentProxy.deleteBackward()
@@ -129,7 +129,7 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
         }
     }
 
-    func handleS(for gesture: KeyboardGesture, on action: KeyboardAction, sender: Any?) {
+    func handleS(for gesture: KeyboardGesture, on action: KeyboardAction) {
         if(!action.isInputAction || action == .character("🔄")) {
             return
         }

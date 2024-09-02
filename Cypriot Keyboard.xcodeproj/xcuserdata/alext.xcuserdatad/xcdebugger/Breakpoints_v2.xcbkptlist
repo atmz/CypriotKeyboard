@@ -14,8 +14,8 @@
             filePath = "Cypriot  Custom Keyboard/CypriotAutocompleteSuggestionProvider.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "39"
-            endingLineNumber = "39"
+            startingLineNumber = "71"
+            endingLineNumber = "71"
             landmarkName = "asyncAutocompleteSuggestions(for:isFirstWordInSentence:completion:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -34,38 +34,6 @@
             endingLineNumber = "103"
             landmarkName = "performAutocomplete()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "7A582502-FABE-4BF5-87CE-55F850E51310 - e1e3af3f1b0aaf24"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Cypriot__Custom_Keyboard.KeyboardViewController.performAutocomplete() -&gt; ()"
-                  moduleName = "Cypriot  Custom Keyboard"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/alext/el_CY/Cypriot%20Keyboard/Cypriot%20%20Custom%20Keyboard/KeyboardViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "74"
-                  endingLineNumber = "74"
-                  offsetFromSymbolStart = "192">
-               </Location>
-               <Location
-                  uuid = "7A582502-FABE-4BF5-87CE-55F850E51310 - e575eca704ff8f0c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Result&lt;Swift.Array&lt;KeyboardKit.AutocompleteSuggestion&gt;, Swift.Error&gt;) -&gt; () in Cypriot__Custom_Keyboard.KeyboardViewController.performAutocomplete() -&gt; ()"
-                  moduleName = "Cypriot  Custom Keyboard"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/alext/el_CY/Cypriot%20Keyboard/Cypriot%20%20Custom%20Keyboard/KeyboardViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "74"
-                  endingLineNumber = "74"
-                  offsetFromSymbolStart = "68">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -78,8 +46,8 @@
             filePath = "Cypriot  Custom Keyboard/CypriotAutocompleteSuggestionProvider.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "37"
-            endingLineNumber = "37"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
             landmarkName = "asyncAutocompleteSuggestions(for:isFirstWordInSentence:completion:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -128,7 +96,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "29"
             endingLineNumber = "29"
-            landmarkName = "handle(_:on:sender:)"
+            landmarkName = "handle(_:on:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -176,7 +144,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "49"
             endingLineNumber = "49"
-            landmarkName = "triggerSpaceAutocomplete(for:on:sender:)"
+            landmarkName = "triggerSpaceAutocomplete(for:on:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -224,7 +192,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "121"
             endingLineNumber = "121"
-            landmarkName = "handleSwitch(for:on:sender:)"
+            landmarkName = "handleSwitch(for:on:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -240,7 +208,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "46"
             endingLineNumber = "46"
-            landmarkName = "triggerSpaceAutocomplete(for:on:sender:)"
+            landmarkName = "triggerSpaceAutocomplete(for:on:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -286,8 +254,8 @@
             filePath = "Cypriot  Custom Keyboard/CypriotAutocompleteSuggestionProvider.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "93"
-            endingLineNumber = "93"
+            startingLineNumber = "130"
+            endingLineNumber = "130"
             landmarkName = "suggestions(for:speller:isFirstWordInSentence:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -318,8 +286,8 @@
             filePath = "Cypriot  Custom Keyboard/CypriotAutocompleteSuggestionProvider.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "95"
-            endingLineNumber = "95"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
             landmarkName = "suggestions(for:speller:isFirstWordInSentence:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -334,8 +302,8 @@
             filePath = "Cypriot  Custom Keyboard/CypriotAutocompleteSuggestionProvider.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "22"
-            endingLineNumber = "22"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
             landmarkName = "init()"
             landmarkType = "7">
          </BreakpointContent>
@@ -350,8 +318,8 @@
             filePath = "Cypriot  Custom Keyboard/CypriotAutocompleteSuggestionProvider.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "20"
-            endingLineNumber = "20"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
             landmarkName = "init()"
             landmarkType = "7">
          </BreakpointContent>
@@ -686,8 +654,8 @@
             filePath = "Cypriot  Custom Keyboard/CypriotAutocompleteSuggestionProvider.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "58"
-            endingLineNumber = "58"
+            startingLineNumber = "95"
+            endingLineNumber = "95"
             landmarkName = "shouldReplace(text:greekText:guess:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -704,7 +672,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "111"
             endingLineNumber = "111"
-            landmarkName = "triggerAccent(for:on:sender:)"
+            landmarkName = "triggerAccent(for:on:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -720,7 +688,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "89"
             endingLineNumber = "89"
-            landmarkName = "triggerAccent(for:on:sender:)"
+            landmarkName = "triggerAccent(for:on:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -736,7 +704,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "156"
             endingLineNumber = "156"
-            landmarkName = "handleS(for:on:sender:)"
+            landmarkName = "handleS(for:on:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -750,8 +718,8 @@
             filePath = "Cypriot  Custom Keyboard/CypriotAutocompleteSuggestionProvider.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "173"
-            endingLineNumber = "173"
+            startingLineNumber = "210"
+            endingLineNumber = "210"
             landmarkName = "suggestions(for:speller:isFirstWordInSentence:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -766,8 +734,8 @@
             filePath = "Cypriot  Custom Keyboard/CypriotAutocompleteSuggestionProvider.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "166"
-            endingLineNumber = "166"
+            startingLineNumber = "203"
+            endingLineNumber = "203"
             landmarkName = "suggestions(for:speller:isFirstWordInSentence:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -782,8 +750,8 @@
             filePath = "Cypriot  Custom Keyboard/CypriotAutocompleteSuggestionProvider.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "133"
-            endingLineNumber = "133"
+            startingLineNumber = "170"
+            endingLineNumber = "170"
             landmarkName = "suggestions(for:speller:isFirstWordInSentence:)"
             landmarkType = "7">
          </BreakpointContent>
