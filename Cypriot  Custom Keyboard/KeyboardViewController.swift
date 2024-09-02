@@ -82,6 +82,7 @@ final class KeyboardViewController: KeyboardInputViewController, UIViewControlle
     }
     
     public var currentGuess: AutocompleteSuggestion? = nil
+    public var lastAction: KeyboardAction? = nil
     public var autocompleteCount: Int = 0
     
     // MARK: - Autocomplete
@@ -121,6 +122,13 @@ final class KeyboardViewController: KeyboardInputViewController, UIViewControlle
     
     override func resetAutocomplete() {
         autocompleteContext.suggestions = []
+    }
+    
+    
+    public func setLastAction(a: KeyboardAction) {
+        if(a.isInputAction || a == KeyboardAction.backspace) {
+            self.lastAction = a
+        }
     }
     
     //stuff needed for SwiftUI/container app:

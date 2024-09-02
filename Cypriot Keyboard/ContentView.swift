@@ -16,7 +16,20 @@ func isKeyboardExtensionEnabled() -> Bool {
      // There is no key `AppleKeyboards` in NSUserDefaults. That happens sometimes.
      return false
  }
+/* https://stackoverflow.com/questions/51896904/ios-how-to-detect-keyboard-change-event
+    
+     func prepareForKeyboardChangeNotification() {
+         NotificationCenter.default.addObserver(self, selector: #selector(changeInputMode), name: UITextInputMode.currentInputModeDidChangeNotification, object: nil)
+     }
 
+     @objc
+     func changeInputMode(notification: NSNotification) {
+         let inputMethod = txtInput.textInputMode?.primaryLanguage
+         //perform your logic here
+
+     }
+ 
+ */
  let keyboardExtensionBundleIdentifierPrefix = appBundleIdentifier + "."
  for keyboard in keyboards {
      if keyboard.hasPrefix(keyboardExtensionBundleIdentifierPrefix) {
@@ -28,23 +41,27 @@ func isKeyboardExtensionEnabled() -> Bool {
     
 struct ContentView: View {
     @State var textTyped: String = ""
-    @State private var showInstall = !isKeyboardExtensionEnabled()
+    @State private var showInstall =  !isKeyboardExtensionEnabled()
 
     var body: some View {
         VStack {
             Text("🇨🇾 Κύπριακο Keyboard")
                 .padding()
                 .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
-        HStack(alignment: .top, spacing: 0) {
-            Spacer(minLength: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/)
-            Button(NSLocalizedString("Installation", comment: "Installation")){showInstall=true}
-            Spacer(minLength: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/)
-            Button(NSLocalizedString("Use", comment: "Use")){showInstall=false}
-            Spacer(minLength: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/)
-            }
-        .padding()
+            
+
         if(showInstall) {
-            Text(NSLocalizedString("1. Open 'Settings'", comment: "1. Open 'Settings'")).padding(.top)
+            
+            Button(NSLocalizedString("1. Open 'Settings'", comment: "1. Open 'Settings'")){
+                //App-prefs:root=General&path=Keyboard/KEYBOARDS
+                
+                let url = URL(string: "App-prefs:root=General&path=Keyboard/KEYBOARDS")!
+
+                // From inside a `UIViewController` method...
+                UIApplication.shared.open(url, options: [:]) { (success: Bool) in
+                   // ... handle the result
+                }
+            }
             Text(NSLocalizedString("2. Tap 'General'", comment: "2. Tap 'General'")).padding(.top)
             Text(NSLocalizedString("3. Tap Keyboard", comment: "3. Tap Keyboard")).padding(.top)
             Text(NSLocalizedString("4. Tap Keyboards", comment: "4. Tap Keyboards")).padding(.top)
