@@ -13,45 +13,28 @@ extension String {
         return self[self.index(self.startIndex, offsetBy: index)]
     }
     public func levenshtein(_ other: String) -> Int {
-        let s = Array(self)
-        let o = Array(other)
-        let sCount = s.count
-        let oCount = o.count
+        // Rolling two-row buffer: O(min(n,m)) extra memory instead of O(n*m).
+        let a = Array(self)
+        let b = Array(other)
+        if a.isEmpty { return b.count }
+        if b.isEmpty { return a.count }
 
-        guard sCount != 0 else {
-            return oCount
-        }
+        var prev = Array(0...b.count)
+        var curr = [Int](repeating: 0, count: b.count + 1)
 
-        guard oCount != 0 else {
-            return sCount
-        }
-
-        let line : [Int]  = Array(repeating: 0, count: oCount + 1)
-        var mat : [[Int]] = Array(repeating: line, count: sCount + 1)
-
-        for i in 0...sCount {
-            mat[i][0] = i
-        }
-
-        for j in 0...oCount {
-            mat[0][j] = j
-        }
-
-        for j in 1...oCount {
-            for i in 1...sCount {
-                if s[i - 1] == o[j - 1] {
-                    mat[i][j] = mat[i - 1][j - 1]       // no operation
-                }
-                else {
-                    let del = mat[i - 1][j] + 1         // deletion
-                    let ins = mat[i][j - 1] + 1         // insertion
-                    let sub = mat[i - 1][j - 1] + 1     // substitution
-                    mat[i][j] = min(min(del, ins), sub)
+        for i in 1...a.count {
+            curr[0] = i
+            let ai = a[i - 1]
+            for j in 1...b.count {
+                if ai == b[j - 1] {
+                    curr[j] = prev[j - 1]
+                } else {
+                    curr[j] = Swift.min(prev[j], curr[j - 1], prev[j - 1]) + 1
                 }
             }
+            swap(&prev, &curr)
         }
-
-        return mat[sCount][oCount]
+        return prev[b.count]
     }
 
 }
@@ -110,128 +93,102 @@ class CypriotKeyboardHelper {
         return Double(levenshtein)
     }
 
-    static func greekify(text:String)  -> String {
- 
-         return text
-             .replacingOccurrences(of: "sh", with: "σ̆")
-             .replacingOccurrences(of: "Sh", with: "Σ̆")
-             .replacingOccurrences(of: "SH", with: "Σ̆")
+    static func greekify(text: String) -> String {
+        // Single-pass longest-match scanner. Replaces a chain of ~30
+        // replacingOccurrences calls (each allocating a fresh String); now
+        // walks the input once with switch-based dispatch over Characters.
+        // Priority: 3-char digraphs > 2-char digraphs > single-char map.
+        let chars = Array(text)
+        var out = ""
+        out.reserveCapacity(text.count * 2)
+        var i = 0
+        let n = chars.count
+        while i < n {
+            let c0 = chars[i]
+            if i + 2 < n, let m = greekifyTrigraph(c0, chars[i + 1], chars[i + 2]) {
+                out += m
+                i += 3
+                continue
+            }
+            if i + 1 < n, let m = greekifyDigraph(c0, chars[i + 1]) {
+                out += m
+                i += 2
+                continue
+            }
+            if let m = greekifySingle(c0) {
+                out += m
+            } else {
+                out.append(c0)
+            }
+            i += 1
+        }
+        return out
+    }
 
-             .replacingOccurrences(of: "ch", with: "τσ̆")
-             .replacingOccurrences(of: "Ch", with: "Τσ̆")
-             .replacingOccurrences(of: "CH", with: "Τσ̆")
+    private static func greekifyTrigraph(_ a: Character, _ b: Character, _ c: Character) -> String? {
+        switch (a, b, c) {
+        case ("n", "g", "k"), ("N", "G", "K"): return "γκ"
+        case ("t", "h", "s"): return "τησ"
+        case ("T", "h", "s"), ("T", "H", "S"): return "Τησ"
+        default: return nil
+        }
+    }
 
-             .replacingOccurrences(of: "ps", with: "ψ")
-             .replacingOccurrences(of: "Ps", with: "Ψ")
-             .replacingOccurrences(of: "PS", with: "Ψ")
-             .replacingOccurrences(of: "ks", with: "ξ")
-             .replacingOccurrences(of: "Ks", with: "Ξ")
-             .replacingOccurrences(of: "KS", with: "Ξ")
+    private static func greekifyDigraph(_ a: Character, _ b: Character) -> String? {
+        switch (a, b) {
+        case ("s", "h"):                return "σ̆"
+        case ("S", "h"), ("S", "H"):    return "Σ̆"
+        case ("c", "h"):                return "τσ̆"
+        case ("C", "h"), ("C", "H"):    return "Τσ̆"
+        case ("p", "s"):                return "ψ"
+        case ("P", "s"), ("P", "S"):    return "Ψ"
+        case ("k", "s"):                return "ξ"
+        case ("K", "s"), ("K", "S"):    return "Ξ"
+        case ("T", "h"), ("T", "H"):    return "Θ"
+        case ("t", "h"):                return "θ"
+        case ("y", "i"):                return "γι"
+        case ("Y", "i"), ("Y", "I"):    return "Γι"
+        case ("n", "g"), ("N", "G"):    return "γκ"
+        default: return nil
+        }
+    }
 
-            // "ths"/"Ths" must run before "th"/"Th" — otherwise the th is
-            // already consumed by the time these rules check.
-            .replacingOccurrences(of: "ths", with: "τησ")
-            .replacingOccurrences(of: "Ths", with: "Τησ")
-            .replacingOccurrences(of: "THS", with: "Τησ")
-
-             .replacingOccurrences(of: "Th", with: "Θ")
-             .replacingOccurrences(of: "TH", with: "Θ")
-             .replacingOccurrences(of: "th", with: "θ")
-
-        //"γι" is pronounced "yi", but other uses of "γ" are "g"s
-            .replacingOccurrences(of: "yi", with: "γι")
-            .replacingOccurrences(of: "Yi", with: "Γι")
-            .replacingOccurrences(of: "YI", with: "Γι")
-
-            .replacingOccurrences(of: "ngk", with: "γκ")
-            .replacingOccurrences(of: "NGK", with: "γκ")
-            .replacingOccurrences(of: "ng", with: "γκ")
-            .replacingOccurrences(of: "NG", with: "γκ")
-        
-            
-             .replacingOccurrences(of: "j", with: "τζ̆")
-             .replacingOccurrences(of: "J", with: "Τζ̆")
-             
-             .replacingOccurrences(of: "a", with: "α")
-             .replacingOccurrences(of: "A", with: "Α")
-             
-             .replacingOccurrences(of: "i", with: "ι")
-             .replacingOccurrences(of: "I", with: "Ι")
-             
-             .replacingOccurrences(of: "e", with: "ε")
-             .replacingOccurrences(of: "E", with: "Ε")
-             
-             .replacingOccurrences(of: "o", with: "ο")
-             .replacingOccurrences(of: "O", with: "Ο")
-             
-             .replacingOccurrences(of: "u", with: "υ")
-             .replacingOccurrences(of: "U", with: "Υ")
-            
-            .replacingOccurrences(of: "y", with: "υ")
-            .replacingOccurrences(of: "Y", with: "Υ")
-             
-             .replacingOccurrences(of: "w", with: "ω")
-             .replacingOccurrences(of: "W", with: "Ω")
-             
-             .replacingOccurrences(of: "r", with: "ρ")
-             .replacingOccurrences(of: "R", with: "Ρ")
-             
-             .replacingOccurrences(of: "t", with: "τ")
-             .replacingOccurrences(of: "T", with: "Τ")
-             
-             .replacingOccurrences(of: "p", with: "π")
-             .replacingOccurrences(of: "P", with: "Π")
-             
-             .replacingOccurrences(of: "s", with: "σ")
-             .replacingOccurrences(of: "S", with: "Σ")
-             
-             .replacingOccurrences(of: "d", with: "δ")
-             .replacingOccurrences(of: "D", with: "Δ")
-             
-             .replacingOccurrences(of: "f", with: "φ")
-             .replacingOccurrences(of: "F", with: "Φ")
-             
-             .replacingOccurrences(of: "g", with: "γ")
-             .replacingOccurrences(of: "G", with: "Γ")
-             
-             .replacingOccurrences(of: "h", with: "η")
-             .replacingOccurrences(of: "H", with: "Η")
-             
-             .replacingOccurrences(of: "k", with: "κ")
-             .replacingOccurrences(of: "K", with: "Κ")
-             
-             .replacingOccurrences(of: "l", with: "λ")
-             .replacingOccurrences(of: "L", with: "Λ")
-             
-             .replacingOccurrences(of: "z", with: "ζ")
-             .replacingOccurrences(of: "Z", with: "Ζ")
-             
-             .replacingOccurrences(of: "x", with: "χ")
-             .replacingOccurrences(of: "X", with: "Χ")
-             
-             .replacingOccurrences(of: "c", with: "κ")
-             .replacingOccurrences(of: "C", with: "Κ")
-             
-             .replacingOccurrences(of: "v", with: "β")
-             .replacingOccurrences(of: "V", with: "Β")
-             
-             .replacingOccurrences(of: "b", with: "μπ")
-             .replacingOccurrences(of: "B", with: "Μπ")
-             
-             .replacingOccurrences(of: "n", with: "ν")
-             .replacingOccurrences(of: "N", with: "Ν")
-             
-             .replacingOccurrences(of: "m", with: "μ")
-            .replacingOccurrences(of: "M", with: "Μ")
-            
-            .replacingOccurrences(of: "3", with: "ξ")
-             
-     }
+    private static func greekifySingle(_ c: Character) -> String? {
+        switch c {
+        case "a": return "α"; case "A": return "Α"
+        case "i": return "ι"; case "I": return "Ι"
+        case "e": return "ε"; case "E": return "Ε"
+        case "o": return "ο"; case "O": return "Ο"
+        case "u": return "υ"; case "U": return "Υ"
+        case "y": return "υ"; case "Y": return "Υ"
+        case "w": return "ω"; case "W": return "Ω"
+        case "r": return "ρ"; case "R": return "Ρ"
+        case "t": return "τ"; case "T": return "Τ"
+        case "p": return "π"; case "P": return "Π"
+        case "s": return "σ"; case "S": return "Σ"
+        case "d": return "δ"; case "D": return "Δ"
+        case "f": return "φ"; case "F": return "Φ"
+        case "g": return "γ"; case "G": return "Γ"
+        case "h": return "η"; case "H": return "Η"
+        case "k": return "κ"; case "K": return "Κ"
+        case "l": return "λ"; case "L": return "Λ"
+        case "z": return "ζ"; case "Z": return "Ζ"
+        case "x": return "χ"; case "X": return "Χ"
+        case "c": return "κ"; case "C": return "Κ"
+        case "v": return "β"; case "V": return "Β"
+        case "b": return "μπ"; case "B": return "Μπ"
+        case "n": return "ν"; case "N": return "Ν"
+        case "m": return "μ"; case "M": return "Μ"
+        case "j": return "τζ̆"; case "J": return "Τζ̆"
+        case "3": return "ξ"
+        default: return nil
+        }
+    }
     
     static func isCommonWord(word:String) -> Bool {
         return commonWords.contains(word.lowercased())
     }
-    static let commonWords = ["άλλα",
+    static let commonWords: Set<String> = ["άλλα",
                        "άλλες",
                        "άλλη",
                        "άλλην",

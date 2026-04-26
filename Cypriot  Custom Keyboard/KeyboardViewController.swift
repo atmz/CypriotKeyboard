@@ -61,7 +61,9 @@ final class KeyboardViewController: KeyboardInputViewController {
                 CypriotSecondaryCalloutActionProvider()])
         
         setup(with: keyboardView)
+        #if DEBUG
         print("viewDidLoad complete")
+        #endif
     }
     
     
@@ -89,12 +91,26 @@ final class KeyboardViewController: KeyboardInputViewController {
     
     
     private var autocompleteProvider = CypriotAutocompleteSuggestionProvider()
-    
+
+    // Coalesces rapid keystrokes: only the most recent typed word actually
+    // hits Hunspell after the debounce window expires. The autocompleteCount
+    // lock token below stays as defense-in-depth for the global-queue race.
+    private var pendingAutocomplete: DispatchWorkItem?
+    private static let autocompleteDebounceMs = 40
+
     private func isFirstWordInSentence(word: String) -> Bool{
         guard let currentSentence = textDocumentProxy.currentSentenceBeforeInput else { return true }
         return currentSentence.trimmed() == word.trimmed()
     }
+
     override func performAutocomplete() {
+        pendingAutocomplete?.cancel()
+        let work = DispatchWorkItem { [weak self] in self?.runAutocomplete() }
+        pendingAutocomplete = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(Self.autocompleteDebounceMs), execute: work)
+    }
+
+    private func runAutocomplete() {
         guard let word = textDocumentProxy.currentWord else { return resetAutocomplete() }
         self.currentGuess = nil
         self.autocompleteCount += 1
@@ -102,7 +118,11 @@ final class KeyboardViewController: KeyboardInputViewController {
         let autompleteLock = self.autocompleteCount
         autocompleteProvider.asyncAutocompleteSuggestions(for: word, isFirstWordInSentence: isFirstWordInSentence(word: word)) { [weak self] result in
             switch result {
-            case .failure(let error): print(error.localizedDescription)
+            case .failure(let error):
+                #if DEBUG
+                print(error.localizedDescription)
+                #endif
+                break
             case .success(let result):
                 if self?.autocompleteCount == autompleteLock {
                     DispatchQueue.main.async {

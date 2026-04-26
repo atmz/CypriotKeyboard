@@ -272,6 +272,44 @@ class IsCommonWordTests: XCTestCase {
     }
 }
 
+// MARK: - levenshtein
+
+class LevenshteinTests: XCTestCase {
+
+    func testIdentical() {
+        XCTAssertEqual("kitten".levenshtein("kitten"), 0)
+        XCTAssertEqual("".levenshtein(""), 0)
+    }
+
+    func testEmptyVsNonEmpty() {
+        XCTAssertEqual("".levenshtein("abc"), 3)
+        XCTAssertEqual("abc".levenshtein(""), 3)
+    }
+
+    func testClassicCases() {
+        XCTAssertEqual("kitten".levenshtein("sitting"), 3)
+        XCTAssertEqual("flaw".levenshtein("lawn"), 2)
+        XCTAssertEqual("intention".levenshtein("execution"), 5)
+    }
+
+    func testSymmetric() {
+        XCTAssertEqual("foo".levenshtein("bar"), "bar".levenshtein("foo"))
+        XCTAssertEqual("καλη".levenshtein("καλι"), "καλι".levenshtein("καλη"))
+    }
+
+    func testGraphemeClusters() {
+        // σ̆ is a single grapheme cluster (σ + U+0306) — counts as one Character.
+        XCTAssertEqual("σ̆".levenshtein("σ"), 1)
+        XCTAssertEqual("καλημέρα".levenshtein("καλημερα"), 1)
+    }
+
+    func testTriangleInequality() {
+        // d(a,c) ≤ d(a,b) + d(b,c) for any a,b,c
+        let a = "kalimera", b = "καλημερα", c = "καλημέρα"
+        XCTAssertLessThanOrEqual(a.levenshtein(c), a.levenshtein(b) + b.levenshtein(c))
+    }
+}
+
 // MARK: - End-to-end autocomplete (real Hunspell)
 
 class SuggestionsE2ETests: XCTestCase {

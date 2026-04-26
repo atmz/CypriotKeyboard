@@ -94,7 +94,16 @@ private extension AutocompleteSuggestionProvider {
         guard CypriotKeyboardHelper.shouldAttemptAutocomplete(text: text) else { return [] }
         let isPunctFirst = !(text.first?.isLetter ?? true)
         let greekText = isPunctFirst ? CypriotKeyboardHelper.greekify(text: String(text.suffix(text.count-1))) : CypriotKeyboardHelper.greekify(text: text)
-    
+
+        // Fast path: pure-Greek common words skip Hunspell entirely. The
+        // word is already correctly spelled (commonWords is hand-curated),
+        // so there's no useful suggestion to compute — just echo it back.
+        // Hunspell_suggest() is the dominant per-keystroke cost, and this
+        // short-circuit fires for the most frequently-typed words.
+        if !isPunctFirst, text == greekText, CypriotKeyboardHelper.isCommonWord(word: text) {
+            return [suggestion(text, verbatim: true)]
+        }
+
         var suggestions_ptr: UnsafeMutablePointer<UnsafeMutablePointer<CChar>?>? = nil
         var suggestions_ptr_0 = suggestions_ptr
         
@@ -106,7 +115,9 @@ private extension AutocompleteSuggestionProvider {
         // 1. Get suggestions from hunspell engine
         let suggestCount = Hunspell_suggest(speller,&suggestions_ptr, shouldCheckLowercase ? greekText.lowercased() : greekText)
 
+        #if DEBUG
         print(greekText, isFirstWordInSentence, shouldCheckLowercase)
+        #endif
         var hunspellSuggestions: [String] = []
         if suggestions_ptr != nil {
             while let s = suggestions_ptr?.pointee, hunspellSuggestions.count<suggestCount {
@@ -121,7 +132,9 @@ private extension AutocompleteSuggestionProvider {
                 suggestions_ptr=suggestions_ptr?.advanced(by: 1)
             }
             Hunspell_free_list(speller,&suggestions_ptr_0, suggestCount)
+            #if DEBUG
             print(hunspellSuggestions)
+            #endif
         }
         
         var priorityMatch : String? = nil
@@ -147,7 +160,9 @@ private extension AutocompleteSuggestionProvider {
                         nextPriorityMatch = priorityMatch
                     }
                     priorityMatch = suggestion
+                    #if DEBUG
                     print("common match", suggestion)
+                    #endif
                     break
                 }
             }
@@ -161,7 +176,9 @@ private extension AutocompleteSuggestionProvider {
                         nextPriorityMatch = priorityMatch
                     }
                     priorityMatch = suggestion
+                    #if DEBUG
                     print("perfect match", suggestion)
+                    #endif
                     break;
                 }
             }
@@ -180,7 +197,9 @@ private extension AutocompleteSuggestionProvider {
         case 3:
             // Common word match or match except for accents, ignore hunspell ordering and suggest it
             if let priorityMatchString = priorityMatch {
+                    #if DEBUG
                     print(priorityMatchString)
+                    #endif
                 if let nextMatchString = nextPriorityMatch {
                     return [
                         suggestion(text, verbatim:true),
@@ -206,7 +225,9 @@ private extension AutocompleteSuggestionProvider {
         case 2:
             // Common word match or match except for accents, ignore hunspell ordering and suggest it
             if let priorityMatchString = priorityMatch {
+                    #if DEBUG
                     print(priorityMatchString)
+                    #endif
                 if let nextMatchString = nextPriorityMatch {
                     return [
                         suggestion(text, verbatim:true),

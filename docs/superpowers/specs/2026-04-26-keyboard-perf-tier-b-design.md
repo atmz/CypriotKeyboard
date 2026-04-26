@@ -13,7 +13,6 @@ Cut autocomplete latency and reduce per-keystroke allocation churn in the keyboa
 - Replacing Hunspell with a trie/DAWG (deferred to tier c).
 - Shrinking `dict/el_CY.dic` itself (user maintains the cap upstream during dict creation).
 - Touching `project.pbxproj` or `*.xcscheme` (the user has unrelated WIP edits there).
-- Fixing the latent dead-code in `greekify`'s chain (`ths`/`Ths` rules are unreachable today; current behavior preserved).
 
 ## Hot-path inventory
 
@@ -59,12 +58,12 @@ New implementation:
 
 Replace the chained `replacingOccurrences` block (~30 calls × ~N character string copies) with one pass over `[Character]`, longest-match-first against a static digraph table.
 
-**Behavior preservation contract:** for every input string, the new implementation must return the same `String` as the old one. Specifically:
+**Behavior preservation contract:** for every input string, the new implementation must return the same `String` as the old one. Longest-match-first priority:
 
-- 3-char digraph `ngk` → `γκ` wins over 2-char `ng`.
-- 2-char digraphs `sh`/`Sh`/`ch`/`Ch`/`ps`/`Ps`/`ks`/`Ks`/`Th`/`th`/`yi`/`Yi`/`ng` win over their 1-char constituents.
-- The chain has dead rules `ths` → `τησ` and `Ths` → `Τησ` that are never reached because `th`/`Th` already ran. **Preserve current observable behavior by omitting these from the scanner table** (rather than fixing the latent bug, which is out of scope here).
-- 1-char fallback: every other letter goes through the existing single-character map (including `b` → `μπ`, `B` → `Μπ`, `j` → `τζ̆`, `J` → `Τζ̆`, `3` → `ξ`).
+- 3-char: `ngk`/`NGK` → `γκ`; `ths`/`Ths`/`THS` → `τησ`/`Τησ`/`Τησ`.
+- 2-char: `sh`/`Sh`/`SH`, `ch`/`Ch`/`CH`, `ps`/`Ps`/`PS`, `ks`/`Ks`/`KS`, `Th`/`TH`/`th`, `yi`/`Yi`/`YI`, `ng`/`NG`.
+- 1-char fallback: every other letter goes through the single-character map (including `b` → `μπ`, `B` → `Μπ`, `j` → `τζ̆`, `J` → `Τζ̆`, `c`/`C` → `κ`/`Κ`, `y`/`Y` → `υ`/`Υ`, `h`/`H` → `η`/`Η`, `3` → `ξ`).
+- Non-mapped characters pass through unchanged.
 
 **Risk mitigation:** unit tests run a corpus through both implementations and assert byte-equivalence before the old impl is removed. The old implementation lives on briefly as `greekifyLegacy` during the rollout, then deletes once tests pass.
 
@@ -129,4 +128,3 @@ The user's existing `*.xcscheme` and `Breakpoints_v2.xcbkptlist` modifications a
 
 - Hunspell's resident-memory hash. That's tier (c).
 - Long-word memory blowups during `Hunspell_suggest`. The current 10-letter cap stays meaningful.
-- The latent unreachable `ths`/`Ths` rules. Filed as a future cleanup; behavior preserved here.
