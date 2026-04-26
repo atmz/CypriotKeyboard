@@ -13,8 +13,10 @@ extension String {
         return self[self.index(self.startIndex, offsetBy: index)]
     }
     public func levenshtein(_ other: String) -> Int {
-        let sCount = self.count
-        let oCount = other.count
+        let s = Array(self)
+        let o = Array(other)
+        let sCount = s.count
+        let oCount = o.count
 
         guard sCount != 0 else {
             return oCount
@@ -37,7 +39,7 @@ extension String {
 
         for j in 1...oCount {
             for i in 1...sCount {
-                if self[i - 1] == other[j - 1] {
+                if s[i - 1] == o[j - 1] {
                     mat[i][j] = mat[i - 1][j - 1]       // no operation
                 }
                 else {
@@ -55,115 +57,96 @@ extension String {
 }
 
 class CypriotKeyboardHelper {
-    
+
+    static func shouldReplace(text: String, greekText: String, guess: String) -> Bool {
+        if text == greekText {
+            // Pure-Greek input: only auto-replace when the difference is purely
+            // diacritics, and only for words ≥2 syllables (single-syllable Greek
+            // words conventionally don't carry accents).
+            if countSyllables(text: text) < 2 { return false }
+            let accentlessWord = text.folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR"))
+            let accentlessGuess = guess.folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR"))
+            if guess != guess.lowercased() {
+                return accentlessWord.lowercased() == accentlessGuess.lowercased()
+                    && accentlessGuess != guess
+                    && accentlessWord.lowercased() == text.lowercased()
+            }
+            return accentlessWord == accentlessGuess
+                && accentlessGuess != guess
+                && accentlessWord == text
+        }
+        // Greeklish input: bias toward auto-replace within Levenshtein distance.
+        return distanceMeasure(transliteratedWord: guess, greekWord: greekText) < 3.0
+    }
+
+    static func shouldAttemptAutocomplete(text: String) -> Bool {
+        // Skip autocomplete for tokens with no letters (numbers, bare punctuation).
+        // Otherwise the Greeklish branch would happily replace "30" with things like "3η".
+        return text.contains(where: { $0.isLetter })
+    }
+
     static func countSyllables(text: String) -> Int {
         var count = 0
-        let vowels = "αειυηοω"
-        var last=Character("Q")
-        for letter in text.lowercased() {
-            if vowels.contains(letter) && !vowels.contains(last) {
+        let vowels = "αειυηοωaeiouy"
+        var last: Character? = nil
+        // Fold diacritics so accented vowels (ά έ ή ί ό ύ ώ) match the
+        // unaccented vowel set.
+        let folded = text.lowercased().folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR"))
+        for letter in folded {
+            let lastWasVowel = last.map { vowels.contains($0) } ?? false
+            if vowels.contains(letter) && !lastWasVowel {
                 count+=1
             }
             last = letter
         }
         return count
     }
-    
-    static private func normalizeGreekWord(greekWord: String)-> String{
-        // Convert greek word to something more comparable with a transliterated string.
-        // Implementation details linked to greekify, since it will be comparing against greekify strings
-        return greekWord
-            .lowercased()
-            //First, check for compound letters that can be reduced to 'i' or 'e' before we remove tonous
-            .replacingOccurrences(of: "ει", with: "ι")
-            .replacingOccurrences(of: "εί", with: "ι")
-            .replacingOccurrences(of: "οι", with: "ι")
-            .replacingOccurrences(of: "οί", with: "ι")
-            // get rid of tonous
-            .folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR"))
-            //replace other letters
-            .replacingOccurrences(of: "η", with: "ι")
-    }
-    
-    
+
     static func distanceMeasure(transliteratedWord: String, greekWord: String) -> Double {
-        
+
         let a = greekWord.lowercased().folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR"))
         let b = transliteratedWord.lowercased().folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR"))
-/*
-         var score = 0.0
-
-        let aCount = a.count
-        let bCount = b.count
-        if (aCount < 1 || bCount < 1) {
-            return 0.0
-        }
-        
-        for i in 1...aCount {
-            if i <= bCount && a[i - 1] == b[i - 1] {
-                score+=1
-            }
-        }
-        return score/Double(aCount)*/
         let levenshtein=a.levenshtein(b)
         return Double(levenshtein)
     }
-    
-    static func getOverrideMatch(for text:String) -> String?{
-        let overrides = [
-            "me":"με",
-            "με":"με",
-            "gia":"για",
-            "yia":"για",
-            "για":"για",
-            "na":"να",
-            "να":"να",
-            "sou":"σου",
-            "σου":"σου",
-            "mou":"μου",
-            "μου":"μου",
-            "pou":"που",
-            "που":"που",
-            "en":"εν",
-            "εν":"εν",
-            "η":"η",
-            "h":"η",
-            "ο":"ο",
-            "o":"ο",
-        ]
-        if let override = overrides[text] {
-            return override
-        }
-        return nil
-    }
-    
+
     static func greekify(text:String)  -> String {
  
          return text
              .replacingOccurrences(of: "sh", with: "σ̆")
              .replacingOccurrences(of: "Sh", with: "Σ̆")
-             
+             .replacingOccurrences(of: "SH", with: "Σ̆")
+
              .replacingOccurrences(of: "ch", with: "τσ̆")
              .replacingOccurrences(of: "Ch", with: "Τσ̆")
-             
+             .replacingOccurrences(of: "CH", with: "Τσ̆")
+
              .replacingOccurrences(of: "ps", with: "ψ")
              .replacingOccurrences(of: "Ps", with: "Ψ")
+             .replacingOccurrences(of: "PS", with: "Ψ")
              .replacingOccurrences(of: "ks", with: "ξ")
              .replacingOccurrences(of: "Ks", with: "Ξ")
-             
+             .replacingOccurrences(of: "KS", with: "Ξ")
+
+            // "ths"/"Ths" must run before "th"/"Th" — otherwise the th is
+            // already consumed by the time these rules check.
+            .replacingOccurrences(of: "ths", with: "τησ")
+            .replacingOccurrences(of: "Ths", with: "Τησ")
+            .replacingOccurrences(of: "THS", with: "Τησ")
+
              .replacingOccurrences(of: "Th", with: "Θ")
+             .replacingOccurrences(of: "TH", with: "Θ")
              .replacingOccurrences(of: "th", with: "θ")
-            
+
         //"γι" is pronounced "yi", but other uses of "γ" are "g"s
             .replacingOccurrences(of: "yi", with: "γι")
             .replacingOccurrences(of: "Yi", with: "Γι")
-    
+            .replacingOccurrences(of: "YI", with: "Γι")
+
             .replacingOccurrences(of: "ngk", with: "γκ")
+            .replacingOccurrences(of: "NGK", with: "γκ")
             .replacingOccurrences(of: "ng", with: "γκ")
-            
-            //th can be theta or τη - todo: better solution
-            .replacingOccurrences(of: "ths", with: "τησ")
-            .replacingOccurrences(of: "Ths", with: "Τησ")
+            .replacingOccurrences(of: "NG", with: "γκ")
         
             
              .replacingOccurrences(of: "j", with: "τζ̆")

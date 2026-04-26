@@ -89,37 +89,9 @@ public struct CypriotAutocompleteSuggestion: AutocompleteSuggestion {
 
 private extension AutocompleteSuggestionProvider {
 
-    
-    func shouldReplace(text: String, greekText: String, guess: String)-> Bool{
-        // This will only be true if all characters in the word are greek
-        if(text == greekText) {
-            // In Greek, we only auto-replace accent-only changes
-            if CypriotKeyboardHelper.countSyllables(text:text)<2 {
-                // if short, don't auto-replace -- one-syllable words don't need accents
-                return false
-            }
-            let accentlessWord = text.folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR"))
-            let accentlessGuess = guess.folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR"))
-            if(guess != guess.lowercased()) { // guess is not lowercase
-                //Special casing for now in case we want to change later
-                return accentlessWord.lowercased() == accentlessGuess.lowercased() // If lowercased words are the same without accents
-                    && accentlessGuess != guess // and guess has accents,
-                    && accentlessWord.lowercased()  == text.lowercased() // and word does not have accents, replace with guess.
-            }
-            
-            return accentlessWord == accentlessGuess   // If words are the same without accents
-                && accentlessGuess != guess // and guess has accents,
-                && accentlessWord == text // and word does not have accents, replace with guess.
-        } else {
-            // if Greeklish, we *always* want to auto-replace
-            let score = CypriotKeyboardHelper.distanceMeasure(transliteratedWord: guess, greekWord: greekText)
-            print(guess,greekText,score)
-            return score<3.0
-        }
-    }
-    
     func suggestions(for text: String, speller:OpaquePointer?, isFirstWordInSentence:Bool) -> [CypriotAutocompleteSuggestion] {
         guard speller != nil else { return [] }
+        guard CypriotKeyboardHelper.shouldAttemptAutocomplete(text: text) else { return [] }
         let isPunctFirst = !(text.first?.isLetter ?? true)
         let greekText = isPunctFirst ? CypriotKeyboardHelper.greekify(text: String(text.suffix(text.count-1))) : CypriotKeyboardHelper.greekify(text: text)
     
@@ -158,7 +130,7 @@ private extension AutocompleteSuggestionProvider {
         if text == greekText {
         // 2a. In greek: determine if any suggestions are eligible for auto-replace, and if so, tag the first as priorityMatch
             for suggestion in hunspellSuggestions {
-                if(shouldReplace(text: text, greekText: greekText, guess: suggestion)) {
+                if(CypriotKeyboardHelper.shouldReplace(text: text, greekText: greekText, guess: suggestion)) {
                     if priorityMatch != nil && priorityMatch != suggestion{
                         nextPriorityMatch = priorityMatch
                     }
@@ -212,21 +184,21 @@ private extension AutocompleteSuggestionProvider {
                 if let nextMatchString = nextPriorityMatch {
                     return [
                         suggestion(text, verbatim:true),
-                        suggestion(priorityMatchString, willReplace:shouldReplace(text: text, greekText: greekText, guess: priorityMatchString)),
+                        suggestion(priorityMatchString, willReplace:CypriotKeyboardHelper.shouldReplace(text: text, greekText: greekText, guess: priorityMatchString)),
                         suggestion(nextMatchString),
                         hunspellSuggestions[0] != priorityMatchString &&  hunspellSuggestions[0] != nextMatchString ? suggestion(hunspellSuggestions[0]) : hunspellSuggestions[1] != priorityMatchString &&  hunspellSuggestions[1] != nextMatchString ? suggestion(hunspellSuggestions[1]) : suggestion(hunspellSuggestions[2])
                     ]
                 }
                 return [
                     suggestion(text, verbatim:true),
-                    suggestion(priorityMatchString, willReplace:shouldReplace(text: text, greekText: greekText, guess: priorityMatchString)),
+                    suggestion(priorityMatchString, willReplace:CypriotKeyboardHelper.shouldReplace(text: text, greekText: greekText, guess: priorityMatchString)),
                     hunspellSuggestions[0] != priorityMatchString ? suggestion(hunspellSuggestions[0]) : suggestion(hunspellSuggestions[1]),
                     hunspellSuggestions[1] != priorityMatchString ? suggestion(hunspellSuggestions[1]) : suggestion(hunspellSuggestions[2])
                 ]
             }
             return [
                 suggestion(text, verbatim:true),
-                suggestion(hunspellSuggestions[0], willReplace:shouldReplace(text: text, greekText: greekText, guess: hunspellSuggestions[0])),
+                suggestion(hunspellSuggestions[0], willReplace:CypriotKeyboardHelper.shouldReplace(text: text, greekText: greekText, guess: hunspellSuggestions[0])),
                 suggestion(hunspellSuggestions[1]),
                 suggestion(hunspellSuggestions[2]),
             ]
@@ -238,26 +210,26 @@ private extension AutocompleteSuggestionProvider {
                 if let nextMatchString = nextPriorityMatch {
                     return [
                         suggestion(text, verbatim:true),
-                        suggestion(priorityMatchString, willReplace:shouldReplace(text: text, greekText: greekText, guess: priorityMatchString)),
+                        suggestion(priorityMatchString, willReplace:CypriotKeyboardHelper.shouldReplace(text: text, greekText: greekText, guess: priorityMatchString)),
                         suggestion(nextMatchString)
                     ]
                 }
                 return [
                     suggestion(text, verbatim:true),
-                    suggestion(priorityMatchString, willReplace:shouldReplace(text: text, greekText: greekText, guess: priorityMatchString)),
+                    suggestion(priorityMatchString, willReplace:CypriotKeyboardHelper.shouldReplace(text: text, greekText: greekText, guess: priorityMatchString)),
                     hunspellSuggestions[0] != priorityMatchString ? suggestion(hunspellSuggestions[0]) : suggestion(hunspellSuggestions[1])
                 ]
             }
             return [
                 suggestion(text, verbatim:true),
-                suggestion(hunspellSuggestions[0], willReplace:shouldReplace(text: text, greekText: greekText, guess: hunspellSuggestions[0])),
+                suggestion(hunspellSuggestions[0], willReplace:CypriotKeyboardHelper.shouldReplace(text: text, greekText: greekText, guess: hunspellSuggestions[0])),
                 suggestion(hunspellSuggestions[1])
             ]
                 
         case 1:
             return [
                 suggestion(text, verbatim:true),
-                suggestion(hunspellSuggestions[0], willReplace:shouldReplace(text: text, greekText: greekText, guess: hunspellSuggestions[0]))
+                suggestion(hunspellSuggestions[0], willReplace:CypriotKeyboardHelper.shouldReplace(text: text, greekText: greekText, guess: hunspellSuggestions[0]))
             ]
         default:
             return [

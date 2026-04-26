@@ -12,6 +12,7 @@
 		CB22289725D262FF00F0707C /* el_CY.dic in Resources */ = {isa = PBXBuildFile; fileRef = CB22289525D262FF00F0707C /* el_CY.dic */; };
 		CB369FFF2601C01C00E050D5 /* CypriotKeyboardUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB369FFE2601C01C00E050D5 /* CypriotKeyboardUtil.swift */; };
 		CB36A0002601C01C00E050D5 /* CypriotKeyboardUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB369FFE2601C01C00E050D5 /* CypriotKeyboardUtil.swift */; };
+		CB36A0FF2601C01C00E050D5 /* CypriotKeyboardUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB369FFE2601C01C00E050D5 /* CypriotKeyboardUtil.swift */; };
 		CB46BF1625CCCE2C00E3413A /* Cypriot_KeyboardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46BF1525CCCE2C00E3413A /* Cypriot_KeyboardApp.swift */; };
 		CB46BF1825CCCE2C00E3413A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46BF1725CCCE2C00E3413A /* ContentView.swift */; };
 		CB46BF1A25CCCE2D00E3413A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB46BF1925CCCE2D00E3413A /* Assets.xcassets */; };
@@ -19,7 +20,7 @@
 		CB46BF2825CCCE2D00E3413A /* Cypriot_KeyboardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46BF2725CCCE2D00E3413A /* Cypriot_KeyboardTests.swift */; };
 		CB46BF3325CCCE2D00E3413A /* Cypriot_KeyboardUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46BF3225CCCE2D00E3413A /* Cypriot_KeyboardUITests.swift */; };
 		CB46BF4A25CCCE7200E3413A /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46BF4925CCCE7200E3413A /* KeyboardViewController.swift */; };
-		CB46BF4E25CCCE7200E3413A /* Cypriot  Custom Keyboard.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = CB46BF4725CCCE7200E3413A /* Cypriot  Custom Keyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CB46BF4E25CCCE7200E3413A /* Cypriot  Custom Keyboard.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CB46BF4725CCCE7200E3413A /* Cypriot  Custom Keyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CB46BF5925CCCF9500E3413A /* KeyboardKit in Frameworks */ = {isa = PBXBuildFile; productRef = CB46BF5825CCCF9500E3413A /* KeyboardKit */; };
 		CB46BF8425CCFF4000E3413A /* CypriotAutocompleteSuggestionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46BF8325CCFF4000E3413A /* CypriotAutocompleteSuggestionProvider.swift */; };
 		CB46BF8A25CCFF5F00E3413A /* KeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46BF8925CCFF5F00E3413A /* KeyboardView.swift */; };
@@ -90,15 +91,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		CB46BF5225CCCE7200E3413A /* Embed App Extensions */ = {
+		CB46BF5225CCCE7200E3413A /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				CB46BF4E25CCCE7200E3413A /* Cypriot  Custom Keyboard.appex in Embed App Extensions */,
+				CB46BF4E25CCCE7200E3413A /* Cypriot  Custom Keyboard.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -347,7 +348,7 @@
 				CB46BF0E25CCCE2C00E3413A /* Sources */,
 				CB46BF0F25CCCE2C00E3413A /* Frameworks */,
 				CB46BF1025CCCE2C00E3413A /* Resources */,
-				CB46BF5225CCCE7200E3413A /* Embed App Extensions */,
+				CB46BF5225CCCE7200E3413A /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -424,8 +425,9 @@
 		CB46BF0A25CCCE2C00E3413A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1240;
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					CB46BF1125CCCE2C00E3413A = {
 						CreatedOnToolsVersion = 12.4;
@@ -545,6 +547,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CB46BF2825CCCE2D00E3413A /* Cypriot_KeyboardTests.swift in Sources */,
+				CB36A0FF2601C01C00E050D5 /* CypriotKeyboardUtil.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -652,8 +655,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -673,6 +678,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -714,8 +720,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -728,6 +736,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
@@ -737,14 +746,12 @@
 		CB46BF3825CCCE2D00E3413A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 47;
+				CURRENT_PROJECT_VERSION = 48;
 				DEVELOPMENT_ASSET_PATHS = "\"Cypriot Keyboard/Preview Content\"";
-				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Cypriot Keyboard/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
@@ -757,7 +764,7 @@
 					"$(PROJECT_DIR)/hunspell_src/hunspell/.libs",
 					"$(PROJECT_DIR)/hunspell_src",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = "alextoumazis.Cypriot-Keyboard";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
@@ -772,14 +779,12 @@
 		CB46BF3925CCCE2D00E3413A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 47;
+				CURRENT_PROJECT_VERSION = 48;
 				DEVELOPMENT_ASSET_PATHS = "\"Cypriot Keyboard/Preview Content\"";
-				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Cypriot Keyboard/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
@@ -792,7 +797,7 @@
 					"$(PROJECT_DIR)/hunspell_src/hunspell/.libs",
 					"$(PROJECT_DIR)/hunspell_src",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = "alextoumazis.Cypriot-Keyboard";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
@@ -806,12 +811,10 @@
 		CB46BF3B25CCCE2D00E3413A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				INFOPLIST_FILE = "Cypriot KeyboardTests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -819,6 +822,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "alextoumazis.Cypriot-KeyboardTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INCLUDE_PATHS = "${SRCROOT}";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Cypriot Keyboard.app/Cypriot Keyboard";
@@ -828,12 +832,10 @@
 		CB46BF3C25CCCE2D00E3413A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				INFOPLIST_FILE = "Cypriot KeyboardTests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -841,6 +843,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "alextoumazis.Cypriot-KeyboardTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INCLUDE_PATHS = "${SRCROOT}";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Cypriot Keyboard.app/Cypriot Keyboard";
@@ -850,9 +853,7 @@
 		CB46BF3E25CCCE2D00E3413A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				INFOPLIST_FILE = "Cypriot KeyboardUITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -870,9 +871,7 @@
 		CB46BF3F25CCCE2D00E3413A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5577AM3Y3M;
 				INFOPLIST_FILE = "Cypriot KeyboardUITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -892,8 +891,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 47;
-				DEVELOPMENT_TEAM = 5577AM3Y3M;
+				CURRENT_PROJECT_VERSION = 48;
 				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Cypriot  Custom Keyboard/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
@@ -908,7 +906,7 @@
 					"$(PROJECT_DIR)/hunspell_src/hunspell/.libs",
 				);
 				"LIBRARY_SEARCH_PATHS[arch=*]" = "${SRCROOT}/hunspell_src";
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = "alextoumazis.Cypriot-Keyboard.Cypriot--Custom-Keyboard";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -927,8 +925,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 47;
-				DEVELOPMENT_TEAM = 5577AM3Y3M;
+				CURRENT_PROJECT_VERSION = 48;
 				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Cypriot  Custom Keyboard/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
@@ -943,7 +940,7 @@
 					"$(PROJECT_DIR)/hunspell_src/hunspell/.libs",
 				);
 				"LIBRARY_SEARCH_PATHS[arch=*]" = "${SRCROOT}/hunspell_src";
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = "alextoumazis.Cypriot-Keyboard.Cypriot--Custom-Keyboard";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
