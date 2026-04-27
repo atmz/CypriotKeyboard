@@ -59,44 +59,50 @@ final class DawgAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
     // MARK: - Suggestion construction
 
     private func buildSuggestions(for text: String) -> [CypriotAutocompleteSuggestion] {
-        // Normalise input: greekify Latin → Greek, then fold to a phonetic key.
         let greek = CypriotKeyboardHelper.greekify(text: text)
 
         // Capitalization handling, mirroring the Hunspell path:
         // The DAWG is built from lowercase forms, so lookups must be lowercase.
-        // We detect a capitalized first letter, lowercase it before folding,
-        // and recapitalize results before display.
-        let isCapitalFirst: Bool
+        // We detect input casing, lowercase before folding, recapitalize results
+        // to match the user's input style.
+        let casing: InputCasing
         let lookupGreek: String
-        if let first = greek.first, first.isUppercase {
-            isCapitalFirst = true
-            lookupGreek = String(first).lowercased() + greek.dropFirst()
+        if greek.isEmpty {
+            casing = .lowercase
+            lookupGreek = greek
+        } else if greek == greek.uppercased() && greek != greek.lowercased() {
+            // Entire input is uppercase (and has at least one cased letter).
+            casing = .allCaps
+            lookupGreek = greek.lowercased()
+        } else if greek.first!.isUppercase {
+            casing = .firstLetterCap
+            lookupGreek = String(greek.first!).lowercased() + greek.dropFirst()
         } else {
-            isCapitalFirst = false
+            casing = .lowercase
             lookupGreek = greek
         }
 
         let foldKey = folder.fold(lookupGreek)
-
         let candidates = suggester.suggest(forKey: foldKey, limit: 4)
 
         func displayForm(_ canonical: String) -> String {
-            if isCapitalFirst, let first = canonical.first {
+            switch casing {
+            case .lowercase:
+                return canonical
+            case .firstLetterCap:
+                guard let first = canonical.first else { return canonical }
                 return String(first).uppercased() + canonical.dropFirst()
+            case .allCaps:
+                return canonical.uppercased()
             }
-            return canonical
         }
 
         var result: [CypriotAutocompleteSuggestion] = []
-        // Slot 0: verbatim
         result.append(CypriotAutocompleteSuggestion(
             text: text, isAutocomplete: false, isUnknown: true,
             title: text, subtitle: nil,
             additionalInfo: [:]
         ))
-        // Slot 1: top autocorrect candidate. Mark willReplace=true when the
-        // candidate is at edit distance 0 OR 1 (i.e. a real phonetic match
-        // we'd want to swap in on space).
         if let top = candidates.first {
             let displayed = displayForm(top.canonical)
             result.append(CypriotAutocompleteSuggestion(
@@ -105,7 +111,6 @@ final class DawgAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
                 additionalInfo: ["willReplace": true]
             ))
         }
-        // Slot 2+: additional candidates (no willReplace)
         for cand in candidates.dropFirst() {
             let displayed = displayForm(cand.canonical)
             result.append(CypriotAutocompleteSuggestion(
@@ -116,4 +121,10 @@ final class DawgAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
         }
         return result
     }
+}
+
+private enum InputCasing {
+    case lowercase
+    case firstLetterCap
+    case allCaps
 }

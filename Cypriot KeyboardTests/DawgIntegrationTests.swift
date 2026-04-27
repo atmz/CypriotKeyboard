@@ -81,6 +81,57 @@ class DawgIntegrationTests: XCTestCase {
                        "expected Νερό at slot 1; got \(result[1].text). Bug regressed.")
     }
 
+    func testAllCapsLatinInputProducesAllCapsSuggestion() {
+        // Input "KALOS" → greekify → "ΚΑΛΟΣ" (all-caps Greek). Detection picks
+        // the all-caps path: lowercase whole string, fold, lookup, then
+        // uppercase the canonical for display.
+        let result = collectSuggestions(for: "KALOS")
+        guard result.count >= 2 else { XCTFail("expected ≥ 2 slots; got \(result.count)"); return }
+        let slot1 = result[1].text
+        // Result must be all uppercase.
+        XCTAssertEqual(slot1, slot1.uppercased(),
+                       "expected all-caps suggestion; got \(slot1)")
+        // The canonical uppercased should start with "ΚΑΛ" (root of καλός/καλώς).
+        // Use hasPrefix rather than equality because Swift's uppercased() may
+        // produce different Unicode normalization for the tonos/accent character
+        // than the literal written in source (both are valid UTF-8 representations
+        // of the same glyph, but == is byte-exact).
+        XCTAssertTrue(slot1.hasPrefix("ΚΑΛ"),
+                       "all-caps slot1 should start with ΚΑΛ (from καλός/καλώς); got \(slot1)")
+    }
+
+    func testGreekAllCapsInputProducesAllCapsSuggestion() {
+        // Same as above but the user types directly in Greek caps.
+        let result = collectSuggestions(for: "ΚΑΛΟΣ")
+        guard result.count >= 2 else { XCTFail(); return }
+        let slot1 = result[1].text
+        XCTAssertEqual(slot1, slot1.uppercased(),
+                       "expected all-caps suggestion; got \(slot1)")
+    }
+
+    func testSingleCapitalLetterIsAllCapsButHarmless() {
+        // Edge case: "Κ" is both capitalized AND all-caps. Either path is
+        // correct; we just verify the lookup doesn't crash and produces a
+        // verbatim slot 0.
+        let result = collectSuggestions(for: "Κ")
+        XCTAssertFalse(result.isEmpty)
+        XCTAssertEqual(result[0].text, "Κ")  // verbatim
+    }
+
+    func testMixedCaseInputUsesFirstLetterCapPath() {
+        // "Καλός" — capitalized but not all-caps. First-letter path: lowercase
+        // first char, fold, lookup, recapitalize first char.
+        let result = collectSuggestions(for: "Καλός")
+        guard result.count >= 2 else { XCTFail(); return }
+        // Slot 1 should be a capitalized canonical.
+        let slot1 = result[1].text
+        XCTAssertTrue(slot1.first?.isUppercase ?? false,
+                       "expected capitalized first char; got \(slot1)")
+        // Should NOT be all-caps.
+        XCTAssertNotEqual(slot1, slot1.uppercased(),
+                          "expected mixed case, not all-caps; got \(slot1)")
+    }
+
     private func collectSuggestions(for text: String) -> [CypriotAutocompleteSuggestion] {
         var captured: [CypriotAutocompleteSuggestion] = []
         provider.autocompleteSuggestions(for: text) { result in
