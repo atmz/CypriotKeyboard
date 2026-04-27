@@ -1,0 +1,332 @@
+{
+  "pairs": [
+    {
+      "input": "a",
+      "expected": "α"
+    },
+    {
+      "input": "b",
+      "expected": "μπ"
+    },
+    {
+      "input": "c",
+      "expected": "κ"
+    },
+    {
+      "input": "h",
+      "expected": "η"
+    },
+    {
+      "input": "i",
+      "expected": "ι"
+    },
+    {
+      "input": "k",
+      "expected": "κ"
+    },
+    {
+      "input": "l",
+      "expected": "λ"
+    },
+    {
+      "input": "m",
+      "expected": "μ"
+    },
+    {
+      "input": "n",
+      "expected": "ν"
+    },
+    {
+      "input": "o",
+      "expected": "ο"
+    },
+    {
+      "input": "p",
+      "expected": "π"
+    },
+    {
+      "input": "r",
+      "expected": "ρ"
+    },
+    {
+      "input": "s",
+      "expected": "σ"
+    },
+    {
+      "input": "t",
+      "expected": "τ"
+    },
+    {
+      "input": "u",
+      "expected": "υ"
+    },
+    {
+      "input": "v",
+      "expected": "β"
+    },
+    {
+      "input": "w",
+      "expected": "ω"
+    },
+    {
+      "input": "x",
+      "expected": "χ"
+    },
+    {
+      "input": "y",
+      "expected": "υ"
+    },
+    {
+      "input": "z",
+      "expected": "ζ"
+    },
+    {
+      "input": "j",
+      "expected": "τζ̆"
+    },
+    {
+      "input": "3",
+      "expected": "ξ"
+    },
+    {
+      "input": "A",
+      "expected": "Α"
+    },
+    {
+      "input": "B",
+      "expected": "Μπ"
+    },
+    {
+      "input": "I",
+      "expected": "Ι"
+    },
+    {
+      "input": "J",
+      "expected": "Τζ̆"
+    },
+    {
+      "input": "K",
+      "expected": "Κ"
+    },
+    {
+      "input": "L",
+      "expected": "Λ"
+    },
+    {
+      "input": "M",
+      "expected": "Μ"
+    },
+    {
+      "input": "N",
+      "expected": "Ν"
+    },
+    {
+      "input": "P",
+      "expected": "Π"
+    },
+    {
+      "input": "T",
+      "expected": "Τ"
+    },
+    {
+      "input": "Y",
+      "expected": "Υ"
+    },
+    {
+      "input": "sh",
+      "expected": "σ̆"
+    },
+    {
+      "input": "Sh",
+      "expected": "Σ̆"
+    },
+    {
+      "input": "SH",
+      "expected": "Σ̆"
+    },
+    {
+      "input": "ch",
+      "expected": "τσ̆"
+    },
+    {
+      "input": "Ch",
+      "expected": "Τσ̆"
+    },
+    {
+      "input": "CH",
+      "expected": "Τσ̆"
+    },
+    {
+      "input": "ps",
+      "expected": "ψ"
+    },
+    {
+      "input": "Ps",
+      "expected": "Ψ"
+    },
+    {
+      "input": "PS",
+      "expected": "Ψ"
+    },
+    {
+      "input": "ks",
+      "expected": "ξ"
+    },
+    {
+      "input": "Ks",
+      "expected": "Ξ"
+    },
+    {
+      "input": "KS",
+      "expected": "Ξ"
+    },
+    {
+      "input": "th",
+      "expected": "θ"
+    },
+    {
+      "input": "Th",
+      "expected": "Θ"
+    },
+    {
+      "input": "TH",
+      "expected": "Θ"
+    },
+    {
+      "input": "yi",
+      "expected": "γι"
+    },
+    {
+      "input": "Yi",
+      "expected": "Γι"
+    },
+    {
+      "input": "YI",
+      "expected": "Γι"
+    },
+    {
+      "input": "ng",
+      "expected": "γκ"
+    },
+    {
+      "input": "NG",
+      "expected": "γκ"
+    },
+    {
+      "input": "ngk",
+      "expected": "γκ"
+    },
+    {
+      "input": "NGK",
+      "expected": "γκ"
+    },
+    {
+      "input": "ths",
+      "expected": "τησ"
+    },
+    {
+      "input": "Ths",
+      "expected": "Τησ"
+    },
+    {
+      "input": "THS",
+      "expected": "Τησ"
+    },
+    {
+      "input": "kalimera",
+      "expected": "καλιμερα"
+    },
+    {
+      "input": "Kalimera",
+      "expected": "Καλιμερα"
+    },
+    {
+      "input": "KALIMERA",
+      "expected": "ΚΑΛΙΜΕΡΑ"
+    },
+    {
+      "input": "yiasou",
+      "expected": "γιασου"
+    },
+    {
+      "input": "yiasas",
+      "expected": "γιασασ"
+    },
+    {
+      "input": "ti kaneis",
+      "expected": "τι κανεισ"
+    },
+    {
+      "input": "panathinaikos",
+      "expected": "παναθιναικοσ"
+    },
+    {
+      "input": "olympiakos",
+      "expected": "ολυμπιακοσ"
+    },
+    {
+      "input": "Christos",
+      "expected": "Τσ̆ριστοσ"
+    },
+    {
+      "input": "theos",
+      "expected": "θεοσ"
+    },
+    {
+      "input": "psyxi",
+      "expected": "ψυχι"
+    },
+    {
+      "input": "ksenos",
+      "expected": "ξενοσ"
+    },
+    {
+      "input": "kai",
+      "expected": "και"
+    },
+    {
+      "input": "alla",
+      "expected": "αλλα"
+    },
+    {
+      "input": "ena",
+      "expected": "ενα"
+    },
+    {
+      "input": "ena fagito",
+      "expected": "ενα φαγιτο"
+    },
+    {
+      "input": "καλημέρα",
+      "expected": "καλημέρα"
+    },
+    {
+      "input": "και",
+      "expected": "και"
+    },
+    {
+      "input": "kai και",
+      "expected": "και και"
+    },
+    {
+      "input": "",
+      "expected": ""
+    },
+    {
+      "input": " ",
+      "expected": " "
+    },
+    {
+      "input": "1",
+      "expected": "1"
+    },
+    {
+      "input": "12",
+      "expected": "12"
+    },
+    {
+      "input": "12345",
+      "expected": "12ξ45"
+    }
+  ]
+}

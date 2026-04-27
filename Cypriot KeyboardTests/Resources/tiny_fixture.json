@@ -1,0 +1,70 @@
+{
+  "fold_keys": {
+    "αıτoκıνıτo": [
+      {
+        "canonical": "αυτοκίνητο",
+        "freq": 20
+      }
+    ],
+    "καλoσ": [
+      {
+        "canonical": "καλός",
+        "freq": 100
+      },
+      {
+        "canonical": "καλώς",
+        "freq": 5
+      }
+    ],
+    "νeρo": [
+      {
+        "canonical": "νερό",
+        "freq": 50
+      }
+    ],
+    "σπıτı": [
+      {
+        "canonical": "σπίτι",
+        "freq": 30
+      }
+    ]
+  },
+  "lookups": [
+    {
+      "input": "καλός",
+      "fold_key": "καλoσ",
+      "expect_canonicals": [
+        "καλός",
+        "καλώς"
+      ]
+    },
+    {
+      "input": "καλος",
+      "fold_key": "καλoσ",
+      "expect_canonicals": [
+        "καλός",
+        "καλώς"
+      ]
+    },
+    {
+      "input": "καλώς",
+      "fold_key": "καλoσ",
+      "expect_canonicals": [
+        "καλός",
+        "καλώς"
+      ]
+    },
+    {
+      "input": "νερό",
+      "fold_key": "νeρo",
+      "expect_canonicals": [
+        "νερό"
+      ]
+    },
+    {
+      "input": "δενυπαρχει",
+      "fold_key": "δeνıπαρχı",
+      "expect_canonicals": []
+    }
+  ]
+}

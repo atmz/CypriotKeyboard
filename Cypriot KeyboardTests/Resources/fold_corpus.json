@@ -1,0 +1,260 @@
+{
+  "pairs": [
+    {
+      "input": "α",
+      "expected": "α"
+    },
+    {
+      "input": "β",
+      "expected": "β"
+    },
+    {
+      "input": "γ",
+      "expected": "γ"
+    },
+    {
+      "input": "δ",
+      "expected": "δ"
+    },
+    {
+      "input": "ε",
+      "expected": "e"
+    },
+    {
+      "input": "ζ",
+      "expected": "ζ"
+    },
+    {
+      "input": "η",
+      "expected": "ı"
+    },
+    {
+      "input": "θ",
+      "expected": "θ"
+    },
+    {
+      "input": "ι",
+      "expected": "ı"
+    },
+    {
+      "input": "κ",
+      "expected": "κ"
+    },
+    {
+      "input": "λ",
+      "expected": "λ"
+    },
+    {
+      "input": "μ",
+      "expected": "μ"
+    },
+    {
+      "input": "ν",
+      "expected": "ν"
+    },
+    {
+      "input": "ξ",
+      "expected": "ξ"
+    },
+    {
+      "input": "ο",
+      "expected": "o"
+    },
+    {
+      "input": "π",
+      "expected": "π"
+    },
+    {
+      "input": "ρ",
+      "expected": "ρ"
+    },
+    {
+      "input": "σ",
+      "expected": "σ"
+    },
+    {
+      "input": "τ",
+      "expected": "τ"
+    },
+    {
+      "input": "υ",
+      "expected": "ı"
+    },
+    {
+      "input": "φ",
+      "expected": "φ"
+    },
+    {
+      "input": "χ",
+      "expected": "χ"
+    },
+    {
+      "input": "ψ",
+      "expected": "ψ"
+    },
+    {
+      "input": "ω",
+      "expected": "o"
+    },
+    {
+      "input": "ά",
+      "expected": "α"
+    },
+    {
+      "input": "έ",
+      "expected": "e"
+    },
+    {
+      "input": "ή",
+      "expected": "ı"
+    },
+    {
+      "input": "ί",
+      "expected": "ı"
+    },
+    {
+      "input": "ό",
+      "expected": "o"
+    },
+    {
+      "input": "ύ",
+      "expected": "ı"
+    },
+    {
+      "input": "ώ",
+      "expected": "o"
+    },
+    {
+      "input": "ϊ",
+      "expected": "ı"
+    },
+    {
+      "input": "ϋ",
+      "expected": "ı"
+    },
+    {
+      "input": "ΐ",
+      "expected": "ı"
+    },
+    {
+      "input": "ΰ",
+      "expected": "ı"
+    },
+    {
+      "input": "ς",
+      "expected": "σ"
+    },
+    {
+      "input": "αι",
+      "expected": "e"
+    },
+    {
+      "input": "αί",
+      "expected": "e"
+    },
+    {
+      "input": "ει",
+      "expected": "ı"
+    },
+    {
+      "input": "εί",
+      "expected": "ı"
+    },
+    {
+      "input": "οι",
+      "expected": "ı"
+    },
+    {
+      "input": "οί",
+      "expected": "ı"
+    },
+    {
+      "input": "υι",
+      "expected": "ı"
+    },
+    {
+      "input": "υί",
+      "expected": "ı"
+    },
+    {
+      "input": "ου",
+      "expected": "oı"
+    },
+    {
+      "input": "ού",
+      "expected": "oı"
+    },
+    {
+      "input": "καλημέρα",
+      "expected": "καλıμeρα"
+    },
+    {
+      "input": "καλιμερα",
+      "expected": "καλıμeρα"
+    },
+    {
+      "input": "καλημερα",
+      "expected": "καλıμeρα"
+    },
+    {
+      "input": "καλυμερα",
+      "expected": "καλıμeρα"
+    },
+    {
+      "input": "νερό",
+      "expected": "νeρo"
+    },
+    {
+      "input": "θεός",
+      "expected": "θeoσ"
+    },
+    {
+      "input": "ψυχή",
+      "expected": "ψıχı"
+    },
+    {
+      "input": "ξένος",
+      "expected": "ξeνoσ"
+    },
+    {
+      "input": "και",
+      "expected": "κe"
+    },
+    {
+      "input": "καί",
+      "expected": "κe"
+    },
+    {
+      "input": "που",
+      "expected": "πoı"
+    },
+    {
+      "input": "πού",
+      "expected": "πoı"
+    },
+    {
+      "input": "αυτοκίνητο",
+      "expected": "αıτoκıνıτo"
+    },
+    {
+      "input": "ηλεκτρικός",
+      "expected": "ıλeκτρıκoσ"
+    },
+    {
+      "input": "",
+      "expected": ""
+    },
+    {
+      "input": "  ",
+      "expected": "  "
+    },
+    {
+      "input": "abc",
+      "expected": "abc"
+    },
+    {
+      "input": "καλη μερα",
+      "expected": "καλı μeρα"
+    }
+  ]
+}
