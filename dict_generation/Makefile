@@ -93,3 +93,15 @@ eval/hunspell_cli/hunspell-cli: eval/hunspell_cli/main.cxx
 clean_hunspell_cli:
 	rm -f eval/hunspell_cli/hunspell-cli
 	rm -f eval/hunspell_cli/*.o
+
+# tier-c Phase 1.5: run the DAWG variant recall eval.
+# Requires hunspell-cli to be built (use eval-no-hunspell to skip baseline).
+eval: hunspell-cli
+	cd .. && python3 dict_generation/eval/main.py
+
+eval-no-hunspell:
+	cd .. && python3 dict_generation/eval/main.py --skip-hunspell
+
+clean_eval:
+	rm -rf /tmp/eval_dawg
+	rm -f dict_generation/eval/results.md
