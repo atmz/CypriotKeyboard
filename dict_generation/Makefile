@@ -39,7 +39,7 @@ el_CY_only.dic: sorted_worldlist_CY_only.tmp
 	cat el_CY.aff_prefix > el_CY_only.aff
 	cat sorted_worldlist_CY_only.tmp.aff >> el_CY_only.aff
 	mv sorted_worldlist_CY_only.tmp.dic  el_CY_only.dic
-install: el_CY.dic el_CY.aff
+install: el_CY.dic el_CY.aff ../dict/el_CY.dawg
 	cp el_CY.dic ~/Library/Spelling
 	cp el_CY.aff ~/Library/Spelling
 	cp el_CY.dic ../dict/
@@ -50,3 +50,23 @@ test: el_CY.dic el_CY.aff
 	hunspell  -d el_CY -l corpus/test_1.txt > test_1.result.tmp
 	diff test_1.result.tmp corpus/test_1.expected
 #Αμμοχωστιανούς
+
+# tier-c: build the phonetic-folded DAWG from the existing .dic + .aff
+# plus the corpus-derived frequency table.
+corpus_freq.json:
+	python3 list_words.py
+	# list_words.py emits both el_CY_words.v3.dic AND corpus_freq.json
+	# in the same run; the latter is what this target produces.
+
+../dict/el_CY.dawg: corpus_freq.json
+	python3 build_dawg.py \
+	  --dic ../dict/el_CY.dic \
+	  --aff ../dict/el_CY.aff \
+	  --freq corpus_freq.json \
+	  --out ../dict/el_CY.dawg
+
+dawg: ../dict/el_CY.dawg
+
+clean_dawg:
+	rm -f ../dict/el_CY.dawg
+	rm -f corpus_freq.json
