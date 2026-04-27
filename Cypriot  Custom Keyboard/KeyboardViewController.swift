@@ -170,28 +170,33 @@ final class KeyboardViewController: KeyboardInputViewController {
         self.autocompleteCount += 1
         //autompleteLock serves to prevent race conditions/out of order autocompletes by ingoring results if a newer autocomoplete has started
         let autompleteLock = self.autocompleteCount
-        autocompleteProvider.asyncAutocompleteSuggestions(for: word, isFirstWordInSentence: isFirstWordInSentence(word: word)) { [weak self] result in
-            switch result {
-            case .failure(let error):
-                #if DEBUG
-                print(error.localizedDescription)
-                #endif
-                break
-            case .success(let result):
-                if self?.autocompleteCount == autompleteLock {
-                    DispatchQueue.main.async {
-                        self?.autocompleteContext.suggestions = result
-                        if result.count>0{
-                            if result.count>1 {
-                                self?.currentGuess = result[1]
-                            } else {
-                                self?.currentGuess = result[0]
+        let provider = autocompleteProvider!
+        let isFirst = isFirstWordInSentence(word: word)
+        DispatchQueue.global().async { [weak self] in
+            provider.autocompleteSuggestions(for: word) { result in
+                switch result {
+                case .failure(let error):
+                    #if DEBUG
+                    print(error.localizedDescription)
+                    #endif
+                    break
+                case .success(let result):
+                    if self?.autocompleteCount == autompleteLock {
+                        DispatchQueue.main.async {
+                            self?.autocompleteContext.suggestions = result
+                            if result.count > 0 {
+                                if result.count > 1 {
+                                    self?.currentGuess = result[1]
+                                } else {
+                                    self?.currentGuess = result[0]
+                                }
                             }
                         }
                     }
                 }
             }
         }
+        _ = isFirst // parameter preserved for future use
     }
     
     override func resetAutocomplete() {
