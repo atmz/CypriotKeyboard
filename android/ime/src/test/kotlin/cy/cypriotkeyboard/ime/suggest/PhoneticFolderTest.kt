@@ -27,8 +27,11 @@ class PhoneticFolderTest {
     private val folder = PhoneticFolder.fromJson(sampleJson)
 
     @Test fun `digraph wins over single-letter rule`() {
-        // "ει" must fold to "ı", not "ε"+"ı"
-        assertEquals("κıμε", folder.fold("ειμε"))
+        // "ει" must fold to "ı" as a single rule, not via the "ε"+"ι"
+        // single-letter rules. Verify by feeding plain "ειμε" — if the
+        // greedy match worked, the leading "ει" → "ı" (one char), not
+        // "ε" → "e" plus "ι" → "ı" (two chars).
+        assertEquals("ıμe", folder.fold("ειμε"))
     }
 
     @Test fun `iota-equivalents collapse to dotless-i`() {
