@@ -84,16 +84,41 @@ def merge(list_of_lists):
 
 
 words = generate_cy_list_2(files)
+
+# Re-tokenize the corpus to capture absolute frequencies for ALL observed
+# tokens, not just the filtered ones above. This output is used by the
+# tier-c DAWG build to rank canonical-form collisions.
+import json
+from collections import defaultdict
+
+corpus_freq = defaultdict(int)
+for fname in files:
+    with open('corpus/' + fname, encoding="utf-8") as f:
+        for line in f:
+            for raw in line.split():
+                cleaned = ''.join(e for e in raw if e.isalpha())
+                if not cleaned:
+                    continue
+                # Lowercase per the same heuristic used above
+                cleaned = cleaned.lower()
+                # Skip Latin tokens (English code-switching in blogs)
+                if (cleaned[0] >= 'A' and cleaned[0] <= 'Z') or (cleaned[0] >= 'a' and cleaned[0] <= 'z'):
+                    continue
+                corpus_freq[cleaned] += 1
+
+with open("corpus_freq.json", "w", encoding="utf-8") as f:
+    json.dump(corpus_freq, f, ensure_ascii=False)
+print(f"corpus_freq.json: {len(corpus_freq)} unique tokens")
+
+# (existing) char count dump and word list write
 char_counts = defaultdict(lambda: 0)
 for w in words:
     for l in w:
-        char_counts[l]+=1
-
-cs  = [(k, v) for k, v in char_counts.items()]
+        char_counts[l] += 1
+cs = [(k, v) for k, v in char_counts.items()]
 cs.sort(key=lambda a: a[1], reverse=False)
 print([a[0] for a in cs])
 word_list = "el_CY_words.v3.dic"
-data = open(word_list, "w")
-data.write(str(len(words))+"\n")
-data.write("\n".join(words))
-data.close()
+with open(word_list, "w", encoding="utf-8") as data:
+    data.write(str(len(words)) + "\n")
+    data.write("\n".join(words))
