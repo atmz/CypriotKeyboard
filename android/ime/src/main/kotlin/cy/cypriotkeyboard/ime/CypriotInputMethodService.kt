@@ -1,16 +1,201 @@
 package cy.cypriotkeyboard.ime
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.inputmethodservice.InputMethodService
+import android.os.Handler
+import android.os.Looper
 import android.view.View
-import android.widget.FrameLayout
+import android.view.inputmethod.InputConnection
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.ComposeView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.setViewTreeLifecycleOwner
+import androidx.savedstate.SavedStateRegistryController
+import androidx.savedstate.SavedStateRegistryOwner
+import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+import cy.cypriotkeyboard.ime.input.ActionHandler
+import cy.cypriotkeyboard.ime.input.KeyboardController
+import cy.cypriotkeyboard.ime.input.KeyboardMode
+import cy.cypriotkeyboard.ime.layout.KeySpec
+import cy.cypriotkeyboard.ime.layout.LayoutSpec
+import cy.cypriotkeyboard.ime.layout.Layouts
+import cy.cypriotkeyboard.ime.suggest.DawgReader
+import cy.cypriotkeyboard.ime.suggest.PhoneticFolder
+import cy.cypriotkeyboard.ime.suggest.Suggestion
+import cy.cypriotkeyboard.ime.suggest.SuggestionEngine
+import cy.cypriotkeyboard.ime.ui.KeyboardUiState
+import cy.cypriotkeyboard.ime.ui.KeyboardView
+import java.io.IOException
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicInteger
 
-/**
- * IME service entry point. Stub for Task 2 — fully wired in Task 19.
- * See spec docs/superpowers/specs/2026-04-27-android-port-design.md.
- */
-class CypriotInputMethodService : InputMethodService() {
+class CypriotInputMethodService :
+    InputMethodService(),
+    LifecycleOwner,
+    SavedStateRegistryOwner,
+    KeyboardController {
+
+    // ---- Lifecycle plumbing for Compose-in-IME -------------------------
+
+    private val lifecycleRegistry = LifecycleRegistry(this)
+    override val lifecycle: Lifecycle get() = lifecycleRegistry
+
+    private val savedStateRegistryController = SavedStateRegistryController.create(this)
+    override val savedStateRegistry get() = savedStateRegistryController.savedStateRegistry
+
+    // ---- IME state -----------------------------------------------------
+
+    private lateinit var prefs: SharedPreferences
+    private val mainHandler = Handler(Looper.getMainLooper())
+    private val workerExec = Executors.newSingleThreadExecutor { r ->
+        Thread(r, "cypriot-suggest").apply { isDaemon = true }
+    }
+
+    @Volatile private var engine: SuggestionEngine? = null
+    private val uiState = mutableStateOf(
+        KeyboardUiState(layout = Layouts.greekAlphabetic(), suggestions = emptyList())
+    )
+    private val handler = ActionHandler(this)
+    private val autocompleteToken = AtomicInteger(0)
+    private var pendingAutocomplete: Runnable? = null
+
+    private var mode: KeyboardMode = KeyboardMode.ALPHABETIC
+    private var isLatin: Boolean = false
+
+    // ---- Service lifecycle --------------------------------------------
+
+    override fun onCreate() {
+        savedStateRegistryController.performAttach()
+        savedStateRegistryController.performRestore(null)
+        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
+        super.onCreate()
+        prefs = getSharedPreferences("cypriot_keyboard", Context.MODE_PRIVATE)
+        isLatin = prefs.getBoolean(KEY_IS_LATIN, false)
+        recomputeLayout()
+        loadEngineAsync()
+    }
 
     override fun onCreateInputView(): View {
-        return FrameLayout(this)
+        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
+        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
+        val composeView = ComposeView(this)
+        composeView.setViewTreeLifecycleOwner(this)
+        composeView.setViewTreeSavedStateRegistryOwner(this)
+        composeView.setContent {
+            KeyboardView(
+                state = uiState,
+                onSuggestionPick = { s -> applySuggestion(s) },
+                onKeyTap = { k -> handler.handle(k) },
+                onKeyLongPress = { k -> handleLongPress(k) }
+            )
+        }
+        return composeView
+    }
+
+    override fun onDestroy() {
+        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+        workerExec.shutdownNow()
+        super.onDestroy()
+    }
+
+    // ---- KeyboardController -------------------------------------------
+
+    override fun ic(): InputConnection? = currentInputConnection
+
+    override fun toggleLayoutGreekLatin() {
+        isLatin = !isLatin
+        prefs.edit().putBoolean(KEY_IS_LATIN, isLatin).apply()
+        recomputeLayout()
+    }
+
+    override fun setMode(mode: KeyboardMode) {
+        this.mode = mode
+        recomputeLayout()
+    }
+
+    override fun requestSuggestions(currentWord: String) {
+        val token = autocompleteToken.incrementAndGet()
+        // Cancel previous pending callable.
+        pendingAutocomplete?.let { mainHandler.removeCallbacks(it) }
+        if (currentWord.isEmpty()) {
+            uiState.value = uiState.value.copy(suggestions = emptyList())
+            handler.currentGuess = null
+            return
+        }
+        val r = Runnable {
+            val eng = engine
+            if (eng == null) return@Runnable
+            workerExec.submit {
+                val out = try { eng.suggest(currentWord) } catch (t: Throwable) { emptyList() }
+                if (autocompleteToken.get() != token) return@submit  // race-guard
+                mainHandler.post {
+                    uiState.value = uiState.value.copy(suggestions = out)
+                    handler.currentGuess = out.firstOrNull { it.willReplace }
+                }
+            }
+        }
+        pendingAutocomplete = r
+        mainHandler.postDelayed(r, AUTOCOMPLETE_DEBOUNCE_MS)
+    }
+
+    override fun shiftHeld(): Boolean = false   // shift held-state not yet wired
+
+    // ---- Helpers -------------------------------------------------------
+
+    private fun recomputeLayout() {
+        val layout: LayoutSpec = when (mode) {
+            KeyboardMode.NUMERIC -> Layouts.numeric()
+            KeyboardMode.SYMBOLIC -> Layouts.symbolic()
+            KeyboardMode.ALPHABETIC -> if (isLatin) Layouts.latinAlphabetic() else Layouts.greekAlphabetic()
+        }
+        uiState.value = uiState.value.copy(layout = layout)
+    }
+
+    private fun applySuggestion(s: Suggestion) {
+        val ic = ic() ?: return
+        // Replace the current word with the picked suggestion + a space.
+        val before = ic.getTextBeforeCursor(64, 0)?.toString() ?: ""
+        val word = Regex("[\\p{L}\\p{M}]+$").find(before)?.value ?: ""
+        if (word.isNotEmpty()) ic.deleteSurroundingText(word.length, 0)
+        ic.commitText(s.text, 1)
+        ic.commitText(" ", 1)
+        handler.currentGuess = null
+        uiState.value = uiState.value.copy(suggestions = emptyList())
+    }
+
+    private fun handleLongPress(spec: KeySpec) {
+        // v1: long-press is a no-op (popup secondary callout deferred).
+        // The 🔄 long-press toggled suggester engine on iOS but Android has
+        // only one engine — this is a no-op deliberately.
+    }
+
+    private fun loadEngineAsync() {
+        workerExec.submit {
+            try {
+                val dawgBytes = assets.open("el_CY.dawg").use { it.readBytes() }
+                val foldJson = assets.open("phonetic_fold.json").use {
+                    it.readBytes().toString(Charsets.UTF_8)
+                }
+                val buf = ByteBuffer.wrap(dawgBytes).order(ByteOrder.LITTLE_ENDIAN)
+                val reader = DawgReader.from(buf)
+                val folder = PhoneticFolder.fromJson(foldJson)
+                engine = SuggestionEngine(reader, folder)
+            } catch (e: IOException) {
+                // No engine — keyboard still types, just no suggestions.
+                engine = null
+            } catch (e: Throwable) {
+                engine = null
+            }
+        }
+    }
+
+    companion object {
+        private const val KEY_IS_LATIN = "isLatinKeyboard"
+        private const val AUTOCOMPLETE_DEBOUNCE_MS = 40L
     }
 }
