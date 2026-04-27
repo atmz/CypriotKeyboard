@@ -90,5 +90,67 @@ class DawgMinimizationTests(unittest.TestCase):
         self.assertLess(d.node_count(), trie_nodes_upper_bound // 2)
 
 
+import io
+import struct
+
+
+class DawgSerializationTests(unittest.TestCase):
+
+    def _build_fixture(self):
+        d = Dawg()
+        for word in ["αβ", "αγ", "βα"]:
+            d.insert_sorted(word, payload=0)  # all share payload 0 for this fixture
+        d.finalize()
+        # Single payload entry for the fixture.
+        payloads = [
+            [(0, 100)],  # canonical form #0, freq 100
+        ]
+        strings = ["καλημέρα"]
+        return d, payloads, strings
+
+    def test_serialize_writes_magic_header(self):
+        d, payloads, strings = self._build_fixture()
+        buf = io.BytesIO()
+        d.serialize(buf, payloads=payloads, strings=strings)
+        data = buf.getvalue()
+        self.assertEqual(data[:4], b"DAWG")
+        version = struct.unpack_from("<H", data, 4)[0]
+        self.assertEqual(version, 1)
+
+    def test_round_trip_through_dawg_reader(self):
+        d, payloads, strings = self._build_fixture()
+        buf = io.BytesIO()
+        d.serialize(buf, payloads=payloads, strings=strings)
+        from dict_generation.dawg import DawgReader
+        reader = DawgReader(buf.getvalue())
+        # Same words must be findable.
+        for word in ["αβ", "αγ", "βα"]:
+            self.assertTrue(reader.contains(word), f"missing: {word}")
+        # Non-members not found.
+        self.assertFalse(reader.contains("γγ"))
+        # Payload retrieval round-trips.
+        idx = reader.payload_for("αβ")
+        self.assertEqual(idx, 0)
+        canonical_form_records = reader.canonical_forms(idx)
+        self.assertEqual(canonical_form_records, [("καλημέρα", 100)])
+
+    def test_round_trip_with_realistic_size(self):
+        # Insert a few hundred sorted folded keys + payloads, round-trip,
+        # confirm every key is still findable.
+        words = sorted({f"a{i:04d}" for i in range(200)})  # 200 lexicographically-sorted strings
+        d = Dawg()
+        for i, w in enumerate(words):
+            d.insert_sorted(w, payload=i)
+        d.finalize()
+        payloads = [[(0, 1)] for _ in words]
+        strings = ["x"]
+        buf = io.BytesIO()
+        d.serialize(buf, payloads=payloads, strings=strings)
+        from dict_generation.dawg import DawgReader
+        reader = DawgReader(buf.getvalue())
+        for i, w in enumerate(words):
+            self.assertEqual(reader.payload_for(w), i, f"payload mismatch for {w!r}")
+
+
 if __name__ == "__main__":
     unittest.main()
