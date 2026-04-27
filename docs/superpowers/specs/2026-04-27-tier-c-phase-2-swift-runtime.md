@@ -21,18 +21,18 @@ The flag defaults OFF for the first ship. Hunspell remains the default for ≥1 
 
 ## Non-goals
 
-- The full UI rollout (Phase B in the rollout plan — long-press on `🔄` to surface the toggle). Phase 2 ships **Phase A only**: hidden/debug-only toggle. Phase B is a follow-up after field stability.
 - Removing Hunspell. Hunspell stays compiled and loadable; only one engine loads at a time per the memory plan below.
 - Edit-budget > 1 in the suggester. Reserved for a Phase 2.x follow-up if recall numbers warrant it.
 - Re-running the Phase 1.5 eval. That happens after Phase 2 ships, with the new Levenshtein-automaton results as a new column.
+- Default-flipping `useDAWGSuggester` to true. Default stays false through Phase 2; flip happens in a follow-up release after field reports stabilize.
 
 ## Design decisions (locked per discussion)
 
 | # | Question | Choice | Rationale |
 |---|---|---|---|
 | 1 | Edit-distance algorithm | **Damerau-Levenshtein, budget=1** | Closes the dominant typo class plain Levenshtein misses (transpositions). +30% impl effort but Phase 1.5 vowel-swap recall (54%) needs this to climb meaningfully. |
-| 2 | UI rollout depth | **Phase A only this iteration** | Hidden/debug-only toggle. Smaller surface, faster ship, less to test. Phase B (long-press on `🔄`) lands after field reports validate Phase A. |
-| 3 | Engine flag dispatch | **Read once at `viewDidLoad`** | Mirrors existing `isLatinKeyboard` pattern. Live-flipping isn't a real user need. Toggle takes effect on next keyboard open. |
+| 2 | UI rollout depth | **Long-press on `🔄` (primary) + optional `#if DEBUG` button in `ContentView` (tester fallback)** | Long-press is the user-visible path. Tester fallback lets the flag be flipped from outside the keyboard if needed. |
+| 3 | Engine flag dispatch | **Read at `viewDidLoad` for initial load + live-swap on long-press** | Initial keyboard open reads the flag. Long-press triggers provider tear-down + reconstruction in-place; user doesn't have to reopen the keyboard for the change to take effect. Toast confirms the new state. |
 | 4 | Suggestion-bar layout | **Unchanged** | Slot 1 stays verbatim user input; slot 2 stays the autocorrect candidate. Phase 2 replaces *only* slot 2's candidate-generation, not the bar layout. |
 | 5 | Cross-language parity | **Add a Swift-side parity test** | Run a corpus of inputs through both the Python `_greekify_python` and the Swift `greekify`, assert byte-identical output. Phase 1.5 caught two real bugs via similar parity checks; expect this to catch fold-rule drift. |
 | 6 | Memory budget | **Load only the chosen engine** | iOS keyboard-extension memory budget is tight (~30–60 MB historically). Loading both Hunspell (~50 MB hash) AND the DAWG (mmap'd 47 MB) on the same launch would blow it. Static engine selection at `viewDidLoad` lets us load only one. |
@@ -41,7 +41,7 @@ The flag defaults OFF for the first ship. Hunspell remains the default for ≥1 
 
 ### Engine dispatch
 
-`KeyboardViewController.viewDidLoad` reads the flag once:
+`KeyboardViewController.viewDidLoad` reads the flag at initial load:
 
 ```swift
 let useDAWG = UserDefaults.standard.bool(forKey: "useDAWGSuggester")  // default false
@@ -53,6 +53,36 @@ Then constructs ONE of two `AutocompleteSuggestionProvider` implementations:
 - `true` → new `DawgAutocompleteSuggestionProvider`.
 
 Both conform to `KeyboardKit.AutocompleteSuggestionProvider`; the rest of the keyboard plumbing is unchanged. **Hunspell isn't initialized when `useDAWG == true`**; the DAWG path doesn't link Hunspell out of the binary, just doesn't construct an instance. This keeps memory usage comparable to today regardless of flag.
+
+### Live-swap on long-press of `🔄`
+
+The existing `🔄` character key toggles between Greek and Latin layouts on tap (handled by `CypriotKeyboardActionHandler.handleSwitch`). We extend that handler to **also handle long-press**: long-press toggles `useDAWGSuggester`, tears down the active provider, constructs the new one, and shows a confirmation toast.
+
+```swift
+// Inside CypriotKeyboardActionHandler (sketch)
+override open func handle(_ gesture: KeyboardGesture, on action: KeyboardAction) {
+    if gesture == .longPress, action == .character("🔄") {
+        cypriotInputViewController?.toggleSuggesterEngine()
+        return  // don't fall through to triggerSpaceAutocomplete etc.
+    }
+    // ... existing tap/input handling unchanged ...
+}
+```
+
+`KeyboardViewController.toggleSuggesterEngine()` does:
+1. Read current `UserDefaults` value, flip, write back.
+2. Tear down `autocompleteProvider` (if it's the Hunspell variant, `Hunspell_destroy` is called by its `deinit`; if DAWG, just nil-out for ARC to reclaim the mmap'd reader).
+3. Construct the new provider.
+4. Reset `currentGuess`, `lastAction`, `autocompleteCount` (clear stale state).
+5. Show toast: `"Suggester: DAWG"` or `"Suggester: Hunspell"`.
+
+The existing `KeyboardToastContext` (already wired into `KeyboardView`'s `keyboardToast` modifier) is the toast surface.
+
+**Sequencing note:** the live-swap re-uses the construction code from `viewDidLoad`. Both paths flow through the same `makeAutocompleteProvider(useDAWG:)` factory function so they can't drift.
+
+### Container app `#if DEBUG` toggle (optional tester fallback)
+
+In `Cypriot Keyboard/ContentView.swift`, behind `#if DEBUG`, a toggle button writes `useDAWGSuggester` to `UserDefaults.standard`. Useful as an out-of-keyboard escape hatch when testing weird states. Doesn't ship in release builds. The keyboard's long-press is the primary UX.
 
 ### Swift module layout
 
@@ -210,12 +240,15 @@ The plan task for this is explicit and step-by-step. Tested in the worktree befo
 
 ### Integration tests
 
-7. **Engine dispatch**: with `useDAWGSuggester = true`, verify `KeyboardViewController` constructs a `DawgAutocompleteSuggestionProvider`. With `false`, verify it constructs the existing Hunspell one. Verify Hunspell isn't loaded when `useDAWG == true` (heap-allocation test).
+7. **Engine dispatch at load**: with `useDAWGSuggester = true`, verify `KeyboardViewController` constructs a `DawgAutocompleteSuggestionProvider`. With `false`, verify it constructs the existing Hunspell one. Verify Hunspell isn't loaded when `useDAWG == true` (heap-allocation test).
+
+8. **Live-swap on long-press**: simulate a long-press on `.character("🔄")`. Verify (a) `UserDefaults` value flips, (b) `autocompleteProvider` is now the other type, (c) `currentGuess`/`lastAction`/`autocompleteCount` are reset, (d) a toast was triggered. Repeat to confirm both directions (Hunspell→DAWG and DAWG→Hunspell) work.
 
 ### Manual verification (recorded in commit messages)
 
-8. Build for an iOS Simulator, type "καλιμερα" with the DAWG flag enabled, screenshot the suggestion bar showing "καλημέρα" highlighted.
-9. Same input with the flag disabled, screenshot the existing Hunspell behavior. Compare.
+9. Build for an iOS Simulator, type "καλιμερα" with the DAWG flag enabled, screenshot the suggestion bar showing "καλημέρα" highlighted.
+10. Same input with the flag disabled, screenshot the existing Hunspell behavior. Compare.
+11. Long-press the `🔄` key in the simulator, observe the toast and confirm subsequent typing uses the new engine. Screenshot both states.
 
 ## Implementation order
 
@@ -229,11 +262,12 @@ Per the rollout-phase taxonomy:
 | 4 | `DamerauLevenshteinSuggester.swift` + tests (unit test #4) | Tasks 1–3 |
 | 5 | `DawgAutocompleteSuggestionProvider.swift` + integration test (unit test #6) | Tasks 1–4 |
 | 6 | Greekify parity test (unit test #5) | Task 1 |
-| 7 | `KeyboardViewController.swift` engine dispatch (integration test #7) | Tasks 1–5 |
-| 8 | pbxproj surgery: add resources + Swift sources to both targets | Tasks 1–7 |
-| 9 | Smoke build for iOS Simulator + manual verification (#8, #9) | Task 8 |
-| 10 | Phase A toggle UI: debug-only button in `ContentView.swift` | Task 7 (orthogonal) |
-| 11 | Final commit: regenerate `dict/el_CY.dawg` from main per-Phase-1.5 decision (currently 47 MB baseline; if revisited then retrigger) | All |
+| 7 | `KeyboardViewController.swift` engine dispatch + provider factory (integration test #7) | Tasks 1–5 |
+| 8 | Long-press handler in `CypriotKeyboardActionHandler` + `toggleSuggesterEngine()` in controller + toast (integration test #8) | Task 7 |
+| 9 | `#if DEBUG` toggle in `ContentView.swift` (tester fallback) | Task 7 (orthogonal) |
+| 10 | pbxproj surgery: add resources (DAWG + JSON, extension target only) + Swift sources to both targets | Tasks 1–9 |
+| 11 | Smoke build for iOS Simulator + manual verification (#9, #10, #11) | Task 10 |
+| 12 | Final commit: regenerate `dict/el_CY.dawg` from main per-Phase-1.5 decision (currently 47 MB baseline; if revisited then retrigger) | All |
 
 ## Memory and size estimates
 
@@ -259,15 +293,17 @@ Per the rollout-phase taxonomy:
 | User installs Phase 2 with stale UserDefaults | low | Fresh installs default to `false` (Hunspell). Existing users from Phase 1 don't have the key set; `bool(forKey:)` returns false. No migration needed. |
 | Toggle UI is too hidden, no testers find it | low | Phase A is intentionally hidden for the first ship. Document the path in CLAUDE.md so the user can find it; users opt in at a later release via Phase B. |
 
-## Open questions
+## Open questions (resolved during planning)
 
-1. **Toggle UI implementation in ContentView.** The container app has minimal UI today (installation instructions). Where does the debug-only toggle live? Options: (a) always-visible button at the bottom of `ContentView` labeled "Use DAWG suggester (experimental)"; (b) hidden behind a debug long-press on the title; (c) `#if DEBUG` only, only visible in dev builds. Recommendation: (c) for the initial Phase 2 ship — testers run dev builds anyway, end-users don't see it.
+1. ~~Toggle UI implementation in ContentView~~ → **Resolved:** primary UX is long-press on `🔄` in the keyboard. Container app gets a `#if DEBUG`-only toggle as tester fallback.
 
-2. **DAWG resource — single-target or both?** Today's resources (`el_CY.dic`/`aff`) are in both the app and extension targets. The DAWG is only used by the extension; bundling in the app target is wasted disk. Recommendation: extension only. Saves ~47 MB of app-bundle bloat.
+2. ~~DAWG resource — single-target or both?~~ → **Resolved:** extension target only. Saves ~47 MB of app-bundle bloat.
 
-3. **Edit-distance ranking ties.** When two candidates have the same edit distance from the input, frequency wins. But what about edit-distance-0 (exact fold match) vs edit-distance-1 (close match)? Current plan: edit-distance-0 always ranks above edit-distance-1. So if "και" is exact-match in the DAWG and "καί" is edit-distance-1, "και" wins.
+3. **Edit-distance ranking ties.** When two candidates have the same edit distance from the input, frequency wins. But what about edit-distance-0 (exact fold match) vs edit-distance-1 (close match)? Current plan: edit-distance-0 always ranks above edit-distance-1. So if "και" is exact-match in the DAWG and "καί" is edit-distance-1, "και" wins. Keep this; revisit if real-world ranking feels off.
 
-4. **Is the existing tier-b debounce (40ms) still right for the DAWG path?** Levenshtein-automaton walks are fast (microseconds), faster than Hunspell's heuristic suggester. We could potentially drop the debounce. **Recommendation: keep 40ms unchanged.** Even if the engine is fast, debouncing prevents flicker as the user types and reduces work on slower devices. Re-evaluate if telemetry shows lag.
+4. **Is the existing tier-b debounce (40 ms) still right for the DAWG path?** Levenshtein-automaton walks are fast (microseconds), faster than Hunspell's heuristic suggester. We could potentially drop the debounce. **Recommendation: keep 40 ms unchanged.** Even if the engine is fast, debouncing prevents flicker as the user types and reduces work on slower devices. Re-evaluate if telemetry shows lag.
+
+5. **Toast text wording.** "Suggester: DAWG" vs "Engine: DAWG (experimental)" vs "🔬 DAWG mode" — bikeshedding territory; ship with something terse and tweak post-hoc.
 
 ## Estimated scope
 
@@ -276,11 +312,12 @@ Per the rollout-phase taxonomy:
 - PhoneticFolder: 0.5 days
 - DamerauLevenshteinSuggester: 2 days (the algorithm itself is the longest piece)
 - DawgAutocompleteSuggestionProvider integration: 1 day
-- KeyboardViewController dispatch + ContentView debug toggle: 0.5 days
-- pbxproj surgery + xcodebuild verification: 1 day
+- KeyboardViewController dispatch + provider factory: 0.5 days
+- Long-press live-swap (handler, controller, toast) + ContentView debug fallback: 1 day
+- pbxproj surgery + xcodebuild verification (resources extension-only): 1 day
 - Manual simulator testing + commit-attached screenshots: 0.5 days
 
-**Total: ~8–10 days of focused work.** Comparable to Phase 1.
+**Total: ~9–10 days of focused work.** Comparable to Phase 1.
 
 ## What this does *not* solve
 
