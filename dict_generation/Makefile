@@ -70,3 +70,26 @@ dawg: ../dict/el_CY.dawg
 clean_dawg:
 	rm -f ../dict/el_CY.dawg
 	rm -f corpus_freq.json
+
+# tier-c-eval: build a Hunspell CLI from the project's vendored hunspell_src/
+# so the eval baseline matches the iOS extension's runtime exactly.
+hunspell-cli: eval/hunspell_cli/hunspell-cli
+
+eval/hunspell_cli/hunspell-cli: eval/hunspell_cli/main.cxx
+	clang++ -std=c++11 -O2 -I../hunspell_src \
+	  eval/hunspell_cli/main.cxx \
+	  ../hunspell_src/affentry.cxx \
+	  ../hunspell_src/affixmgr.cxx \
+	  ../hunspell_src/csutil.cxx \
+	  ../hunspell_src/filemgr.cxx \
+	  ../hunspell_src/hashmgr.cxx \
+	  ../hunspell_src/hunspell.cxx \
+	  ../hunspell_src/hunzip.cxx \
+	  ../hunspell_src/phonet.cxx \
+	  ../hunspell_src/replist.cxx \
+	  ../hunspell_src/suggestmgr.cxx \
+	  -o eval/hunspell_cli/hunspell-cli
+
+clean_hunspell_cli:
+	rm -f eval/hunspell_cli/hunspell-cli
+	rm -f eval/hunspell_cli/*.o
