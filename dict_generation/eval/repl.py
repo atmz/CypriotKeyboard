@@ -12,6 +12,7 @@ Usage:
 import argparse
 import os
 import sys
+from enum import Enum
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
@@ -23,6 +24,55 @@ from dict_generation.eval.hunspell_runner import (
 from dict_generation.eval.perturbations import _greekify_python
 from dict_generation.eval.variants import build_variant
 from dict_generation.phonetic_fold import load_default_folder
+
+
+class _Casing(Enum):
+    LOWERCASE = 1
+    FIRST_LETTER_CAP = 2
+    ALL_CAPS = 3
+
+
+def preprocess_input(text: str) -> tuple:
+    """Mirror the iOS providers' input pipeline.
+
+    Returns (greekified, lookup_form, casing, leading_punct):
+      - greekified: text after CypriotKeyboardHelper.greekify (Latin → Greek)
+      - lookup_form: what to actually feed the engines (lowercased per casing)
+      - casing: how to recapitalize results for display
+      - leading_punct: any non-letter prefix stripped before processing
+    """
+    # Strip leading punct (mirrors isPunctFirst handling in iOS Hunspell path).
+    leading_punct = ""
+    body = text
+    while body and not body[0].isalpha():
+        leading_punct += body[0]
+        body = body[1:]
+
+    if not body:
+        return ("", "", _Casing.LOWERCASE, leading_punct)
+
+    greek = _greekify_python(body)
+
+    # Three-state casing detection (mirrors iOS DAWG provider).
+    if greek == greek.upper() and greek != greek.lower():
+        # All-caps with at least one cased letter.
+        return (greek, greek.lower(), _Casing.ALL_CAPS, leading_punct)
+    if greek[:1].isupper():
+        return (greek, greek[:1].lower() + greek[1:], _Casing.FIRST_LETTER_CAP, leading_punct)
+    return (greek, greek, _Casing.LOWERCASE, leading_punct)
+
+
+def postprocess_suggestion(canonical: str, casing: _Casing, leading_punct: str) -> str:
+    """Mirror the iOS providers' output recapitalization."""
+    if not canonical:
+        return leading_punct
+    if casing == _Casing.ALL_CAPS:
+        out = canonical.upper()
+    elif casing == _Casing.FIRST_LETTER_CAP:
+        out = canonical[:1].upper() + canonical[1:]
+    else:
+        out = canonical
+    return leading_punct + out
 
 
 # Variants we expose. Order is the print order.
@@ -55,23 +105,27 @@ def load_engines():
 
 def lookup_one(word: str, folder, readers, baseline_suggester, have_hunspell, quiet: bool) -> str:
     lines = []
-    greekified = _greekify_python(word)
-    fold_key = folder.fold(greekified)
+    greekified, lookup_form, casing, leading_punct = preprocess_input(word)
+    fold_key = folder.fold(lookup_form)
 
     if not quiet:
-        if greekified != word:
-            lines.append(f"  greekified:      {greekified}")
+        if greekified and greekified != word:
+            lines.append(f"  greekified:      {leading_punct}{greekified}")
+        if lookup_form != greekified:
+            lines.append(f"  lookup form:     {lookup_form}  (case-folded for engine lookup)")
         lines.append(f"  fold key:        {fold_key}")
 
     if have_hunspell:
-        result = analyze_via_hunspell(word)
+        result = analyze_via_hunspell(lookup_form) if lookup_form else analyze_via_hunspell(word)
         if result.is_correct:
-            if result.root and result.root != word:
-                lines.append(f"  Hunspell:        {word} (correct, root={result.root})")
+            display = postprocess_suggestion(lookup_form, casing, leading_punct)
+            if result.root and result.root != lookup_form:
+                lines.append(f"  Hunspell:        {display} (correct, root={result.root})")
             else:
-                lines.append(f"  Hunspell:        {word} (correct)")
+                lines.append(f"  Hunspell:        {display} (correct)")
         elif result.suggestions:
-            lines.append(f"  Hunspell:        {', '.join(result.suggestions)}")
+            displayed = [postprocess_suggestion(s, casing, leading_punct) for s in result.suggestions]
+            lines.append(f"  Hunspell:        {', '.join(displayed)}")
         else:
             lines.append(f"  Hunspell:        (misspelled, no suggestions)")
 
@@ -82,31 +136,37 @@ def lookup_one(word: str, folder, readers, baseline_suggester, have_hunspell, qu
         lines.append(f"  DAWG baseline    (no payload — fold key not present)")
     else:
         forms = baseline_reader.canonical_forms(pidx)
-        rendered = ", ".join(f"{c} ({f})" for c, f in forms)
+        rendered = ", ".join(
+            f"{postprocess_suggestion(c, casing, leading_punct)} ({f})"
+            for c, f in forms
+        )
         lines.append(f"  DAWG baseline    {rendered}")
 
     for budget in (1, 2):
         suggestions = baseline_suggester.suggest(fold_key, budget=budget, limit=5)
         if not suggestions:
-            lines.append(f"  DAWG <=edit-{budget}    (none within edit-{budget})")
+            lines.append(f"  DAWG <=edit-{budget}     (none within edit-{budget})")
         else:
             rendered = ", ".join(
-                f"{s.canonical} ({s.frequency}, d={s.edit_distance})"
+                f"{postprocess_suggestion(s.canonical, casing, leading_punct)} ({s.frequency}, d={s.edit_distance})"
                 for s in suggestions
             )
-            lines.append(f"  DAWG <=edit-{budget}    {rendered}")
+            lines.append(f"  DAWG <=edit-{budget}     {rendered}")
 
     # Other variants (currently just v3_freq1) — exact-match only.
     for name, label in VARIANTS_TO_LOAD:
         if name == "baseline":
-            continue  # already handled above
+            continue
         _, reader = readers[name]
         pidx = reader.payload_for(fold_key)
         if pidx is None:
             lines.append(f"  {label:16s} (no payload — fold key not present)")
         else:
             forms = reader.canonical_forms(pidx)
-            rendered = ", ".join(f"{c} ({f})" for c, f in forms)
+            rendered = ", ".join(
+                f"{postprocess_suggestion(c, casing, leading_punct)} ({f})"
+                for c, f in forms
+            )
             lines.append(f"  {label:16s} {rendered}")
 
     return "\n".join(lines)
