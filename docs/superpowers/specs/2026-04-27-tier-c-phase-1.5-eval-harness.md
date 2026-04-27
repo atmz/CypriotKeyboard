@@ -2,7 +2,35 @@
 
 **Date:** 2026-04-27
 **Author:** Claude (Opus 4.7) on behalf of Alex
-**Status:** Plan written. Sequencing decision: Phase 1 ships first at 47 MB; Phase 1.5 follows as the optimization + testing-framework step after Phase 1, before Phase 2. The eval harness then either confirms the 47 MB baseline is good enough or picks a smaller variant. Reframed scope: this is a quality-measurement and optimization step, not a Phase 1 gate.
+**Status:** **Phase 1.5 complete (2026-04-27).** Eval harness shipped, all 6 variants measured against synthetic Greeklish/Greek perturbation corpus + Hunspell baseline. **Decision: retain `dict/el_CY.dawg` at the 47 MB baseline pending Phase 2 evaluation.** Optimization variants are characterized and ready; revisit after Phase 2's Levenshtein-automaton suggester lands and we can re-run the harness with edit-distance recovery factored into the recall numbers.
+
+### Phase 1.5 findings worth remembering
+
+Recall summary on the 585-word top-N + commonWords ground-truth (~2,357 perturbation pairs):
+
+| Variant | Size | identity | unaccented | vowel-swap | greekified-Latin | avg |
+|---|---|---|---|---|---|---|
+| baseline | 47 MB | 95.0% | 93.3% | 54.3% | 94.2% | 84.2% |
+| v3_freq1 + passthrough (proposed) | ~2.7 MB | (would match v3_freq1) | | | | |
+| v3_freq1 | 2.72 MB | 93.5% | 93.3% | 53.5% | 92.6% | 83.2% |
+| v3_freq2 | 1.47 MB | 93.5% | 93.3% | 53.5% | 92.6% | 83.2% |
+| hunspell | — | 95.0% | 94.0% | 86.4% | 92.6% | 92.0% |
+
+Key qualitative findings the eval surfaced:
+
+1. **The vowel-swap recall gap (DAWG ~54% vs Hunspell 86%)** is the Phase-1-caveat realised: when a swap breaks a digraph (e.g. `και` → `καη`), exact-fold-match misses. Phase 2's Levenshtein-automaton is the intended fix.
+
+2. **v3_freq2 (1.47 MB) drops 23,547 freq=1 corpus singletons** that include real, common Greek inflections (άκυρη, ενήλικοι, σύμμαχοι, στεναχωρημένη, μπερδεύτηκε). v3_freq1 (2.72 MB) covers these at 100% identity recall.
+
+3. **9 high-frequency Cypriot dialect words drop from v3_freq1/v3_freq2 due to a corpus/canonical spelling mismatch:** the corpus stores τζαι/τζιαι (no breve), but the canonical curated form is τζ̆αι (with breve), so its corpus_freq is 0. Solution when we revisit: `build_dawg.py` exempts the curated word lists (`magic_words.dic`, `spyros_list.dic`, `commonWords` JSON) from the freq filter.
+
+4. **The freq=0 cliff: 852,089 surface forms (94% of the dict) have no corpus presence at all.** Random sampling shows these are mostly archaic / formal / complex-derivational forms (αποχαυνωνόμενος, παραφουσκώθηκα, υαλογραφημένα). Low priority for autocorrect coverage; safe to drop in any optimization.
+
+5. **The recommended optimization when we revisit: v3_freq1 + curated-passthrough.** ~2.7 MB final (17× smaller than baseline), covers all corpus-attested words, restores the τζ̆- forms via passthrough. Strictly dominates v3_freq2 on coverage; pays only +1.25 MB over it.
+
+### What we're waiting for before flipping
+
+Phase 2's Levenshtein-automaton suggester. If it closes the vowel-swap gap (DAWG 54% → ≥80% expected), the variant comparison shifts: rare-word lookups can also benefit from edit-distance walking, which materially changes how much we lose by shipping a smaller variant. Re-run `make eval` after Phase 2 lands and re-evaluate.
 **Predecessor:** [Phase 1 plan](../plans/2026-04-27-tier-c-phase-1-build-pipeline.md)
 
 ## Goal
