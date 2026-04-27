@@ -2,7 +2,7 @@
 
 **Date:** 2026-04-27
 **Author:** Claude (Opus 4.7) on behalf of Alex
-**Status:** Draft, awaiting user review
+**Status:** Draft, revision 2 (reflects existing `dict_generation/` pipeline)
 **Predecessor:** [`2026-04-26-keyboard-perf-tier-b-design.md`](./2026-04-26-keyboard-perf-tier-b-design.md)
 
 ## Goal
@@ -104,83 +104,118 @@ The "edit distance ≤ 1 in folded space" is roughly equivalent to "edit distanc
 
 ## Build pipeline
 
-Offline tool, written in Swift (so it can share the phonetic-fold code with the runtime). Run manually; commit the artifact.
+The repo already has a working dict-generation pipeline at `dict_generation/` (Python + Makefile, runs `affixcompress` to produce today's `el_CY.dic` + `el_CY.aff`). Tier-c **extends** this — does not replace it. The DAWG build sits downstream of the existing pipeline, consuming the same source word lists.
+
+### Existing pipeline (unchanged, recap)
 
 ```
-input:  dict/el_CY.dic, dict/el_CY.aff, freq/wiki_el_2026.tsv (see §Frequency)
-        → tools/build-dawg/main.swift
+inputs:  el_GR/el_GR.dic (SMG base, iconv'd to UTF-8)
+         spyros_list.dic, magic_words.dic, place_words.dic (curated Cypriot)
+         corpus/*.csv (scraped Cypriot blogs — aceras, drprasinada, …)
+         el_CY.aff_prefix
+         list_words.py (tokenizes corpus → emits el_CY_words.v3.dic)
+output:  ../dict/el_CY.dic + ../dict/el_CY.aff (Hunspell-formatted)
+```
 
-steps:
+### New tier-c additions
+
+Add a Makefile target `el_CY.dawg` that depends on `el_CY.dic` + a frequency map. Implement in Python to fit the existing pipeline; no Swift CLI.
+
+```
+new inputs:  el_CY.dic + el_CY.aff (existing pipeline output)
+             corpus_freq.json (NEW — emitted by list_words.py as a side-output;
+                               see §Frequency. Free to produce, currently thrown away.)
+new tool:    dict_generation/build_dawg.py
+new output:  ../dict/el_CY.dawg
+
+steps inside build_dawg.py:
   1. Parse el_CY.aff (suffix/prefix rules), apply over each stem in
      el_CY.dic → ~3–8M surface forms.
-  2. For each surface form: compute phonetic key, lookup frequency,
-     accumulate (folded_key → [(canonical, freq)]) map.
-  3. Sort entries; build minimized DAWG (Daciuk algorithm — ~200 lines
-     of well-known prior art).
+  2. For each surface form: compute phonetic key, attach freq from
+     corpus_freq.json (default-floor for unmatched), accumulate
+     (folded_key → [(canonical, freq)]) map.
+  3. Sort entries; build minimized DAWG via the Daciuk incremental
+     algorithm (~200 LOC, well-known prior art).
   4. Serialize DAWG to a compact binary (uint32 transitions, varint
-     deltas; reference: marisa-trie's format is a good template).
-  5. Emit dict/el_CY.dawg + a small dict/el_CY.dawg.meta header.
-
-output: a single ~3–5 MB binary that replaces el_CY.dic + el_CY.aff +
-        the entire hunspell_src/ tree.
+     deltas; marisa-trie's on-disk format is a reasonable template).
+  5. Emit ../dict/el_CY.dawg with a versioned magic header.
 ```
 
-The build tool is **not** part of Xcode's build phases — running it is a manual step (likely once per dict revision). The output binary is checked in. This keeps the iOS build simple and avoids pbxproj surgery for build phases. Re-run only when:
-- The source dict changes.
+The DAWG build is part of `make install` — same workflow as today, just one extra file gets copied into `../dict/`. Re-run only when:
+- A source word list changes.
 - The fold rules change.
 - The DAWG format changes (rare).
+
+### Phonetic-fold rules: cross-language sharing
+
+Fold rules live in **`dict_generation/phonetic_fold.json`** — a single source of truth read by:
+- `build_dawg.py` (Python) at build time.
+- `CypriotKeyboardUtil.swift` (Swift) at runtime, loaded from the bundled JSON resource at app start.
+
+~10 LOC of glue per side; rules edit in one place; no risk of build/runtime drift. JSON is overkill for the data volume but avoids any custom format.
+
+### What `dict/` looks like during the transition
+
+```
+dict/
+├── el_CY.aff      # kept for one release, fallback safety net (Hunspell still loaded)
+├── el_CY.dic      # ditto
+└── el_CY.dawg     # new
+```
+
+After the post-flip cleanup phase, only `el_CY.dawg` (and possibly `phonetic_fold.json` if not embedded) remains in `dict/`.
 
 ## Frequency data
 
 Frequency only matters at **build time**, to disambiguate canonical-form collisions on the same folded key (`καλημέρα` vs `καλομάρα` both fold to `kalımera` — frequency picks which is suggested first). The runtime is unaware of how frequencies were obtained.
 
-### Sources, ranked by effort
+### What we already have
 
-**1. Wikipedia el dump** *(few hours of compute, no humans needed)*
+`dict_generation/list_words.py` already tokenizes the entire `corpus/` (~150K lines across 8+ Cypriot blog scrapes — aceras, beatrixcrisis, drprasinada, erykini, kaisitree, oof, …) and computes per-word counts in `words_abs`. **The counts are currently thrown away** — only the filtered word list ships forward. Preserving them is a one-line change: emit `corpus_freq.json` alongside `el_CY_words.v3.dic`.
 
-Download `elwiki-latest-pages-articles.xml.bz2`, strip MediaWiki markup, tokenize, count. ~70M tokens of Standard Modern Greek. Reliable rank ordering for ~90–95% of dict word forms. **Gap:** Cypriot dialect words ("ίντα", "ένι", "έσιει", "πλάστιχα") underweighted or absent because they don't appear in SMG Wikipedia.
+This single change makes Cypriot-corpus frequencies available for free, and they're better-targeted than any external corpus would be (real Cypriot dialect text, not SMG wiki).
 
-**2. OpenSubtitles Greek subset** *(few hours, complements #1)*
+### Sources, ranked
 
-OPUS hosts the OpenSubtitles corpus split by language; `el` is several hundred million tokens of *spoken* Greek (subtitles), heavy on conversational/informal words. Different distribution than Wikipedia — more representative of how people actually type. Combine with #1 via weighted average.
+**1. Existing `corpus/` tokenization counts** *(a few lines of glue — primary)*
 
-**3. Re-tier the existing `commonWords` set** *(an hour by hand, fills the Cypriot gap)*
+Already-collected, dialect-correct, free to extract. Coverage gap: corpus is small (~hundreds of thousands of tokens after dedup), so the long tail of standard-Greek-only words gets default-floor frequency. Acceptable; suggestions still appear, just unranked at the bottom.
 
-The ~550 entries Alex already curated are by definition "common Cypriot." Manually split into 3 buckets:
+**2. Re-tier the curated `commonWords` set** *(an hour by hand, plugs known-common-Cypriot holes)*
+
+The ~550 entries in `CypriotKeyboardUtil.swift` are by definition "common Cypriot." Manually split into 3 buckets:
 - *very common* (~50 entries): function words ("και", "που", "εν", "ίντα")
 - *common* (~200)
 - *moderately common* (rest)
 
-Assign each bucket a synthetic frequency that slots into the SMG ranking. Cheapest way to fix the SMG-undercounts-Cypriot bias.
+Assign each bucket a synthetic frequency that slots in above the corpus floor. Plugs the gap for words that may be common in speech but underrepresented in the blog corpus.
 
-**4. Cypriot-specific corpus** *(weekend project)*
+**3. Wikipedia el dump** *(few hours, fallback for SMG long tail)*
 
-Public sources with real Cypriot dialect content:
-- r/cyprus archives via the Reddit API
-- Cypriot YouTube comment dumps (yt-dlp + `--write-comments`)
-- Public Cypriot blog/op-ed content (politis.com.cy archives, etc.)
+Download `elwiki-latest-pages-articles.xml.bz2`, strip MediaWiki markup, tokenize, count. ~70M tokens of Standard Modern Greek. Useful for *standard* Greek words that aren't well-represented in the Cypriot corpus (e.g., formal/technical vocabulary). Demoted from "primary" to "fallback" now that the dialect corpus exists.
 
-Probably 1–10M tokens after dedup and English-code-switching filtering. Specifically captures words SMG corpora miss. Higher signal-to-noise issue, but worth it for dialect-heavy curation.
+**4. OpenSubtitles Greek subset** *(only if 1+2+3 leave gaps)*
 
-**5. LLM-bootstrapped frequencies** *(half a day)*
+OPUS `el` subtitles corpus, ~hundreds of millions of tokens, conversational. Worth adding if the Wikipedia distribution feels too formal in practice.
 
-For dict entries not in the corpus, batch-prompt Claude/GPT: "rate how common this word is in everyday Cypriot Greek, 1–5." Probably $5–10 in API calls for the whole long tail. Crude backstop, not primary.
+**5. LLM-bootstrapped frequencies** *(half a day, long-tail only)*
 
-**6. Crowdsourced study** *(weeks)*
+For dict entries not in any of the above, batch-prompt Claude/GPT: "rate how common this word is in everyday Cypriot Greek, 1–5." ~$5–10 in API calls. Crude backstop for words affix-expanded into existence with no corpus evidence.
 
-Recruit native Cypriot speakers to rank a few thousand candidate words. Highest quality, slowest path. Overkill for this iteration.
+**6. Crowdsourced study** *(weeks; not in scope for v1)*
 
 ### Recommended pipeline
 
-**Do (1) + (3) for the v1 ship.** Wikipedia gives the SMG distribution for the 90% of the dict that's standard Greek; manual tiering of `commonWords` patches the Cypriot-specific gap. Total effort: one afternoon. If quality eval shows gaps, layer (2) on top in a v2.
+**v1 ship: (1) + (2).** Extract corpus counts, manually tier `commonWords`. Total effort: one afternoon. Layer (3) on if the long-tail SMG ranking feels off after evaluation.
 
-Final frequency function (per surface form):
+Final frequency function (per surface form, evaluated at build time):
 
 ```
 freq(w) = max(
-  log(wiki_count(w) + 1),           // tier 1
-  commonWords_bucket_score(w),       // tier 3 — boosts Cypriot-specific
-  default_floor                      // unknown words still appear in suggestions
+  log(corpus_count(w) + 1),         // tier 1 — Cypriot dialect corpus
+  commonWords_bucket_score(w),      // tier 2 — manual curation
+  log(wiki_count(w) + 1) * 0.5,     // tier 3 — SMG fallback, weighted lower
+  default_floor                     // unknown words still appear, ranked last
 )
 ```
 
@@ -195,19 +230,64 @@ freq(w) = max(
 
 These are rough — actual numbers come out of the build tool's first real run.
 
+## User-facing setting (opt-in initially)
+
+The new engine ships behind a UserDefaults toggle, **defaulting OFF**. Hunspell is the default for at least one release after the DAWG path is shippable. Users opt in explicitly while we gather field reports.
+
+### Where the setting lives
+
+Constraint: the extension has `RequestsOpenAccess = false` and cannot share UserDefaults with the container app. The toggle has to be readable from the extension's own sandbox.
+
+Pattern from the existing codebase: `isLatinKeyboard` is stored in `UserDefaults.standard` of the extension and read at startup in `KeyboardViewController.viewDidLoad`. We use the same shape:
+
+```swift
+// In KeyboardViewController.viewDidLoad
+let useDAWG = UserDefaults.standard.bool(forKey: "useDAWGSuggester")  // default false
+```
+
+The suggestion provider receives this flag at construction time and dispatches between Hunspell and DAWG paths.
+
+### How users flip it
+
+Two-phase UI rollout to keep the initial implementation small:
+
+**Phase A — internal/tester only.** No keyboard UI surface. The setting is set via a debug command in the container app's `ContentView` (a hidden long-press, or a build-flagged toggle button visible only in DEBUG builds). Documented in CLAUDE.md so testers can find it. This keeps the v1 implementation focused on correctness, not UX.
+
+**Phase B — user-visible toggle.** Once parity is measured and confidence is high, surface the setting in the keyboard itself. Options:
+
+- A long-press secondary action on the existing `🔄` key (currently it just toggles Greek/Latin; long-press could open a small "engine" callout).
+- A new `⚙` key in the layout — costs real estate, probably overkill.
+- A row of engine pills above the autocomplete bar for one release after the flip — nudges discovery. Removed once the new engine is the default.
+
+Recommendation: lean toward (A) — long-press on `🔄`. Reuses the convention. No new keys.
+
+### Default-flip strategy
+
+After measured field stability (one App Store release with the toggle off-by-default + N weeks of feedback), flip the default to ON. Hunspell still loads as fallback for one more release. Then the cleanup phase removes Hunspell entirely.
+
+This means the `useDAWG` setting goes through three states over time:
+
+| State                           | UserDefaults default | Hunspell loaded? |
+|---------------------------------|----------------------|------------------|
+| 1. Initial ship (opt-in)        | `false`              | Always           |
+| 2. Default-on, opt-out remains  | `true`               | Always (fallback)|
+| 3. Cleanup release              | (setting removed)    | No               |
+
 ## Rollout plan
 
 Best done as a long-lived feature branch with intermediate verification.
 
-**Phase 1: build pipeline.** Pure offline work. Write `tools/build-dawg`, generate a first DAWG from `el_CY.dic` + `el_CY.aff`. Validate by spot-checking that lookups return the expected canonical forms.
+**Phase 1: build pipeline.** Pure offline work in `dict_generation/`. Add `build_dawg.py`, modify `list_words.py` to emit `corpus_freq.json`, add Makefile target `el_CY.dawg`. Validate by spot-checking lookups.
 
-**Phase 2: runtime.** Implement DAWG loader + Levenshtein-automaton suggester in Swift, behind a feature flag (`useDAWG = false` by default). Both Hunspell and DAWG paths run side-by-side in dev builds; an integration test compares suggestions for a corpus of typos and reports diffs.
+**Phase 2: runtime, opt-in via setting.** Implement DAWG loader + Damerau-Levenshtein-automaton suggester in Swift. The suggestion provider reads `UserDefaults.standard.bool(forKey: "useDAWGSuggester")` (default `false`) and dispatches between Hunspell and DAWG paths. Both engines compiled into the binary; both loadable. Dev-build evaluation harness diffs the two for a typo corpus.
 
-**Phase 3: switchover.** When the dev-build comparison shows acceptable parity, flip `useDAWG = true` for release. Hunspell still loaded for one release as a safety net.
+**Phase 3: ship opt-in.** App Store release with the setting off by default. Hunspell stays the default; testers and curious users opt in via the Phase A toggle (debug-build button or hidden combo). Gather field reports. Hunspell still always loaded.
 
-**Phase 4: removal.** Following release, delete `hunspell_src/`, the modulemap, the bridging headers, the dict bundling, the dual-target source compilation entries for hunspell `.cxx` files. Big cleanup commit.
+**Phase 4: flip default.** Surface the setting as a user-visible UI element (long-press on `🔄`). Default flips to `true`. Hunspell still loaded as opt-out fallback for one release.
 
-This staged approach means no flag day; each phase is independently shippable.
+**Phase 5: removal.** Once feedback confirms parity, delete `hunspell_src/`, the modulemap, the bridging headers, the dict bundling, the dual-target `.cxx` Sources entries, and the toggle itself. Big cleanup commit.
+
+This staged approach means no flag day; each phase is independently shippable, and Hunspell remains the safety net through Phase 4.
 
 ## Risks and mitigations
 
@@ -215,7 +295,7 @@ This staged approach means no flag day; each phase is independently shippable.
 |------|------------|
 | Suggestion quality regression worse than predicted | Phase 2 runs both engines in parallel with corpus diffing; we don't ship until parity is measured. |
 | DAWG file format incompatibility across iOS versions | DAWG file is byte-stable (no architecture-specific layout). Versioned magic header; runtime refuses to load mismatched versions. |
-| Build tool drifts from runtime fold rules | Both share the same Swift source for the fold function (build tool imports `CypriotKeyboardUtil.swift` — or a leaner shared file). |
+| Build tool drifts from runtime fold rules | Single source of truth: `dict_generation/phonetic_fold.json`, loaded by both Python build tool and Swift runtime. ~10 LOC of glue per side. |
 | Long-word memory regression in suggester | Levenshtein-automaton state is bounded by edit budget × DAWG fanout; budget=1 keeps state tiny even for long inputs. |
 | Frequency data wrong, suggestions feel weird | Ship-time evaluation against a held-out typo set; iterate on frequency sources before flipping the flag. |
 
@@ -228,12 +308,13 @@ This staged approach means no flag day; each phase is independently shippable.
 
 ## Estimated scope
 
-- Build tool: ~3–5 days. Affix expansion + DAWG construction + frequency ingest.
-- Runtime: ~3–4 days. DAWG loader, Levenshtein-automaton suggester, integration with the existing suggestion provider behind a flag.
-- Evaluation harness: ~2 days. Typo corpus, parallel-engine diffing.
-- Cleanup (post-flip): ~1 day. Hunspell removal, pbxproj surgery.
+- **Frequency extraction: ~1 day.** Modify `list_words.py` to emit `corpus_freq.json`; manually tier `commonWords`.
+- **Build tool: ~2–4 days.** `build_dawg.py`: affix expansion (consumes existing `el_CY.aff`), Daciuk DAWG construction, frequency ingest, binary serializer. Smaller than original estimate because no Swift CLI scaffolding and corpus already collected.
+- **Runtime: ~3–4 days.** DAWG loader, Damerau-Levenshtein automaton suggester, fold-from-JSON, integration with the existing suggestion provider behind a `useDAWG` flag.
+- **Evaluation harness: ~2 days.** Typo corpus, parallel-engine diffing of Hunspell vs DAWG suggestions.
+- **Cleanup (post-flip): ~1 day.** Remove `hunspell_src/`, the modulemap, the bridging headers, the dual-target `.cxx` Sources entries, the `el_CY.dic`/`el_CY.aff` resource bundling. pbxproj surgery happens here.
 
-Total: ~2 calendar weeks of focused work, not overnight.
+Total: ~1.5 calendar weeks of focused work, not overnight. Scope is somewhat smaller than originally estimated because the existing `dict_generation/` pipeline gives us frequency data and an established build entry point for free.
 
 ## What this does *not* solve
 
