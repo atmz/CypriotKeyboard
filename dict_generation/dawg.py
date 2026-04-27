@@ -10,7 +10,7 @@ Reference: Daciuk, Mihov, Watson, Watson, "Incremental Construction
 of Minimal Acyclic Finite-State Automata", Computational Linguistics
 26(1), 2000.
 """
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 
 class _Node:
@@ -282,6 +282,22 @@ class DawgReader:
             if idx is None:
                 return None
         return self._terminal_payload(idx)
+
+    def edges_at(self, node_idx: int) -> List[Tuple[int, int]]:
+        """Return all (char_codepoint, target_node_idx) edges from a node.
+        Mirrors the Swift DawgReader.edges(from:) method."""
+        off = self._node_offsets[node_idx]
+        edge_count = struct.unpack_from("<H", self._data, off)[0]
+        edges_off = off + 2 + 4
+        out = []
+        for i in range(edge_count):
+            cp, tgt = struct.unpack_from("<II", self._data, edges_off + i * 8)
+            out.append((cp, tgt))
+        return out
+
+    def root_idx(self) -> int:
+        """Public alias for _root_idx (root is the last node per format spec)."""
+        return self._node_count - 1
 
     def _step(self, node_idx: int, char_code: int) -> Optional[int]:
         off = self._node_offsets[node_idx]

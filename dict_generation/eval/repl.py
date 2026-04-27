@@ -16,6 +16,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 from dict_generation.dawg import DawgReader
+from dict_generation.eval.dawg_suggester import DawgSuggester
 from dict_generation.eval.hunspell_runner import (
     suggest_via_hunspell, HUNSPELL_CLI_PATH,
 )
@@ -39,6 +40,9 @@ def load_engines():
         path, _stats = build_variant(name)
         with open(path, "rb") as f:
             readers[name] = (label, DawgReader(f.read()))
+    # Damerau-Levenshtein suggester for the baseline (the variant we ship).
+    baseline_reader = readers["baseline"][1]
+    baseline_suggester = DawgSuggester(baseline_reader)
     have_hunspell = os.path.exists(HUNSPELL_CLI_PATH)
     if not have_hunspell:
         print(
@@ -46,10 +50,10 @@ def load_engines():
             f"run `cd dict_generation && make hunspell-cli`",
             file=sys.stderr,
         )
-    return folder, readers, have_hunspell
+    return folder, readers, baseline_suggester, have_hunspell
 
 
-def lookup_one(word: str, folder, readers, have_hunspell, quiet: bool) -> str:
+def lookup_one(word: str, folder, readers, baseline_suggester, have_hunspell, quiet: bool) -> str:
     lines = []
     greekified = _greekify_python(word)
     fold_key = folder.fold(greekified)
@@ -66,7 +70,31 @@ def lookup_one(word: str, folder, readers, have_hunspell, quiet: bool) -> str:
         else:
             lines.append(f"  Hunspell:        (correct)")
 
+    # DAWG baseline (exact match) + edit-distance walks at budget=1 / budget=2.
+    baseline_reader = readers["baseline"][1]
+    pidx = baseline_reader.payload_for(fold_key)
+    if pidx is None:
+        lines.append(f"  DAWG baseline    (no payload — fold key not present)")
+    else:
+        forms = baseline_reader.canonical_forms(pidx)
+        rendered = ", ".join(f"{c} ({f})" for c, f in forms)
+        lines.append(f"  DAWG baseline    {rendered}")
+
+    for budget in (1, 2):
+        suggestions = baseline_suggester.suggest(fold_key, budget=budget, limit=5)
+        if not suggestions:
+            lines.append(f"  DAWG <=edit-{budget}    (none within edit-{budget})")
+        else:
+            rendered = ", ".join(
+                f"{s.canonical} ({s.frequency}, d={s.edit_distance})"
+                for s in suggestions
+            )
+            lines.append(f"  DAWG <=edit-{budget}    {rendered}")
+
+    # Other variants (currently just v3_freq1) — exact-match only.
     for name, label in VARIANTS_TO_LOAD:
+        if name == "baseline":
+            continue  # already handled above
         _, reader = readers[name]
         pidx = reader.payload_for(fold_key)
         if pidx is None:
@@ -87,7 +115,7 @@ def main():
                         help="suppress greekified/fold-key lines")
     args = parser.parse_args()
 
-    folder, readers, have_hunspell = load_engines()
+    folder, readers, baseline_suggester, have_hunspell = load_engines()
 
     if not args.batch:
         print("[repl] type a word, ^D to exit", file=sys.stderr)
@@ -115,7 +143,8 @@ def main():
             continue
         if args.batch:
             print(f"> {word}")
-        print(lookup_one(word, folder, readers, have_hunspell, quiet=args.quiet))
+        print(lookup_one(word, folder, readers, baseline_suggester, have_hunspell,
+                          quiet=args.quiet))
         print()
 
 
