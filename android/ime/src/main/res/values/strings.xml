@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ime_label">Cypriot Keyboard</string>
+    <string name="subtype_label_el">Κυπριακά</string>
+    <string name="subtype_label_en">English (Greeklish)</string>
+</resources>

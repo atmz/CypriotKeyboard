@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<input-method xmlns:android="http://schemas.android.com/apk/res/android"
+    android:settingsActivity="cy.cypriotkeyboard.app.MainActivity"
+    android:supportsSwitchingToNextInputMethod="true">
+    <subtype
+        android:label="@string/subtype_label_el"
+        android:imeSubtypeLocale="el_CY"
+        android:imeSubtypeMode="keyboard"
+        android:isAsciiCapable="false" />
+    <subtype
+        android:label="@string/subtype_label_en"
+        android:imeSubtypeLocale="en_US"
+        android:imeSubtypeMode="keyboard"
+        android:isAsciiCapable="true" />
+</input-method>
