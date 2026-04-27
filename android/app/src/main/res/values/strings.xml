@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cypriot Keyboard</string>
+    <string name="app_title">🇨🇾 Κύπριακο Keyboard</string>
+    <string name="install_step_1">1. Open \'Settings\'</string>
+    <string name="install_step_2">2. Tap \'System\'</string>
+    <string name="install_step_3">3. Tap \'Languages \\u0026 input\'</string>
+    <string name="install_step_4">4. Tap \'On-screen keyboard\'</string>
+    <string name="install_step_5">5. Tap \'Manage keyboards\'</string>
+    <string name="install_step_6">6. Enable \'Cypriot Keyboard\'</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="usage_globe">Tap 🌐 to switch to the Cypriot Keyboard</string>
+    <string name="usage_swap">Tap 🔄 to switch between Latin and Greek alphabets</string>
+    <string name="usage_suggestions">The bar above the keyboard shows current suggestions. When you press Space, the highlighted suggestion is applied.</string>
+    <string name="test_here_hint">Test here</string>
+    <string name="credits">Alex Toumazis</string>
+</resources>
