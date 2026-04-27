@@ -77,6 +77,7 @@ private fun Home(isImeEnabled: Boolean, onOpenSettings: () -> Unit) {
             )
             Text(stringResource(R.string.credits), style = MaterialTheme.typography.bodySmall)
         } else {
+            Text(stringResource(R.string.install_step_1))
             Button(onClick = onOpenSettings) { Text(stringResource(R.string.open_settings)) }
             Text(stringResource(R.string.install_step_2))
             Text(stringResource(R.string.install_step_3))

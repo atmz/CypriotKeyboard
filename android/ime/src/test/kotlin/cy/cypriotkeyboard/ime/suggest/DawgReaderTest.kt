@@ -1,7 +1,5 @@
 package cy.cypriotkeyboard.ime.suggest
 
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
@@ -26,17 +24,13 @@ class DawgReaderTest {
         assertTrue(reader.stringCount > 0)
     }
 
-    @Test fun `lookup of a known word returns a payload`() {
-        // We don't know exact fold-keys without folding, but we know the DAWG
-        // contains paths. Just walking from root with any common letter must
-        // succeed for at least some of them.
+    @Test fun `root node has at least one edge`() {
+        // Smoke test: any non-empty DAWG must have at least one edge from root.
+        // We don't probe a specific codepoint because exact fold-key shapes
+        // depend on the bundled dictionary and are exercised in the suggester
+        // tests instead.
         val reader = loadBundled()
-        val root = reader.rootNodeIdx
-        // Greek alpha codepoint 0x03B1
-        val next = reader.step(root, 0x03B1)
-        // The DAWG may or may not have an edge from root for any specific char,
-        // but root has at least one edge (smoke test).
-        assertTrue(reader.edges(root).isNotEmpty())
+        assertTrue(reader.edges(reader.rootNodeIdx).isNotEmpty())
     }
 
     @Test fun `bad magic throws`() {

@@ -25,8 +25,6 @@ sealed class KeyAction {
     object NumericMode : KeyAction()
     object SymbolicMode : KeyAction()
     object AlphabeticMode : KeyAction()
-    /** Combining diacritic, applied to the previous character (΄ ˘ ¨ ΅). */
-    data class Accent(val combining: String) : KeyAction()
 }
 
 data class LayoutSpec(

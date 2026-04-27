@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.inputmethod.InputConnection
+import android.view.inputmethod.InputMethodManager
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
 import androidx.lifecycle.Lifecycle
@@ -113,27 +114,48 @@ class CypriotInputMethodService :
         recomputeLayout()
     }
 
+    override fun switchToNextIme() {
+        // Switch to whichever IME the system thinks comes next. The argument
+        // false means "don't restrict to ASCII-capable IMEs".
+        val token = window.window?.attributes?.token
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager ?: return
+        if (token != null) {
+            @Suppress("DEPRECATION")
+            imm.switchToNextInputMethod(token, false)
+        }
+    }
+
     override fun setMode(mode: KeyboardMode) {
         this.mode = mode
         recomputeLayout()
     }
 
     override fun requestSuggestions(currentWord: String) {
+        // Refresh the layout each keystroke so the breve/tonos accent key swap
+        // tracks the previous letter (mirrors iOS alphabeticInputSet).
+        recomputeLayout()
+
         val token = autocompleteToken.incrementAndGet()
-        // Cancel previous pending callable.
+        // Cancel any in-flight debounce window.
         pendingAutocomplete?.let { mainHandler.removeCallbacks(it) }
+        pendingAutocomplete = null
+
+        // No current word → clear suggestions immediately, no work to schedule.
         if (currentWord.isEmpty()) {
             uiState.value = uiState.value.copy(suggestions = emptyList())
             handler.currentGuess = null
             return
         }
         val r = Runnable {
-            val eng = engine
-            if (eng == null) return@Runnable
+            val eng = engine ?: return@Runnable
             workerExec.submit {
                 val out = try { eng.suggest(currentWord) } catch (t: Throwable) { emptyList() }
-                if (autocompleteToken.get() != token) return@submit  // race-guard
+                // Race-guard: only post the result back if no newer request has
+                // arrived. The check is INSIDE mainHandler.post so it's the very
+                // last thing before we mutate UI state — closes the gap between
+                // "worker decided to publish" and "main thread updates state".
                 mainHandler.post {
+                    if (autocompleteToken.get() != token) return@post
                     uiState.value = uiState.value.copy(suggestions = out)
                     handler.currentGuess = out.firstOrNull { it.willReplace }
                 }
@@ -143,17 +165,31 @@ class CypriotInputMethodService :
         mainHandler.postDelayed(r, AUTOCOMPLETE_DEBOUNCE_MS)
     }
 
-    override fun shiftHeld(): Boolean = false   // shift held-state not yet wired
-
     // ---- Helpers -------------------------------------------------------
 
     private fun recomputeLayout() {
         val layout: LayoutSpec = when (mode) {
             KeyboardMode.NUMERIC -> Layouts.numeric()
             KeyboardMode.SYMBOLIC -> Layouts.symbolic()
-            KeyboardMode.ALPHABETIC -> if (isLatin) Layouts.latinAlphabetic() else Layouts.greekAlphabetic()
+            KeyboardMode.ALPHABETIC -> {
+                if (isLatin) Layouts.latinAlphabetic()
+                else Layouts.greekAlphabetic(useBreve = previousLetterTakesBreve())
+            }
         }
         uiState.value = uiState.value.copy(layout = layout)
+    }
+
+    /**
+     * iOS shows the breve accent (˘) instead of tonos (΄) on the top row when
+     * the previous letter is one of σ ζ ξ ψ ς. Mirror that here by peeking
+     * the most recent character before the cursor.
+     */
+    private fun previousLetterTakesBreve(): Boolean {
+        val ic = currentInputConnection ?: return false
+        val before = ic.getTextBeforeCursor(1, 0)?.toString() ?: return false
+        if (before.isEmpty()) return false
+        val ch = before[before.length - 1].lowercaseChar()
+        return ch == 'σ' || ch == 'ζ' || ch == 'ξ' || ch == 'ψ' || ch == 'ς'
     }
 
     private fun applySuggestion(s: Suggestion) {

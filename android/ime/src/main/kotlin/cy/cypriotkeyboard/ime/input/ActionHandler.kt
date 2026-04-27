@@ -9,9 +9,9 @@ import cy.cypriotkeyboard.ime.suggest.Suggestion
 interface KeyboardController {
     fun ic(): InputConnection?
     fun toggleLayoutGreekLatin()
+    fun switchToNextIme()
     fun setMode(mode: KeyboardMode)
     fun requestSuggestions(currentWord: String)
-    fun shiftHeld(): Boolean
 }
 
 enum class KeyboardMode { ALPHABETIC, NUMERIC, SYMBOLIC }
@@ -46,6 +46,8 @@ class ActionHandler(private val controller: KeyboardController) {
         val ic = controller.ic() ?: return
         when (val a = spec.action) {
             is KeyAction.Character -> handleCharacter(ic, a.text)
+            // (KeyAction.Accent was removed — accent keys come through Character
+            //  with the dead-key text, intercepted by ACCENT_DEAD_KEYS below.)
             KeyAction.Space -> handleSpaceLike(ic, " ")
             KeyAction.Return -> handleSpaceLike(ic, "\n")
             KeyAction.Backspace -> {
@@ -58,7 +60,10 @@ class ActionHandler(private val controller: KeyboardController) {
                 controller.toggleLayoutGreekLatin()
                 lastAction = LastAction.NonInput
             }
-            KeyAction.SwitchIme -> { lastAction = LastAction.NonInput }
+            KeyAction.SwitchIme -> {
+                controller.switchToNextIme()
+                lastAction = LastAction.NonInput
+            }
             KeyAction.NumericMode -> {
                 controller.setMode(KeyboardMode.NUMERIC)
                 lastAction = LastAction.NonInput
@@ -71,7 +76,6 @@ class ActionHandler(private val controller: KeyboardController) {
                 controller.setMode(KeyboardMode.ALPHABETIC)
                 lastAction = LastAction.NonInput
             }
-            is KeyAction.Accent -> handleAccentKey(ic, a.combining)
         }
     }
 
