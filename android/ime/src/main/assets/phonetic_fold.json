@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "description": "Cypriot Greek phonetic equivalence classes for tier-c spellchecker. Each entry maps a source string to a canonical key character. Longest source strings are tried first by the matcher. Diacritics on i/e/o-sound vowels collapse into the base sound.",
+  "rules": [
+    {"from": "ει", "to": "ı"},
+    {"from": "εί", "to": "ı"},
+    {"from": "οι", "to": "ı"},
+    {"from": "οί", "to": "ı"},
+    {"from": "υι", "to": "ı"},
+    {"from": "υί", "to": "ı"},
+    {"from": "αι", "to": "e"},
+    {"from": "αί", "to": "e"},
+    {"from": "ι", "to": "ı"},
+    {"from": "η", "to": "ı"},
+    {"from": "υ", "to": "ı"},
+    {"from": "ή", "to": "ı"},
+    {"from": "ί", "to": "ı"},
+    {"from": "ύ", "to": "ı"},
+    {"from": "ϊ", "to": "ı"},
+    {"from": "ϋ", "to": "ı"},
+    {"from": "ΐ", "to": "ı"},
+    {"from": "ΰ", "to": "ı"},
+    {"from": "ε", "to": "e"},
+    {"from": "έ", "to": "e"},
+    {"from": "ο", "to": "o"},
+    {"from": "ω", "to": "o"},
+    {"from": "ό", "to": "o"},
+    {"from": "ώ", "to": "o"},
+    {"from": "ά", "to": "α"},
+    {"from": "ς", "to": "σ"}
+  ]
+}

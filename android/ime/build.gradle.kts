@@ -27,6 +27,10 @@ android {
     }
 
     sourceSets["main"].assets.srcDirs("src/main/assets")
+
+    androidResources {
+        noCompress += setOf("dawg")
+    }
 }
 
 dependencies {
