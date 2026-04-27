@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspa
 from dict_generation.dawg import DawgReader
 from dict_generation.eval.dawg_suggester import DawgSuggester
 from dict_generation.eval.hunspell_runner import (
-    suggest_via_hunspell, HUNSPELL_CLI_PATH,
+    analyze_via_hunspell, suggest_via_hunspell, HUNSPELL_CLI_PATH,
 )
 from dict_generation.eval.perturbations import _greekify_python
 from dict_generation.eval.variants import build_variant
@@ -64,11 +64,16 @@ def lookup_one(word: str, folder, readers, baseline_suggester, have_hunspell, qu
         lines.append(f"  fold key:        {fold_key}")
 
     if have_hunspell:
-        h = suggest_via_hunspell(word)
-        if h:
-            lines.append(f"  Hunspell:        {', '.join(h)}")
+        result = analyze_via_hunspell(word)
+        if result.is_correct:
+            if result.root and result.root != word:
+                lines.append(f"  Hunspell:        {word} (correct, root={result.root})")
+            else:
+                lines.append(f"  Hunspell:        {word} (correct)")
+        elif result.suggestions:
+            lines.append(f"  Hunspell:        {', '.join(result.suggestions)}")
         else:
-            lines.append(f"  Hunspell:        (correct)")
+            lines.append(f"  Hunspell:        (misspelled, no suggestions)")
 
     # DAWG baseline (exact match) + edit-distance walks at budget=1 / budget=2.
     baseline_reader = readers["baseline"][1]
@@ -107,6 +112,23 @@ def lookup_one(word: str, folder, readers, baseline_suggester, have_hunspell, qu
     return "\n".join(lines)
 
 
+def lookup_input(text: str, folder, readers, baseline_suggester, have_hunspell, quiet: bool) -> str:
+    """Process `text`. Single-word inputs go straight through `lookup_one`.
+    Multi-word inputs split on whitespace and process each word with a header."""
+    words = text.split()
+    if not words:
+        return ""
+    if len(words) == 1:
+        return lookup_one(words[0], folder, readers, baseline_suggester, have_hunspell, quiet)
+    blocks = []
+    for i, word in enumerate(words, start=1):
+        if i > 1:
+            blocks.append("")  # blank separator between word blocks
+        blocks.append(f"  --- word {i}/{len(words)}: {word!r} ---")
+        blocks.append(lookup_one(word, folder, readers, baseline_suggester, have_hunspell, quiet))
+    return "\n".join(blocks)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--batch", action="store_true",
@@ -143,8 +165,8 @@ def main():
             continue
         if args.batch:
             print(f"> {word}")
-        print(lookup_one(word, folder, readers, baseline_suggester, have_hunspell,
-                          quiet=args.quiet))
+        print(lookup_input(word, folder, readers, baseline_suggester, have_hunspell,
+                           quiet=args.quiet))
         print()
 
 

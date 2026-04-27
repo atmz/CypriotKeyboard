@@ -9,7 +9,7 @@ Then this module subprocesses into it for each lookup.
 """
 import os
 import subprocess
-from typing import List
+from typing import List, NamedTuple, Optional
 
 
 class HunspellCliNotBuilt(RuntimeError):
@@ -24,12 +24,23 @@ AFF_PATH = os.path.join(_REPO, "dict", "el_CY.aff")
 DIC_PATH = os.path.join(_REPO, "dict", "el_CY.dic")
 
 
-def suggest_via_hunspell(word: str) -> List[str]:
-    """Return the list of Hunspell suggestions for `word`.
+class HunspellResult(NamedTuple):
+    """Structured result of one hunspell-cli analysis.
 
-    Returns [] if the word is correctly spelled. The caller can compare
-    word == expected separately for the identity case.
+    - is_correct: True if Hunspell reports the word as recognized
+      (line started with `*` or `+`).
+    - suggestions: only nonempty when Hunspell returned an `&` line
+      (misspelled, with suggestions).
+    - root: only set when Hunspell returned `+ <root>` (the analyzed
+      root form, useful for inflected words).
     """
+    is_correct: bool
+    suggestions: List[str]
+    root: Optional[str]
+
+
+def analyze_via_hunspell(word: str) -> HunspellResult:
+    """Run hunspell-cli on `word` and return its structured result."""
     if not os.path.exists(HUNSPELL_CLI_PATH):
         raise HunspellCliNotBuilt(
             f"hunspell-cli not built at {HUNSPELL_CLI_PATH}; "
@@ -43,23 +54,37 @@ def suggest_via_hunspell(word: str) -> List[str]:
         text=True,
         encoding="utf-8",
     )
-    return _parse_pipe_output(proc.stdout)
+    return _parse_pipe_output_full(proc.stdout)
 
 
-def _parse_pipe_output(output: str) -> List[str]:
-    """Parse the ispell pipe protocol output and return the suggestion list."""
+def _parse_pipe_output_full(output: str) -> HunspellResult:
+    """Parse hunspell pipe protocol output into a HunspellResult."""
     for raw in output.splitlines():
         line = raw.strip()
         if not line:
             continue
         if line.startswith("@"):
             continue  # banner
-        if line.startswith("*") or line.startswith("+"):
-            return []  # correctly spelled
+        if line.startswith("*"):
+            return HunspellResult(is_correct=True, suggestions=[], root=None)
+        if line.startswith("+"):
+            # Format: "+ <root>"
+            parts = line.split(None, 1)
+            root = parts[1].strip() if len(parts) >= 2 else None
+            return HunspellResult(is_correct=True, suggestions=[], root=root)
         if line.startswith("#"):
-            return []  # misspelled, no suggestions
+            # Misspelled, no suggestions.
+            return HunspellResult(is_correct=False, suggestions=[], root=None)
         if line.startswith("&"):
-            # Format: "& <word> <count> <offset>: <sugg1>, <sugg2>, ..."
+            # "& <word> <count> <offset>: <sugg1>, <sugg2>, ..."
             _, _, after_colon = line.partition(":")
-            return [s.strip() for s in after_colon.split(",") if s.strip()]
-    return []
+            suggestions = [s.strip() for s in after_colon.split(",") if s.strip()]
+            return HunspellResult(is_correct=False, suggestions=suggestions, root=None)
+    return HunspellResult(is_correct=False, suggestions=[], root=None)
+
+
+def suggest_via_hunspell(word: str) -> List[str]:
+    """Return the list of Hunspell suggestions for `word`. Backwards-compatible
+    shape: returns `[]` if the word is correctly spelled or has no suggestions.
+    Use `analyze_via_hunspell` for structured output."""
+    return analyze_via_hunspell(word).suggestions

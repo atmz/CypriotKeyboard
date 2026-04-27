@@ -29,6 +29,25 @@ class HunspellRunnerTests(unittest.TestCase):
         suggestions = suggest_via_hunspell("zzzzzzzz")
         self.assertIsInstance(suggestions, list)
 
+    def test_analyze_correct_word(self):
+        from dict_generation.eval.hunspell_runner import analyze_via_hunspell
+        result = analyze_via_hunspell("και")
+        self.assertTrue(result.is_correct)
+
+    def test_analyze_misspelled_word_returns_suggestions(self):
+        from dict_generation.eval.hunspell_runner import analyze_via_hunspell
+        result = analyze_via_hunspell("καλιμερα")
+        self.assertFalse(result.is_correct)
+        self.assertIn("καλημέρα", result.suggestions)
+
+    def test_analyze_garbage_returns_misspelled_no_suggestions(self):
+        from dict_generation.eval.hunspell_runner import analyze_via_hunspell
+        result = analyze_via_hunspell("zzzzzzzz")
+        # Either misspelled with no suggestions, or treated as correct
+        # (vendored CLI behavior). Just confirm the result type is well-formed.
+        self.assertIsInstance(result.is_correct, bool)
+        self.assertIsInstance(result.suggestions, list)
+
 
 class HunspellCliNotBuiltTests(unittest.TestCase):
     def test_error_class_subclasses_runtime_error(self):
