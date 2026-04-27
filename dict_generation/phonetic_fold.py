@@ -9,7 +9,7 @@ the same JSON file.
 """
 import json
 import os
-from typing import List, Tuple
+from typing import Iterator, List, Tuple
 
 
 class PhoneticFolder:
@@ -35,6 +35,67 @@ class PhoneticFolder:
                 out.append(text[i])
                 i += 1
         return "".join(out)
+
+    def fold_variants(self, text: str, max_variants: int = 16) -> List[str]:
+        """Return all fold variants by branching at digraph-matching positions.
+
+        At each position, if a multi-char rule matches, we explore TWO branches:
+          (a) take the multi-char rule (collapses to one fold char)
+          (b) take the single-char rule for text[i] and recurse from i+1
+              (so the "digraph" gets folded as two separate single-char fold steps)
+
+        The first returned variant equals the greedy longest-match fold (i.e.,
+        the same string self.fold(text) would return). Subsequent variants
+        explore alternatives.
+
+        Single-char-only positions don't branch — only digraph rules introduce
+        ambiguity worth exploring.
+
+        Capped at max_variants to prevent pathological blowup. Typical Greek
+        words have 0-2 digraphs, so 1-4 variants is normal.
+        """
+        n = len(text)
+
+        def helper(i: int) -> Iterator[str]:
+            if i >= n:
+                yield ""
+                return
+            # Find longest-match multi-char rule at position i (if any).
+            digraph = None
+            for src, dst in self._rules:
+                if len(src) >= 2 and i + len(src) <= n:
+                    if all(text[i + k] == src[k] for k in range(len(src))):
+                        digraph = (src, dst)
+                        break
+            # Find single-char rule for text[i] (if any).
+            single = None
+            for src, dst in self._rules:
+                if len(src) == 1 and text[i] == src[0]:
+                    single = (src, dst)
+                    break
+
+            if digraph is not None:
+                src, dst = digraph
+                for tail in helper(i + len(src)):
+                    yield dst + tail
+            if single is not None:
+                src, dst = single
+                for tail in helper(i + 1):
+                    yield dst + tail
+            elif digraph is None:
+                # No rule fires — pass char through.
+                for tail in helper(i + 1):
+                    yield text[i] + tail
+
+        seen = set()
+        out = []
+        for variant in helper(0):
+            if variant not in seen:
+                seen.add(variant)
+                out.append(variant)
+                if len(out) >= max_variants:
+                    break
+        return out
 
 
 def load_default_folder() -> PhoneticFolder:

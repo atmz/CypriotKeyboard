@@ -103,17 +103,23 @@ def load_engines():
     return folder, readers, baseline_suggester, have_hunspell
 
 
-def lookup_one(word: str, folder, readers, baseline_suggester, have_hunspell, quiet: bool) -> str:
+def lookup_one(word: str, folder, readers, baseline_suggester, have_hunspell, quiet: bool,
+               multi_fold: bool = True) -> str:
     lines = []
     greekified, lookup_form, casing, leading_punct = preprocess_input(word)
-    fold_key = folder.fold(lookup_form)
+
+    # Compute fold variants. With multi_fold=False, just one (greedy longest-match).
+    fold_keys = folder.fold_variants(lookup_form) if multi_fold else [folder.fold(lookup_form)]
 
     if not quiet:
         if greekified and greekified != word:
             lines.append(f"  greekified:      {leading_punct}{greekified}")
         if lookup_form != greekified:
             lines.append(f"  lookup form:     {lookup_form}  (case-folded for engine lookup)")
-        lines.append(f"  fold key:        {fold_key}")
+        if len(fold_keys) == 1:
+            lines.append(f"  fold key:        {fold_keys[0]}")
+        else:
+            lines.append(f"  fold keys ({len(fold_keys)}):  {', '.join(fold_keys)}")
 
     if have_hunspell:
         result = analyze_via_hunspell(lookup_form) if lookup_form else analyze_via_hunspell(word)
@@ -129,21 +135,27 @@ def lookup_one(word: str, folder, readers, baseline_suggester, have_hunspell, qu
         else:
             lines.append(f"  Hunspell:        (misspelled, no suggestions)")
 
-    # DAWG baseline (exact match) + edit-distance walks at budget=1 / budget=2.
+    # DAWG baseline (exact match across all fold variants).
     baseline_reader = readers["baseline"][1]
-    pidx = baseline_reader.payload_for(fold_key)
-    if pidx is None:
-        lines.append(f"  DAWG baseline    (no payload — fold key not present)")
+    exact_canonicals = {}  # canonical -> freq (max across variants)
+    for fk in fold_keys:
+        pidx = baseline_reader.payload_for(fk)
+        if pidx is not None:
+            for canonical, freq in baseline_reader.canonical_forms(pidx):
+                if canonical not in exact_canonicals or freq > exact_canonicals[canonical]:
+                    exact_canonicals[canonical] = freq
+    if not exact_canonicals:
+        lines.append(f"  DAWG baseline    (no payload for any fold variant)")
     else:
-        forms = baseline_reader.canonical_forms(pidx)
+        ranked = sorted(exact_canonicals.items(), key=lambda kv: -kv[1])
         rendered = ", ".join(
             f"{postprocess_suggestion(c, casing, leading_punct)} ({f})"
-            for c, f in forms
+            for c, f in ranked
         )
         lines.append(f"  DAWG baseline    {rendered}")
 
     for budget in (1, 2):
-        suggestions = baseline_suggester.suggest(fold_key, budget=budget, limit=5)
+        suggestions = baseline_suggester.suggest_multi(fold_keys, budget=budget, limit=5)
         if not suggestions:
             lines.append(f"  DAWG <=edit-{budget}     (none within edit-{budget})")
         else:
@@ -153,39 +165,48 @@ def lookup_one(word: str, folder, readers, baseline_suggester, have_hunspell, qu
             )
             lines.append(f"  DAWG <=edit-{budget}     {rendered}")
 
-    # Other variants (currently just v3_freq1) — exact-match only.
+    # Other variants (currently just v3_freq1) — exact-match across fold variants.
     for name, label in VARIANTS_TO_LOAD:
         if name == "baseline":
             continue
         _, reader = readers[name]
-        pidx = reader.payload_for(fold_key)
-        if pidx is None:
-            lines.append(f"  {label:16s} (no payload — fold key not present)")
+        exact_canonicals = {}
+        for fk in fold_keys:
+            pidx = reader.payload_for(fk)
+            if pidx is not None:
+                for canonical, freq in reader.canonical_forms(pidx):
+                    if canonical not in exact_canonicals or freq > exact_canonicals[canonical]:
+                        exact_canonicals[canonical] = freq
+        if not exact_canonicals:
+            lines.append(f"  {label:16s} (no payload for any fold variant)")
         else:
-            forms = reader.canonical_forms(pidx)
+            ranked = sorted(exact_canonicals.items(), key=lambda kv: -kv[1])
             rendered = ", ".join(
                 f"{postprocess_suggestion(c, casing, leading_punct)} ({f})"
-                for c, f in forms
+                for c, f in ranked
             )
             lines.append(f"  {label:16s} {rendered}")
 
     return "\n".join(lines)
 
 
-def lookup_input(text: str, folder, readers, baseline_suggester, have_hunspell, quiet: bool) -> str:
+def lookup_input(text: str, folder, readers, baseline_suggester, have_hunspell, quiet: bool,
+                 multi_fold: bool = True) -> str:
     """Process `text`. Single-word inputs go straight through `lookup_one`.
     Multi-word inputs split on whitespace and process each word with a header."""
     words = text.split()
     if not words:
         return ""
     if len(words) == 1:
-        return lookup_one(words[0], folder, readers, baseline_suggester, have_hunspell, quiet)
+        return lookup_one(words[0], folder, readers, baseline_suggester, have_hunspell,
+                          quiet, multi_fold)
     blocks = []
     for i, word in enumerate(words, start=1):
         if i > 1:
             blocks.append("")  # blank separator between word blocks
         blocks.append(f"  --- word {i}/{len(words)}: {word!r} ---")
-        blocks.append(lookup_one(word, folder, readers, baseline_suggester, have_hunspell, quiet))
+        blocks.append(lookup_one(word, folder, readers, baseline_suggester, have_hunspell,
+                                 quiet, multi_fold))
     return "\n".join(blocks)
 
 
@@ -195,6 +216,8 @@ def main():
                         help="no prompt or banner; suitable for piping")
     parser.add_argument("--quiet", action="store_true",
                         help="suppress greekified/fold-key lines")
+    parser.add_argument("--no-multi-fold", action="store_true",
+                        help="disable multi-fold lookup (revert to greedy longest-match fold)")
     args = parser.parse_args()
 
     folder, readers, baseline_suggester, have_hunspell = load_engines()
@@ -226,7 +249,7 @@ def main():
         if args.batch:
             print(f"> {word}")
         print(lookup_input(word, folder, readers, baseline_suggester, have_hunspell,
-                           quiet=args.quiet))
+                           quiet=args.quiet, multi_fold=not args.no_multi_fold))
         print()
 
 

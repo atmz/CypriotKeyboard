@@ -73,6 +73,26 @@ class DawgSuggester:
         return [DawgSuggestion(canonical=c, frequency=f, edit_distance=d)
                 for c, f, d in results[:limit]]
 
+    def suggest_multi(self, keys: List[str], budget: int = 1, limit: int = 5) -> List[DawgSuggestion]:
+        """Look up multiple fold-key variants, dedupe canonicals by min edit
+        distance, rank by (distance asc, freq desc).
+
+        Used when the input has multiple plausible fold interpretations
+        (e.g., digraph that may or may not be intended as a digraph by the user).
+        """
+        by_canonical = {}  # canonical -> DawgSuggestion (with min distance)
+        for key in keys:
+            # Over-fetch since we'll dedupe across variants.
+            for s in self.suggest(key, budget=budget, limit=limit * 4):
+                existing = by_canonical.get(s.canonical)
+                if existing is None or s.edit_distance < existing.edit_distance:
+                    by_canonical[s.canonical] = s
+        merged = sorted(
+            by_canonical.values(),
+            key=lambda s: (s.edit_distance, -s.frequency),
+        )
+        return merged[:limit]
+
     def _edit1_variants(self, key: str) -> List[str]:
         chars = list(key)
         n = len(chars)

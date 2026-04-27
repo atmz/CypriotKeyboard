@@ -68,6 +68,30 @@ class DawgSuggesterTests(unittest.TestCase):
             self.assertGreaterEqual(suggestions[i].edit_distance,
                                     suggestions[i - 1].edit_distance)
 
+    def test_suggest_multi_returns_min_distance(self):
+        # If a canonical appears at d=0 via one fold key and d=1 via another,
+        # the merged result should record d=0.
+        key_exact = self.folder.fold("καλός")  # exact match for "καλός"
+        # Construct a perturbed key that's edit-1 from "καλoσ".
+        chars = list(key_exact)
+        chars[0] = "x"
+        perturbed = "".join(chars)
+        # First key: exact match (distance 0). Second: edit-1.
+        merged = self.suggester.suggest_multi([key_exact, perturbed], budget=1, limit=5)
+        # Find καλός in the merged output.
+        kalos = [s for s in merged if s.canonical == "καλός"]
+        self.assertEqual(len(kalos), 1)
+        self.assertEqual(kalos[0].edit_distance, 0,
+                         "suggest_multi must take min distance across keys")
+
+    def test_suggest_multi_dedupes_canonicals(self):
+        # The same canonical reachable via multiple keys should appear once.
+        key = self.folder.fold("καλός")
+        merged = self.suggester.suggest_multi([key, key], budget=1, limit=10)
+        canonicals = [s.canonical for s in merged]
+        self.assertEqual(len(canonicals), len(set(canonicals)),
+                         "suggest_multi must dedupe canonicals across keys")
+
 
 if __name__ == "__main__":
     unittest.main()
