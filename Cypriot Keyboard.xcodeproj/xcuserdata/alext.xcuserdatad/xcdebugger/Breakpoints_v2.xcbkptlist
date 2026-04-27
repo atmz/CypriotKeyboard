@@ -768,7 +768,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "102"
             endingLineNumber = "102"
-            landmarkName = "distanceMeasure(transliteratedWord:greekWord:)"
+            landmarkName = "greekify(text:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
