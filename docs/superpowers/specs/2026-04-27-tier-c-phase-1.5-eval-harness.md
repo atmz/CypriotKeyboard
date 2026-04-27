@@ -2,7 +2,7 @@
 
 **Date:** 2026-04-27
 **Author:** Claude (Opus 4.7) on behalf of Alex
-**Status:** Draft
+**Status:** Plan written. Sequencing decision: Phase 1 ships first at 47 MB; Phase 1.5 follows as the optimization + testing-framework step after Phase 1, before Phase 2. The eval harness then either confirms the 47 MB baseline is good enough or picks a smaller variant. Reframed scope: this is a quality-measurement and optimization step, not a Phase 1 gate.
 **Predecessor:** [Phase 1 plan](../plans/2026-04-27-tier-c-phase-1-build-pipeline.md)
 
 ## Goal
