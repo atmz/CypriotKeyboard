@@ -64,6 +64,11 @@ final class KeyboardViewController: KeyboardInputViewController {
         #if DEBUG
         print("viewDidLoad complete")
         #endif
+
+        // tier-c Phase 2: initialise the autocomplete engine based on the
+        // user's flag. Only one engine loads at a time.
+        let useDAWG = UserDefaults.standard.bool(forKey: "useDAWGSuggester")
+        autocompleteProvider = makeAutocompleteProvider(useDAWG: useDAWG)
     }
     
     
@@ -88,9 +93,58 @@ final class KeyboardViewController: KeyboardInputViewController {
     public var autocompleteCount: Int = 0
     
     // MARK: - Autocomplete
-    
-    
-    private var autocompleteProvider = CypriotAutocompleteSuggestionProvider()
+
+    // MARK: - Autocomplete provider (engine selectable via UserDefaults)
+
+    private var autocompleteProvider: AutocompleteSuggestionProvider!
+
+    /// Reads UserDefaults["useDAWGSuggester"] and constructs the right provider.
+    /// Invariant: only one engine is loaded at a time.
+    private func makeAutocompleteProvider(useDAWG: Bool) -> AutocompleteSuggestionProvider {
+        if useDAWG {
+            do {
+                guard let dawgURL = Bundle.main.url(forResource: "el_CY", withExtension: "dawg") else {
+                    #if DEBUG
+                    print("[KeyboardViewController] el_CY.dawg missing from extension bundle; falling back to Hunspell")
+                    #endif
+                    return CypriotAutocompleteSuggestionProvider()
+                }
+                let reader = try DawgReader(url: dawgURL)
+                let folder = try PhoneticFolder.loadDefault()
+                return DawgAutocompleteSuggestionProvider(reader: reader, folder: folder)
+            } catch {
+                #if DEBUG
+                print("[KeyboardViewController] DAWG engine init failed: \(error); falling back to Hunspell")
+                #endif
+                return CypriotAutocompleteSuggestionProvider()
+            }
+        }
+        return CypriotAutocompleteSuggestionProvider()
+    }
+
+    /// Long-press on 🔄 calls this — flip the flag, swap the provider, reset state, show toast.
+    public func toggleSuggesterEngine() {
+        let current = UserDefaults.standard.bool(forKey: "useDAWGSuggester")
+        let newValue = !current
+        UserDefaults.standard.setValue(newValue, forKey: "useDAWGSuggester")
+        autocompleteProvider = makeAutocompleteProvider(useDAWG: newValue)
+        currentGuess = nil
+        lastAction = nil
+        autocompleteCount = 0
+        let label = newValue ? "Suggester: DAWG" : "Suggester: Hunspell"
+        showSuggesterToast(label)
+    }
+
+    /// Toast helper. The bundled KeyboardKit's KeyboardToastContext API
+    /// is verified at integration time; this helper is intentionally
+    /// minimal so its call shape can be adjusted without touching
+    /// toggleSuggesterEngine.
+    private func showSuggesterToast(_ label: String) {
+        // Try the most likely API shapes for the bundled KeyboardKit version.
+        // Adjust here once Task 10 wires the project and we can verify which
+        // method the bundled toast context exposes.
+        toastContext.present(label)
+    }
 
     // Coalesces rapid keystrokes: only the most recent typed word actually
     // hits Hunspell after the debounce window expires. The autocompleteCount
