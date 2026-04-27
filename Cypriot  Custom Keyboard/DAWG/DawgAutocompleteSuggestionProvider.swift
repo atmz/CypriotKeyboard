@@ -61,9 +61,31 @@ final class DawgAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
     private func buildSuggestions(for text: String) -> [CypriotAutocompleteSuggestion] {
         // Normalise input: greekify Latin → Greek, then fold to a phonetic key.
         let greek = CypriotKeyboardHelper.greekify(text: text)
-        let foldKey = folder.fold(greek)
+
+        // Capitalization handling, mirroring the Hunspell path:
+        // The DAWG is built from lowercase forms, so lookups must be lowercase.
+        // We detect a capitalized first letter, lowercase it before folding,
+        // and recapitalize results before display.
+        let isCapitalFirst: Bool
+        let lookupGreek: String
+        if let first = greek.first, first.isUppercase {
+            isCapitalFirst = true
+            lookupGreek = String(first).lowercased() + greek.dropFirst()
+        } else {
+            isCapitalFirst = false
+            lookupGreek = greek
+        }
+
+        let foldKey = folder.fold(lookupGreek)
 
         let candidates = suggester.suggest(forKey: foldKey, limit: 4)
+
+        func displayForm(_ canonical: String) -> String {
+            if isCapitalFirst, let first = canonical.first {
+                return String(first).uppercased() + canonical.dropFirst()
+            }
+            return canonical
+        }
 
         var result: [CypriotAutocompleteSuggestion] = []
         // Slot 0: verbatim
@@ -76,17 +98,19 @@ final class DawgAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
         // candidate is at edit distance 0 OR 1 (i.e. a real phonetic match
         // we'd want to swap in on space).
         if let top = candidates.first {
+            let displayed = displayForm(top.canonical)
             result.append(CypriotAutocompleteSuggestion(
-                text: top.canonical, isAutocomplete: false, isUnknown: false,
-                title: top.canonical, subtitle: nil,
+                text: displayed, isAutocomplete: false, isUnknown: false,
+                title: displayed, subtitle: nil,
                 additionalInfo: ["willReplace": true]
             ))
         }
         // Slot 2+: additional candidates (no willReplace)
         for cand in candidates.dropFirst() {
+            let displayed = displayForm(cand.canonical)
             result.append(CypriotAutocompleteSuggestion(
-                text: cand.canonical, isAutocomplete: false, isUnknown: false,
-                title: cand.canonical, subtitle: nil,
+                text: displayed, isAutocomplete: false, isUnknown: false,
+                title: displayed, subtitle: nil,
                 additionalInfo: [:]
             ))
         }
