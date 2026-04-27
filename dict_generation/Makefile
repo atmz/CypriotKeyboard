@@ -105,3 +105,7 @@ eval-no-hunspell:
 clean_eval:
 	rm -rf /tmp/eval_dawg
 	rm -f dict_generation/eval/results.md
+
+# tier-c eval REPL: interactive comparison of Hunspell vs DAWG variants.
+repl: hunspell-cli
+	cd .. && python3 dict_generation/eval/repl.py
