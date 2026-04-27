@@ -3,8 +3,11 @@
   "description": "Cypriot Greek phonetic equivalence classes for tier-c spellchecker. Each entry maps a source string to a canonical key character. Longest source strings are tried first by the matcher. Diacritics on i/e/o-sound vowels collapse into the base sound.",
   "rules": [
     {"from": "ει", "to": "ı"},
+    {"from": "εί", "to": "ı"},
     {"from": "οι", "to": "ı"},
+    {"from": "οί", "to": "ı"},
     {"from": "υι", "to": "ı"},
+    {"from": "υί", "to": "ı"},
     {"from": "αι", "to": "e"},
     {"from": "αί", "to": "e"},
     {"from": "ι", "to": "ı"},
