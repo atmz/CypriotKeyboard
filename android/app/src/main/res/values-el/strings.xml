@@ -2,13 +2,9 @@
 <resources>
     <string name="app_name">Κυπριακό Πληκτρολόγιο</string>
     <string name="app_title">🇨🇾 Κύπριακο Keyboard</string>
-    <string name="install_step_1">1. Άνοιξε τις \'Ρυθμίσεις\'</string>
-    <string name="install_step_2">2. Πάτα \'Σύστημα\'</string>
-    <string name="install_step_3">3. Πάτα \'Γλώσσες \\u0026 εισαγωγή\'</string>
-    <string name="install_step_4">4. Πάτα \'Πληκτρολόγιο οθόνης\'</string>
-    <string name="install_step_5">5. Πάτα \'Διαχείριση πληκτρολογίων\'</string>
-    <string name="install_step_6">6. Ενεργοποίησε το \'Cypriot Keyboard\'</string>
-    <string name="open_settings">Άνοιγμα Ρυθμίσεων</string>
+    <string name="install_intro">Για να ολοκληρωθεί η εγκατάσταση, ενεργοποίησε το Κυπριακό Πληκτρολόγιο στις ρυθμίσεις πληκτρολογίου.</string>
+    <string name="open_settings">Άνοιγμα Ρυθμίσεων Πληκτρολογίου</string>
+    <string name="install_then">Ενεργοποίησε το \'Cypriot Keyboard\' στη λίστα και γύρισε εδώ.</string>
     <string name="usage_globe">Πάτα 🌐 για να αλλάξεις στο Κυπριακό Πληκτρολόγιο</string>
     <string name="usage_swap">Πάτα 🔄 για να αλλάξεις μεταξύ Λατινικού και Ελληνικού αλφαβήτου</string>
     <string name="usage_suggestions">Η μπάρα πάνω από το πληκτρολόγιο δείχνει τις προτάσεις. Όταν πατάς Διάστημα, εφαρμόζεται η επισημασμένη πρόταση.</string>

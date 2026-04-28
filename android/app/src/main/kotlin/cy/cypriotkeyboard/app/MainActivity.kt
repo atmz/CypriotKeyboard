@@ -8,8 +8,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -47,6 +50,8 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun openImeSettings() {
+        // ACTION_INPUT_METHOD_SETTINGS deep-links straight to the on-screen
+        // keyboard list — the user just toggles "Cypriot Keyboard" there.
         startActivity(Intent(Settings.ACTION_INPUT_METHOD_SETTINGS).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         })
@@ -56,10 +61,13 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun Home(isImeEnabled: Boolean, onOpenSettings: () -> Unit) {
     Column(
+        // safeDrawing keeps content out of status bar, navigation bar, and
+        // display cutouts (camera notch / hole-punch).
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+            .windowInsetsPadding(WindowInsets.safeDrawing)
+            .padding(horizontal = 24.dp, vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
             text = stringResource(R.string.app_title),
@@ -77,13 +85,14 @@ private fun Home(isImeEnabled: Boolean, onOpenSettings: () -> Unit) {
             )
             Text(stringResource(R.string.credits), style = MaterialTheme.typography.bodySmall)
         } else {
-            Text(stringResource(R.string.install_step_1))
-            Button(onClick = onOpenSettings) { Text(stringResource(R.string.open_settings)) }
-            Text(stringResource(R.string.install_step_2))
-            Text(stringResource(R.string.install_step_3))
-            Text(stringResource(R.string.install_step_4))
-            Text(stringResource(R.string.install_step_5))
-            Text(stringResource(R.string.install_step_6))
+            Text(stringResource(R.string.install_intro))
+            Button(onClick = onOpenSettings) {
+                Text(stringResource(R.string.open_settings))
+            }
+            Text(
+                stringResource(R.string.install_then),
+                style = MaterialTheme.typography.bodySmall
+            )
         }
     }
 }
