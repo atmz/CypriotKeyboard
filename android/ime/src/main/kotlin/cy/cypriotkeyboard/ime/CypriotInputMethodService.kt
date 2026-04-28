@@ -13,7 +13,10 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.setViewTreeLifecycleOwner
+import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
@@ -38,6 +41,7 @@ import java.util.concurrent.atomic.AtomicInteger
 class CypriotInputMethodService :
     InputMethodService(),
     LifecycleOwner,
+    ViewModelStoreOwner,
     SavedStateRegistryOwner,
     KeyboardController {
 
@@ -45,6 +49,9 @@ class CypriotInputMethodService :
 
     private val lifecycleRegistry = LifecycleRegistry(this)
     override val lifecycle: Lifecycle get() = lifecycleRegistry
+
+    private val store = ViewModelStore()
+    override val viewModelStore: ViewModelStore get() = store
 
     private val savedStateRegistryController = SavedStateRegistryController.create(this)
     override val savedStateRegistry get() = savedStateRegistryController.savedStateRegistry
@@ -84,9 +91,8 @@ class CypriotInputMethodService :
     override fun onCreateInputView(): View {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
+
         val composeView = ComposeView(this)
-        composeView.setViewTreeLifecycleOwner(this)
-        composeView.setViewTreeSavedStateRegistryOwner(this)
         composeView.setContent {
             KeyboardView(
                 state = uiState,
@@ -95,11 +101,24 @@ class CypriotInputMethodService :
                 onKeyLongPress = { k -> handleLongPress(k) }
             )
         }
+
+        // Compose's WindowRecomposer queries the lifecycle owner via
+        // findViewTreeLifecycleOwner() starting from the window's *root* view
+        // (which `InputMethodService.setInputView` wraps around our ComposeView
+        // — a LinearLayout with id `parentPanel`). Setting the owners only on
+        // the ComposeView crashes because the search starts above it.
+        // Install owners on the decor view so the upward walk finds them.
+        val decor = window.window?.decorView
+        decor?.setViewTreeLifecycleOwner(this)
+        decor?.setViewTreeViewModelStoreOwner(this)
+        decor?.setViewTreeSavedStateRegistryOwner(this)
+
         return composeView
     }
 
     override fun onDestroy() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+        store.clear()
         workerExec.shutdownNow()
         super.onDestroy()
     }

@@ -26,7 +26,9 @@ fun KeyboardView(
 ) {
     val s by state
     Surface(
-        color = MaterialTheme.colorScheme.background,
+        // Slightly tinted background that contrasts with white keys, matching
+        // the look of system keyboards.
+        color = MaterialTheme.colorScheme.surfaceContainer,
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {

@@ -54,9 +54,8 @@ object Layouts {
                 ),
                 listOf(
                     KeySpec(KeyAction.NumericMode, "?123", widthUnits = 1.5f),
-                    KeySpec(KeyAction.SwitchIme, "🌐"),
-                    KeySpec(KeyAction.SwitchLayout, "🔄"),
-                    KeySpec(KeyAction.Space, "διάστημα", widthUnits = 4.0f),
+                    KeySpec(KeyAction.SwitchLayout, "🔄", widthUnits = 1.25f),
+                    KeySpec(KeyAction.Space, "διάστημα", widthUnits = 4.75f),
                     KeySpec(KeyAction.Return, "↵", widthUnits = 1.5f)
                 )
             )
@@ -74,9 +73,8 @@ object Layouts {
             },
             listOf(
                 KeySpec(KeyAction.NumericMode, "?123", widthUnits = 1.5f),
-                KeySpec(KeyAction.SwitchIme, "🌐"),
-                KeySpec(KeyAction.SwitchLayout, "🔄"),
-                KeySpec(KeyAction.Space, "space", widthUnits = 4.0f),
+                KeySpec(KeyAction.SwitchLayout, "🔄", widthUnits = 1.25f),
+                KeySpec(KeyAction.Space, "space", widthUnits = 4.75f),
                 KeySpec(KeyAction.Return, "↵", widthUnits = 1.5f)
             )
         )
@@ -93,9 +91,8 @@ object Layouts {
             },
             listOf(
                 KeySpec(KeyAction.AlphabeticMode, "ABC", widthUnits = 1.5f),
-                KeySpec(KeyAction.SwitchIme, "🌐"),
-                KeySpec(KeyAction.SwitchLayout, "🔄"),
-                KeySpec(KeyAction.Space, " ", widthUnits = 4.0f),
+                KeySpec(KeyAction.SwitchLayout, "🔄", widthUnits = 1.25f),
+                KeySpec(KeyAction.Space, " ", widthUnits = 4.75f),
                 KeySpec(KeyAction.Return, "↵", widthUnits = 1.5f)
             )
         )
@@ -112,9 +109,8 @@ object Layouts {
             },
             listOf(
                 KeySpec(KeyAction.AlphabeticMode, "ABC", widthUnits = 1.5f),
-                KeySpec(KeyAction.SwitchIme, "🌐"),
-                KeySpec(KeyAction.SwitchLayout, "🔄"),
-                KeySpec(KeyAction.Space, " ", widthUnits = 4.0f),
+                KeySpec(KeyAction.SwitchLayout, "🔄", widthUnits = 1.25f),
+                KeySpec(KeyAction.Space, " ", widthUnits = 4.75f),
                 KeySpec(KeyAction.Return, "↵", widthUnits = 1.5f)
             )
         )
