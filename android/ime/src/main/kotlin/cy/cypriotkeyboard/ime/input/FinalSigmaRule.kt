@@ -30,11 +30,28 @@ sealed class SigmaResult {
  */
 fun applyFinalSigma(wordPreCursor: String, postCursorEmpty: Boolean): SigmaResult {
     if (wordPreCursor.isEmpty()) return SigmaResult.None
-    val last = wordPreCursor.last()
-    if (!last.isLetter()) return SigmaResult.None
 
-    // Promote-medial: look at the substring before the last char and inspect
-    // whether IT ended in "ς" or "ς̆".
+    // Kotlin `String.last` is a UTF-16 Char, NOT a grapheme cluster. The
+    // sigma-breve cluster "σ̆" is two Chars: σ + U+0306. Special-case the
+    // combining-mark trailing case before the .isLetter() guard, otherwise
+    // we'd bail out for "κασ̆" because U+0306 isn't a letter.
+    val lastChar = wordPreCursor.last()
+    val isCombiningMark = lastChar.code in 0x0300..0x036F
+    if (isCombiningMark) {
+        if (postCursorEmpty && wordPreCursor.endsWith("σ̆")) {
+            return SigmaResult.ReplaceTrailing(from = "σ̆", to = "ς̆")
+        }
+        // Other combining-mark situations don't trigger the rule. (E.g. typing
+        // an accent over a vowel — handled elsewhere by AccentCombiner.)
+        return SigmaResult.None
+    }
+
+    if (!lastChar.isLetter()) return SigmaResult.None
+
+    // Promote-medial: if the cluster before the just-typed letter is "ς"
+    // or "ς̆", demote it back to medial sigma. Check the longer cluster
+    // first because endsWith("ς̆") implies endsWith("ς̆"[1]) which is a
+    // combining mark, not "ς".
     val before = wordPreCursor.substring(0, wordPreCursor.length - 1)
     if (before.endsWith("ς̆")) {
         return SigmaResult.PromoteMedial(from = "ς̆", to = "σ̆")
@@ -43,15 +60,9 @@ fun applyFinalSigma(wordPreCursor: String, postCursorEmpty: Boolean): SigmaResul
         return SigmaResult.PromoteMedial(from = "ς", to = "σ")
     }
 
-    // End-of-word promotion: only fires when cursor is truly at end-of-word.
-    if (postCursorEmpty) {
-        // Check σ̆ (compound) before plain σ — longest match wins.
-        if (wordPreCursor.endsWith("σ̆")) {
-            return SigmaResult.ReplaceTrailing(from = "σ̆", to = "ς̆")
-        }
-        if (last == 'σ') {
-            return SigmaResult.ReplaceTrailing(from = "σ", to = "ς")
-        }
+    // End-of-word promotion of plain σ → ς.
+    if (postCursorEmpty && lastChar == 'σ') {
+        return SigmaResult.ReplaceTrailing(from = "σ", to = "ς")
     }
     return SigmaResult.None
 }

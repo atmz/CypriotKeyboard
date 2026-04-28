@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "cy.cypriotkeyboard.ime"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24
@@ -27,10 +27,11 @@ android {
     }
 
     sourceSets["main"].assets.srcDirs("src/main/assets")
-
-    androidResources {
-        noCompress += setOf("dawg")
-    }
+    // The DAWG is compressed by the APK packager (AGP's library-level
+    // androidResources.noCompress doesn't propagate to consuming apps).
+    // That's fine: SuggestionEngine reads the whole asset into memory once
+    // at startup via assets.open().readBytes(), so on-disk compression is
+    // transparent and shrinks the APK from ~50 MB to ~25 MB.
 }
 
 dependencies {
@@ -40,7 +41,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation("androidx.savedstate:savedstate-ktx:1.2.1")
 
-    val composeBom = platform("androidx.compose:compose-bom:2024.10.01")
+    val composeBom = platform("androidx.compose:compose-bom:2025.04.01")
     implementation(composeBom)
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-tooling-preview")
@@ -50,4 +51,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
 
     testImplementation("junit:junit:4.13.2")
+    // Android stubs out android.* and org.json.* in JVM unit tests; provide a
+    // real org.json so PhoneticFolder.fromJson works under :ime:test.
+    testImplementation("org.json:json:20240303")
 }

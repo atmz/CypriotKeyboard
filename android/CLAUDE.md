@@ -18,21 +18,16 @@ The IME ships only the **DAWG** suggester (no Hunspell). The DAWG binary
 `dict_generation/` directories — they are **not the source of truth**. Regenerate
 the DAWG on the iOS side and re-copy when it changes.
 
-Min SDK 24, target SDK 35, Kotlin 2.0, AGP 8.6, Jetpack Compose BOM 2024.10.
+Min SDK 24, target/compile SDK 36, Kotlin 2.1.20, AGP 8.12.3, Gradle 8.14.3,
+Jetpack Compose BOM 2025.04.01.
 
 ## Build / run / test
 
-The wrapper jar (`gradle/wrapper/gradle-wrapper.jar`) is **not committed**. On a
-fresh checkout, generate it once:
+The wrapper is committed; nothing to bootstrap.
 
 ```bash
 cd android
-gradle wrapper --gradle-version 8.10.2
-```
 
-Then:
-
-```bash
 # Build the IME library + the container app
 ./gradlew :app:assembleDebug
 
@@ -46,8 +41,11 @@ Then:
 ./gradlew :ime:test --tests "cy.cypriotkeyboard.ime.input.GreekifyTest"
 ```
 
+Environment Claude can rely on locally:
+- `JAVA_HOME=/Applications/Android Studio.app/Contents/jbr/Contents/Home` (JBR 21)
+- `ANDROID_HOME=$HOME/Library/Android/sdk`
+
 Easiest path for a human: open `android/` as a project in Android Studio.
-Studio bundles a JDK + Android SDK + emulator and handles Gradle sync.
 
 To enable the keyboard after installing: Settings → System → Languages & input
 → On-screen keyboards → Manage keyboards → toggle "Cypriot Keyboard".

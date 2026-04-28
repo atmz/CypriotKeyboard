@@ -4,21 +4,27 @@ Android port of the iOS Cypriot Greek keyboard. See `docs/superpowers/specs/2026
 
 ## Build
 
-Requires:
-- JDK 17 or 21
-- Android SDK (build-tools 35, platform 35)
-- The first build will need a Gradle wrapper jar; if missing, run:
-  ```bash
-  cd android
-  gradle wrapper --gradle-version 8.10.2
-  ```
+Easiest path: open the `android/` folder in **Android Studio**. The bundled
+JBR (Java 21) and SDK manager handle everything.
 
-Then:
+For the CLI:
 ```bash
 cd android
 ./gradlew :app:installDebug    # installs to a connected device/emulator
-./gradlew :ime:test            # runs unit tests on the suggester pipeline
+./gradlew :ime:test            # runs the unit-test suite (37 tests)
+./gradlew :app:assembleDebug   # produces app/build/outputs/apk/debug/app-debug.apk (~25 MB)
 ```
+
+The wrapper jar is committed, so the above runs out-of-the-box on any machine
+with `JAVA_HOME` and `ANDROID_HOME` set.
+
+Toolchain pinned by the Gradle scripts:
+- AGP 8.12.3
+- Kotlin 2.1.20 + Compose plugin
+- Compose BOM 2025.04.01
+- compileSdk / targetSdk = 36, minSdk = 24
+- Gradle 8.14.3 (downloaded by the wrapper on first run)
+- JDK 17+ (Studio's bundled JBR 21 works)
 
 ## Enable the keyboard on-device
 
