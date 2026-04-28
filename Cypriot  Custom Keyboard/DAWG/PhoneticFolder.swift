@@ -71,6 +71,58 @@ final class PhoneticFolder {
         return out
     }
 
+    /// Branches at each position where a digraph rule matches: emits both
+    /// the digraph fold AND the single-char fold of the leading character.
+    /// Where no digraph applies, behaves identically to `fold`.
+    ///
+    /// Used by multi-fold lookup so an input like `noima` ("νοιμα") produces
+    /// both `νoıμα` (treating οι as a digraph) and `νoıμα` via the
+    /// alternate single-char path — letting the suggester find both `νόημα`
+    /// and `νήμα` and rank them correctly.
+    func foldVariants(_ text: String, maxVariants: Int = 16) -> [String] {
+        let chars = Array(text)
+        let n = chars.count
+        var seen = Set<String>()
+        var out: [String] = []
+
+        func helper(_ i: Int, _ acc: String) {
+            if out.count >= maxVariants { return }
+            if i >= n {
+                if seen.insert(acc).inserted {
+                    out.append(acc)
+                }
+                return
+            }
+            // Find longest digraph match (rules are sorted longest-first).
+            var digraph: (src: [Character], dst: String)? = nil
+            for (src, dst) in rules where src.count >= 2 {
+                if i + src.count <= n {
+                    var ok = true
+                    for k in 0..<src.count {
+                        if chars[i + k] != src[k] { ok = false; break }
+                    }
+                    if ok { digraph = (src, dst); break }
+                }
+            }
+            // Find single-char rule for chars[i] (if any).
+            var single: (src: [Character], dst: String)? = nil
+            for (src, dst) in rules where src.count == 1 {
+                if chars[i] == src[0] { single = (src, dst); break }
+            }
+            if let d = digraph {
+                helper(i + d.src.count, acc + d.dst)
+            }
+            if let s = single {
+                helper(i + 1, acc + s.dst)
+            } else if digraph == nil {
+                helper(i + 1, acc + String(chars[i]))
+            }
+        }
+
+        helper(0, "")
+        return out
+    }
+
     /// Loads the bundled phonetic_fold.json. Used by the runtime.
     static func loadDefault() throws -> PhoneticFolder {
         guard let url = Bundle.main.url(forResource: "phonetic_fold", withExtension: "json") else {

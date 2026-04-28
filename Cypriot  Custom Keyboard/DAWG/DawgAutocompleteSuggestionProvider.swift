@@ -82,8 +82,11 @@ final class DawgAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
             lookupGreek = greek
         }
 
-        let foldKey = folder.fold(lookupGreek)
-        let candidates = suggester.suggest(forKey: foldKey, limit: 4)
+        // Multi-fold lookup: branch at digraph positions so e.g. `νοιμα`
+        // probes both `νoıμα` (οι→ı) and `νoıμα` (ο→o, ι→ı), giving the
+        // suggester a chance to find both `νήμα` and `νόημα`.
+        let foldKeys = folder.foldVariants(lookupGreek)
+        let candidates = suggester.suggest(forKeys: foldKeys, limit: 4)
 
         func displayForm(_ canonical: String) -> String {
             switch casing {

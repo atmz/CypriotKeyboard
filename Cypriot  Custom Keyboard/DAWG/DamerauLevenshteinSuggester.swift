@@ -32,6 +32,34 @@ final class DamerauLevenshteinSuggester {
         self.alphabet = DamerauLevenshteinSuggester.collectAlphabet(reader: reader)
     }
 
+    /// Multi-key variant: runs `suggest` per key, merges results by canonical
+    /// taking the minimum editDistance per canonical, then ranks the merged
+    /// set by (distance asc, freq desc) and caps to `limit`.
+    ///
+    /// Used with `PhoneticFolder.foldVariants` so the lookup considers each
+    /// possible interpretation of a digraph in the user's input (e.g. `νοιμα`
+    /// → both `νoıμα` and `νoıμα`).
+    func suggest(forKeys keys: [String], limit: Int = 5) -> [DawgSuggestion] {
+        var byCanonical: [String: DawgSuggestion] = [:]
+        let perKeyLimit = max(limit * 4, limit)
+        for key in keys {
+            for s in suggest(forKey: key, limit: perKeyLimit) {
+                if let existing = byCanonical[s.canonical] {
+                    if s.editDistance < existing.editDistance {
+                        byCanonical[s.canonical] = s
+                    }
+                } else {
+                    byCanonical[s.canonical] = s
+                }
+            }
+        }
+        let merged = byCanonical.values.sorted { lhs, rhs in
+            if lhs.editDistance != rhs.editDistance { return lhs.editDistance < rhs.editDistance }
+            return lhs.frequency > rhs.frequency
+        }
+        return Array(merged.prefix(limit))
+    }
+
     /// Returns up to `limit` ranked candidates within Damerau-Levenshtein
     /// distance ≤ 1 of `key` (in the folded keyspace).
     func suggest(forKey key: String, limit: Int = 5) -> [DawgSuggestion] {

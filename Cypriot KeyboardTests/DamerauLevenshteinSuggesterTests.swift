@@ -71,6 +71,44 @@ class DamerauLevenshteinSuggesterTests: XCTestCase {
         XCTAssertTrue(suggestions.isEmpty)
     }
 
+    // MARK: - Multi-key (suggest(forKeys:))
+
+    func testMultiKeySuggestEmptyKeysReturnsEmpty() {
+        let multi = suggester.suggest(forKeys: [], limit: 5)
+        XCTAssertTrue(multi.isEmpty)
+    }
+
+    func testMultiKeySuggestPicksMinDistance() {
+        // Same canonical reachable from key A at distance 0 and key B at
+        // distance 1 → merged result must record distance 0.
+        let exactKey = folder.fold("καλός")
+        var perturbed = Array(exactKey)
+        perturbed[0] = "x"
+        let edit1Key = String(perturbed)
+        let multi = suggester.suggest(forKeys: [exactKey, edit1Key], limit: 5)
+        let kalos = multi.first { $0.canonical == "καλός" }
+        XCTAssertNotNil(kalos, "καλός should appear in merged results")
+        XCTAssertEqual(kalos?.editDistance, 0, "min of {0, 1} expected to be 0")
+    }
+
+    func testMultiKeySuggestDedupesAcrossKeys() {
+        // Same key passed twice — canonicals must appear once each.
+        let key = folder.fold("καλός")
+        let multi = suggester.suggest(forKeys: [key, key], limit: 5)
+        let canonicals = multi.map { $0.canonical }
+        XCTAssertEqual(Set(canonicals).count, canonicals.count,
+                       "duplicates not merged: \(canonicals)")
+    }
+
+    func testMultiKeySuggestSingleKeyMatchesSingleSuggest() {
+        // Single-key invocation through the multi API must agree with the
+        // single-key path on the same set (modulo ordering of equal-rank ties).
+        let key = folder.fold("καλός")
+        let single = Set(suggester.suggest(forKey: key, limit: 5).map { $0.canonical })
+        let multi = Set(suggester.suggest(forKeys: [key], limit: 5).map { $0.canonical })
+        XCTAssertEqual(single, multi)
+    }
+
     func testDistanceZeroRanksAboveDistanceOne() {
         // When the input is the exact fold of "καλός", the exact match
         // (distance 0) must rank before any near-match.
