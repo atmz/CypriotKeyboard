@@ -17,10 +17,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import cy.cypriotkeyboard.ime.suggest.Suggestion
 
-private val BAR_HEIGHT = 50.dp
+// Slightly taller and roomier so combining marks (breve U+0306, tonos U+0301)
+// have vertical headroom to render above their base letter.
+private val BAR_HEIGHT = 56.dp
 
 @Composable
 fun SuggestionBar(
@@ -60,10 +64,17 @@ private fun SuggestionSlot(
             .clickable(onClick = onPick),
         contentAlignment = Alignment.Center
     ) {
+        // Generous lineHeight gives combining marks (breve U+0306, tonos
+        // U+0301) vertical room above their base. With Roboto/Noto Sans Greek,
+        // breve-over-ζ etc. has no font-specific anchor, so the renderer
+        // places it at the default high position — which gets clipped without
+        // extra line height.
         Text(
             text = s.text,
             color = Color.Black,
-            style = MaterialTheme.typography.bodyMedium
+            fontSize = 18.sp,
+            lineHeight = 28.sp,
+            textAlign = TextAlign.Center
         )
     }
 }

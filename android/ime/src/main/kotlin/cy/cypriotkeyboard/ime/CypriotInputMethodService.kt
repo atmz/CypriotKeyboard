@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.inputmethodservice.InputMethodService
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputConnection
 import android.view.inputmethod.InputMethodManager
@@ -20,6 +21,7 @@ import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+import cy.cypriotkeyboard.ime.BuildConfig
 import cy.cypriotkeyboard.ime.input.ActionHandler
 import cy.cypriotkeyboard.ime.input.KeyboardController
 import cy.cypriotkeyboard.ime.input.KeyboardMode
@@ -177,6 +179,13 @@ class CypriotInputMethodService :
                     if (autocompleteToken.get() != token) return@post
                     uiState.value = uiState.value.copy(suggestions = out)
                     handler.currentGuess = out.firstOrNull { it.willReplace }
+                    if (BuildConfig.DEBUG) {
+                        for (s in out) {
+                            val cps = s.text.codePoints().toArray()
+                                .joinToString(" ") { "U+%04X".format(it) }
+                            Log.d("CypriotIME", "suggest='${s.text}' cps=$cps willReplace=${s.willReplace}")
+                        }
+                    }
                 }
             }
         }

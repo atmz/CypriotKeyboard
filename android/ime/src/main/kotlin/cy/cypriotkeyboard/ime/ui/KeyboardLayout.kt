@@ -131,11 +131,13 @@ private fun RowScope.KeyButton(
             },
         contentAlignment = Alignment.Center
     ) {
+        // lineHeight headroom so combining marks render above the base letter.
         Text(
             text = key.label,
             color = labelColor,
             textAlign = TextAlign.Center,
-            fontSize = if (isSpace) 13.sp else if (isFunction) 16.sp else 18.sp
+            fontSize = if (isSpace) 13.sp else if (isFunction) 16.sp else 18.sp,
+            lineHeight = if (isSpace) 18.sp else if (isFunction) 22.sp else 26.sp
         )
 
         if (popupVisible && hasPopup) {
@@ -192,7 +194,8 @@ private fun DiacriticPopup(
                         Text(
                             text = ch,
                             color = MaterialTheme.colorScheme.onSurface,
-                            fontSize = 20.sp,
+                            fontSize = 22.sp,
+                            lineHeight = 32.sp,
                             textAlign = TextAlign.Center
                         )
                     }
