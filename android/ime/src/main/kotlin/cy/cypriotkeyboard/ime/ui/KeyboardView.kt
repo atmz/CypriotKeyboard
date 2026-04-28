@@ -26,9 +26,9 @@ fun KeyboardView(
 ) {
     val s by state
     Surface(
-        // Slightly tinted background that contrasts with white keys, matching
-        // the look of system keyboards.
-        color = MaterialTheme.colorScheme.surfaceContainer,
+        // Slightly tinted tray background. Letter keys sit on top of this with
+        // a marginally lighter fill, matching Gboard's "keys-on-tray" look.
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
