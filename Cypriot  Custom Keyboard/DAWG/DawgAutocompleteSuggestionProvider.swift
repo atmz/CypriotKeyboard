@@ -74,10 +74,15 @@ final class DawgAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
         // Mirrors the Hunspell provider's identical guard.
         guard CypriotKeyboardHelper.shouldAttemptAutocomplete(text: text) else { return [] }
 
-        // Strip a leading non-letter (".", "(", etc.) before greekify so e.g.
-        // ".kalimera" looks up "kalimera" and the punct gets re-prepended on
-        // the way out. Matches the Hunspell provider's isPunctFirst handling.
-        let isPunctFirst = !(text.first?.isLetter ?? true)
+        // Strip a leading punctuation character (".", "(", etc.) before
+        // greekify. Digits stay attached so e.g. "8a" enters
+        // greekifyAlternatives as "8α" and can branch to "θα" via the
+        // 8 ⇄ θ rule. Matches the Hunspell provider's isPunctFirst handling
+        // for actual punctuation.
+        let isPunctFirst: Bool = {
+            guard let first = text.first else { return false }
+            return !first.isLetter && !first.isNumber
+        }()
         let textForGreekify = isPunctFirst ? String(text.dropFirst()) : text
         let greek = CypriotKeyboardHelper.greekify(text: textForGreekify)
 

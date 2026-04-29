@@ -282,6 +282,15 @@ class DawgIntegrationTests: XCTestCase {
         XCTAssertTrue(variants.contains("θα"))
     }
 
+    func testLeadingDigitStaysWithBody() {
+        // Input "8a" — leading "8" must NOT be stripped as isPunctFirst, so
+        // it enters greekifyAlternatives and can branch to "θα". The
+        // verbatim slot must still echo "8a" (not "a").
+        let result = collectSuggestions(for: "8a")
+        XCTAssertFalse(result.isEmpty)
+        XCTAssertEqual(result[0].text, "8a", "verbatim must preserve leading digit")
+    }
+
     private func collectSuggestions(for text: String) -> [CypriotAutocompleteSuggestion] {
         var captured: [CypriotAutocompleteSuggestion] = []
         provider.autocompleteSuggestions(for: text) { result in

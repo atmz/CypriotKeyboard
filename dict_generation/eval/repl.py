@@ -40,10 +40,12 @@ def preprocess_input(text: str) -> tuple:
       - casing: how to recapitalize results for display
       - leading_punct: any non-letter prefix stripped before processing
     """
-    # Strip leading punct (mirrors isPunctFirst handling in iOS Hunspell path).
+    # Strip leading punctuation only — digits stay attached to the body
+    # so e.g. "8a" enters greekify_alternatives as "8α" and can branch to
+    # "θα" via the 8 ⇄ θ rule. Mirrors the iOS isPunctFirst handling.
     leading_punct = ""
     body = text
-    while body and not body[0].isalpha():
+    while body and not body[0].isalpha() and not body[0].isdigit():
         leading_punct += body[0]
         body = body[1:]
 
