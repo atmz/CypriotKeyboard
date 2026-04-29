@@ -59,7 +59,23 @@ class CypriotKeyboardHelper {
                 && accentlessWord == text
         }
         // Greeklish input: bias toward auto-replace within Levenshtein distance.
-        return distanceMeasure(transliteratedWord: guess, greekWord: greekText) < 3.0
+        // Normalise σ ↔ ς before measuring: greekify outputs medial σ at
+        // word-end, but canonicals use final ς. Without this, every short
+        // Greeklish word with a single other-character mismatch pays a +1
+        // distance tax that pushes legitimate corrections past the gate.
+        let normalizedGreek = normalizeFinalSigma(
+            greekText.lowercased().folding(options: .diacriticInsensitive,
+                                           locale: Locale(identifier: "el_GR")))
+        let normalizedGuess = normalizeFinalSigma(
+            guess.lowercased().folding(options: .diacriticInsensitive,
+                                       locale: Locale(identifier: "el_GR")))
+        return Double(normalizedGreek.levenshtein(normalizedGuess)) < 3.0
+    }
+
+    /// Collapses final ς onto medial σ so the two are treated as equal
+    /// during Levenshtein comparison. See `shouldReplace` for rationale.
+    private static func normalizeFinalSigma(_ s: String) -> String {
+        return s.replacingOccurrences(of: "ς", with: "σ")
     }
 
     static func shouldAttemptAutocomplete(text: String) -> Bool {

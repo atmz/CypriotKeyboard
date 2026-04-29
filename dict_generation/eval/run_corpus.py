@@ -117,6 +117,13 @@ def _levenshtein(a: str, b: str) -> int:
     return prev[-1]
 
 
+def _normalize_final_sigma(s: str) -> str:
+    """Collapse final ς onto medial σ for distance comparison. Greekify
+    outputs σ at word-end; canonicals use ς. See shouldReplace in the Swift
+    side for rationale."""
+    return s.replace("ς", "σ")
+
+
 def should_replace(text: str, greek_text: str, guess: str) -> bool:
     """Mirror of CypriotKeyboardHelper.shouldReplace."""
     if text == greek_text:
@@ -130,9 +137,12 @@ def should_replace(text: str, greek_text: str, guess: str) -> bool:
                     and ag != guess
                     and aw.lower() == text.lower())
         return aw == ag and ag != guess and aw == text
-    # Greeklish branch: Levenshtein < 3 on accent-folded lowercase.
-    a = _strip_diacritics(greek_text.lower())
-    b = _strip_diacritics(guess.lower())
+    # Greeklish branch: Levenshtein < 3 on accent-folded, σ↔ς-normalised
+    # lowercase. Without the σ↔ς fold, every short Greeklish word with one
+    # other-character mismatch pays a +1 distance tax that pushes legitimate
+    # corrections past the gate.
+    a = _normalize_final_sigma(_strip_diacritics(greek_text.lower()))
+    b = _normalize_final_sigma(_strip_diacritics(guess.lower()))
     return _levenshtein(a, b) < 3
 
 
