@@ -1,0 +1,108 @@
+# Greeklish corpus for run_corpus.py
+#
+# One sentence per line. Comments start with '#'.
+# Inputs are intentionally written the way real users type — accents dropped,
+# inconsistent transliteration, occasional English words mixed in, Cypriot
+# dialect markers (τζ̆/sh, εν, εν να, τζαι, …) where labelled.
+#
+# Sources & provenance are noted in '###' section headers. When a sample was
+# transliterated from Greek script the source line shows '(from Greek)'; when
+# it was already in Greeklish online it's marked '(organic)'.
+#
+# Add new sections for new sources rather than mixing them in randomly — it
+# makes regression spotting easier when the eval output drifts.
+
+### Standard Greek baseline (from Wikipedia 'Greeklish' + GR-NLP-toolkit)
+
+kalimera, pos iste?
+kalhmera, pws eiste
+Kalispera ti kanis
+ti kaneis simera
+o Volos kai h Larisa einai sth Thessalia
+thelo na pao stin Lefkosia avrio
+kalo apogevma fage
+poso kanei to nero
+pou einai i toualeta
+mporo na exo ena kafe
+poli oraio fagito
+den katalaveno
+de mporo na erthw avrio
+8a mas dwseis ena potiri nero
+i mama mou eipe na pao spiti
+
+### Cypriot dialect markers (from Greek, theonlinegreektutor)
+
+intalos pame tziame
+inta pou essieis
+en na pamen diakopes
+en na pao spiti
+inta pou en na kamete ton allon minan
+poutsou se tzaime mas dame
+eipen mou o yiannis oti en na erthei
+en tzai ksero
+o Andreas eshi enan trapezin oraion
+to xartin ennen sto kouti
+
+### Cypriot organic Greeklish (sublimeridiculous blog + Wikipedia Cypriot Greek)
+
+kori, touti cooka sou eshi kabion wrong
+i glossa mou koma fakka
+mashalla na sou pao oloyiro
+ishalla erthei kala to taxidi
+ekamen mia oraian douleian o Stavros
+kamnousin to soir tziai pinoun rakin
+egw thoro pou makria oti erkete
+sintixanno me ton patera mou kathe vradi
+
+### Common-word fast-path probes (these should echo verbatim)
+
+ena duo tria
+nai oxi exi
+poli kala
+tora simera avrio
+o ki ego eseis
+mou sou tou tis tous
+
+### Multi-word sentences with potential autocorrect targets
+
+thelo ena kafe me galaktos
+exoume ranteboy stis 8
+i Lefkosia eshi orea kairo simera
+o filos mou en na ftasei argotera
+8a pame paralia auriou to apogevma
+ti ora 8a fygoume gia paralia
+8elw na sou peis kati simantiko
+o aderfos mou kserei poli kala ellinika
+exi panta ena vivlio sto sakidio tou
+auto en ena megalo provlima
+
+### Single-token spelling-stress probes
+
+Lefkosia
+Leukosia
+Lemesos
+Pafos
+Larnaka
+Ammoxostos
+Aei8alassa
+sintagmatarxis
+syntagmatarxis
+afth
+auth
+afto
+fchristo
+psaria
+xara
+xarta
+ksero
+xerw
+
+### Numbers / punctuation / mixed (regression protection)
+
+8 elaies tziai 3 portokalia
+to taxi kanei 25 evro
+nero kostizei 1.5 evro
+o arithmos einai 12345
+"ti kanis" eipen mou
+(panta) exi diafora
+.kalimera (leading punct)
