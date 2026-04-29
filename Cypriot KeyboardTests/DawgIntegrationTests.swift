@@ -232,6 +232,29 @@ class DawgIntegrationTests: XCTestCase {
         XCTAssertTrue(variants.contains("Τηελω"))
     }
 
+    func testGreekifyAlternativesBranchesOnEphiToEypsilon() {
+        // "Lefkosia" → greekify → "λεφκοσια"; we want to also probe "λευκοσια"
+        // so Λευκωσία is reachable at edit-1 instead of edit-2.
+        let variants = DawgAutocompleteSuggestionProvider.greekifyAlternatives("λεφκοσια")
+        XCTAssertTrue(variants.contains("λεφκοσια"))
+        XCTAssertTrue(variants.contains("λευκοσια"))
+    }
+
+    func testGreekifyAlternativesBranchesOnAlphaPhi() {
+        let variants = DawgAutocompleteSuggestionProvider.greekifyAlternatives("αφθ")
+        // αφ branches to αυ, then θ branches to τη — 4 variants.
+        XCTAssertTrue(variants.contains("αφθ"))
+        XCTAssertTrue(variants.contains("αυθ"))
+        XCTAssertTrue(variants.contains("αφτη"))
+        XCTAssertTrue(variants.contains("αυτη"))
+    }
+
+    func testGreekifyAlternativesBranchesOnVeta() {
+        let variants = DawgAutocompleteSuggestionProvider.greekifyAlternatives("ναβ")
+        XCTAssertTrue(variants.contains("ναβ"))
+        XCTAssertTrue(variants.contains("ναυ"))
+    }
+
     func testGreekifyAlternativesEnumeratesMultipleThetas() {
         // Two θs → 4 variants: keep/keep, keep/expand, expand/keep, expand/expand.
         let variants = DawgAutocompleteSuggestionProvider.greekifyAlternatives("θαθα")

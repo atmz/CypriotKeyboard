@@ -200,13 +200,34 @@ final class DawgAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
 }
 
 extension DawgAutocompleteSuggestionProvider {
-    /// Generate alternative Greek interpretations for ambiguous Greeklish
-    /// transliterations. Today: branch on θ ⇄ τη because Greeklish "th"
-    /// can mean either letter sequence (compare "thelo" → θέλω vs "afth"
-    /// → αυτή — both spell "th" the same in Latin).
+    /// Rules for branching ambiguous Greeklish transliterations into multiple
+    /// Greek interpretations. Sorted longest-first so digraphs win over
+    /// single-char rules.
     ///
-    /// Returns at least the input itself; capped at `maxVariants` to keep
-    /// combinatorial explosion in check when many θs appear in one word.
+    /// - αφ/εφ/αβ/εβ ⇄ αυ/ευ: Greek's αυ/ευ diphthong sounds like "af/ef"
+    ///   before voiceless consonants and "av/ev" before voiced — but
+    ///   greekify maps the consonant char-by-char (φ/β), so we branch back
+    ///   to the diphthong here. Without this, "Lefkosia" → Λεφκοσια only
+    ///   reaches Λευκωσία at edit-2, outside the suggester's edit-1 budget.
+    /// - θ ⇄ τη: Greeklish "th" maps greedily to θ but might mean τη
+    ///   (e.g. "afth" → αυτή).
+    private static let altRules: [(src: String, alts: [String])] = [
+        ("αφ", ["αφ", "αυ"]),
+        ("Αφ", ["Αφ", "Αυ"]),
+        ("εφ", ["εφ", "ευ"]),
+        ("Εφ", ["Εφ", "Ευ"]),
+        ("αβ", ["αβ", "αυ"]),
+        ("Αβ", ["Αβ", "Αυ"]),
+        ("εβ", ["εβ", "ευ"]),
+        ("Εβ", ["Εβ", "Ευ"]),
+        ("θ", ["θ", "τη"]),
+        ("Θ", ["Θ", "Τη"]),
+    ]
+
+    /// Generate alternative Greek interpretations for ambiguous Greeklish
+    /// transliterations. Returns at least the input itself; capped at
+    /// `maxVariants` to keep combinatorial explosion in check when many
+    /// branchable positions appear in one word.
     static func greekifyAlternatives(_ greek: String, maxVariants: Int = 8) -> [String] {
         let chars = Array(greek)
         var out: [String] = []
@@ -218,17 +239,22 @@ extension DawgAutocompleteSuggestionProvider {
                 if seen.insert(acc).inserted { out.append(acc) }
                 return
             }
-            let c = chars[i]
-            switch c {
-            case "θ":
-                helper(i + 1, acc + "θ")
-                helper(i + 1, acc + "τη")
-            case "Θ":
-                helper(i + 1, acc + "Θ")
-                helper(i + 1, acc + "Τη")
-            default:
-                helper(i + 1, acc + String(c))
+            for (src, alts) in altRules {
+                let srcChars = Array(src)
+                if i + srcChars.count > chars.count { continue }
+                var match = true
+                for k in 0..<srcChars.count where chars[i + k] != srcChars[k] {
+                    match = false
+                    break
+                }
+                if match {
+                    for alt in alts {
+                        helper(i + srcChars.count, acc + alt)
+                    }
+                    return
+                }
             }
+            helper(i + 1, acc + String(chars[i]))
         }
         helper(0, "")
         return out
