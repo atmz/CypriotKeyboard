@@ -146,7 +146,7 @@ def should_replace(text: str, greek_text: str, guess: str) -> bool:
     return _levenshtein(a, b) < 3
 
 
-def _should_replace_any(text: str, greek_variants: list, guess: str) -> bool:
+def should_replace_any(text: str, greek_variants: list, guess: str) -> bool:
     """Mirror of CypriotKeyboardHelper.shouldReplace(text:greekVariants:guess:).
     Passes if ANY of the supplied greekify interpretations would gate true,
     so greekify-shortening cases (th → θ where the user meant τη) don't get
@@ -197,7 +197,7 @@ def correct_token_dawg(token: str, folder, suggester) -> str:
     # the pure-Greek diacritic-only path still matches uppercase Greek input.
     gate_variants = (greekify_alternatives(greekified)
                      if is_greeklish else [greekified])
-    if not _should_replace_any(body, gate_variants, displayed):
+    if not should_replace_any(body, gate_variants, displayed):
         return token
     return displayed + trailing
 
