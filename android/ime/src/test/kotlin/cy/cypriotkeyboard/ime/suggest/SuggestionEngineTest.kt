@@ -109,4 +109,20 @@ class SuggestionEngineTest {
         assertTrue(eng.suggest(".").isEmpty())
         assertTrue(eng.suggest("8!").isEmpty())
     }
+
+    @Test fun `long input caps at three slots`() {
+        // Inputs over 5 chars get at most 2 candidates → 3 slots total
+        // (verbatim + 2). Mirrors the Hunspell provider's length-aware
+        // sizing so suggestions stay readable when each slot is narrow.
+        val res = engine().suggest("αυτοκίνητο")
+        assertTrue("long input should cap at 3 slots; got ${res.size}",
+            res.size <= 3)
+    }
+
+    @Test fun `short input caps at four slots`() {
+        // Inputs ≤5 chars get up to 3 candidates → 4 slots total.
+        val res = engine().suggest("καλος")
+        assertTrue("short input should cap at 4 slots; got ${res.size}",
+            res.size <= 4)
+    }
 }

@@ -22,11 +22,21 @@ data class Suggestion(
 class SuggestionEngine(
     private val reader: DawgReader,
     private val folder: PhoneticFolder,
-    suggester: DamerauSuggester? = null,
-    private val limit: Int = 4
+    suggester: DamerauSuggester? = null
 ) {
 
     private val suggester: DamerauSuggester = suggester ?: DamerauSuggester(reader)
+
+    /**
+     * Length-aware candidate cap so the suggestion bar stays readable. Long
+     * input → less width per slot → fewer alternatives shown. Total bar
+     * slots = 1 verbatim + N candidates, so:
+     *   - input.length > 5 → 2 candidates → 3 slots
+     *   - input.length ≤ 5 → 3 candidates → 4 slots
+     * Mirrors the Hunspell provider's identical sizing.
+     */
+    private fun candidateLimitFor(input: String): Int =
+        if (input.length > 5) 2 else 3
 
     private enum class Casing { LOWERCASE, FIRST_LETTER_CAP, ALL_CAPS }
 
@@ -62,7 +72,7 @@ class SuggestionEngine(
         // ranking a rare exact-match (νήμα for "noima") above the user's
         // likely intent (νόημα).
         val keys = folder.foldVariants(lookup)
-        val candidates = suggester.suggestMulti(keys, limit = limit)
+        val candidates = suggester.suggestMulti(keys, limit = candidateLimitFor(input))
 
         val out = ArrayList<Suggestion>(1 + candidates.size)
         out += Suggestion(text = input, isVerbatim = true, willReplace = false)
