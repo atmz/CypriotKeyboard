@@ -34,7 +34,7 @@ final class DawgAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
     func autocompleteSuggestions(for text: String,
                                  completion: (AutocompleteResult) -> Void) {
         guard !text.isEmpty else { return completion(.success([])) }
-        completion(.success(buildSuggestions(for: text)))
+        completion(.success(buildSuggestions(for: text, isFirstWordInSentence: false)))
     }
 
     func asyncAutocompleteSuggestions(for text: String,
@@ -43,7 +43,8 @@ final class DawgAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
         guard !text.isEmpty else { return completion(.success([])) }
         // Run on global queue mirroring the Hunspell provider's pattern.
         DispatchQueue.global().async {
-            completion(.success(self.buildSuggestions(for: text)))
+            completion(.success(self.buildSuggestions(for: text,
+                                                     isFirstWordInSentence: isFirstWordInSentence)))
         }
     }
 
@@ -58,14 +59,42 @@ final class DawgAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
 
     // MARK: - Suggestion construction
 
-    private func buildSuggestions(for text: String) -> [CypriotAutocompleteSuggestion] {
+    private func buildSuggestions(for text: String,
+                                  isFirstWordInSentence: Bool) -> [CypriotAutocompleteSuggestion] {
+        // isFirstWordInSentence is preserved on the call path for parity with
+        // the Hunspell provider's contract, even though the DAWG always
+        // lowercases for lookup (the engine has only lowercase canonicals,
+        // so case-sensitive lookup isn't an option). The signal is wired
+        // through so future ranking/gating can use it.
+        _ = isFirstWordInSentence
+
         // Skip purely-numeric / punctuation tokens — otherwise typing "8"
         // greekifies to nothing useful and the suggester returns Greek
         // letters that fold to the empty key (η, ο, …) as edit-1 neighbors.
         // Mirrors the Hunspell provider's identical guard.
         guard CypriotKeyboardHelper.shouldAttemptAutocomplete(text: text) else { return [] }
 
-        let greek = CypriotKeyboardHelper.greekify(text: text)
+        // Strip a leading non-letter (".", "(", etc.) before greekify so e.g.
+        // ".kalimera" looks up "kalimera" and the punct gets re-prepended on
+        // the way out. Matches the Hunspell provider's isPunctFirst handling.
+        let isPunctFirst = !(text.first?.isLetter ?? true)
+        let textForGreekify = isPunctFirst ? String(text.dropFirst()) : text
+        let greek = CypriotKeyboardHelper.greekify(text: textForGreekify)
+
+        // Common-word fast path: if the input is pure-Greek (greekify is a
+        // no-op) and a known common word, return verbatim only — no
+        // autocorrect alternatives. Mirrors the Hunspell provider's
+        // identical short-circuit so users aren't pestered with candidates
+        // for words they typed correctly.
+        if !isPunctFirst,
+           text == greek,
+           CypriotKeyboardHelper.isCommonWord(word: text) {
+            return [CypriotAutocompleteSuggestion(
+                text: text, isAutocomplete: false, isUnknown: true,
+                title: text, subtitle: nil,
+                additionalInfo: [:]
+            )]
+        }
 
         // Capitalization handling, mirroring the Hunspell path:
         // The DAWG is built from lowercase forms, so lookups must be lowercase.
@@ -99,15 +128,22 @@ final class DawgAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
         let candidates = suggester.suggest(forKeys: foldKeys, limit: candidateLimit)
 
         func displayForm(_ canonical: String) -> String {
+            let cased: String
             switch casing {
             case .lowercase:
-                return canonical
+                cased = canonical
             case .firstLetterCap:
-                guard let first = canonical.first else { return canonical }
-                return String(first).uppercased() + canonical.dropFirst()
+                if let first = canonical.first {
+                    cased = String(first).uppercased() + canonical.dropFirst()
+                } else {
+                    cased = canonical
+                }
             case .allCaps:
-                return canonical.uppercased()
+                cased = canonical.uppercased()
             }
+            // Re-prepend the leading punct stripped for lookup so the
+            // suggestion appears with the same surface form the user typed.
+            return isPunctFirst ? String(text.first!) + cased : cased
         }
 
         var result: [CypriotAutocompleteSuggestion] = []
@@ -118,10 +154,18 @@ final class DawgAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
         ))
         if let top = candidates.first {
             let displayed = displayForm(top.canonical)
+            // Gate willReplace through shouldReplace so spacebar only
+            // replaces the typed word when the candidate is a close
+            // diacritics-only or low-Levenshtein match. Mirrors the
+            // Hunspell provider's identical gate; without it, every
+            // edit-1 candidate would force-replace the user's input.
+            let willReplace = CypriotKeyboardHelper.shouldReplace(
+                text: text, greekText: greek, guess: displayed
+            )
             result.append(CypriotAutocompleteSuggestion(
                 text: displayed, isAutocomplete: false, isUnknown: false,
                 title: displayed, subtitle: nil,
-                additionalInfo: ["willReplace": true]
+                additionalInfo: willReplace ? ["willReplace": true] : [:]
             ))
         }
         for cand in candidates.dropFirst() {

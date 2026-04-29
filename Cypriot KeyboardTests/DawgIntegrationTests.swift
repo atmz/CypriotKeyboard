@@ -132,6 +132,55 @@ class DawgIntegrationTests: XCTestCase {
                           "expected mixed case, not all-caps; got \(slot1)")
     }
 
+    func testCommonWordFastPathReturnsOnlyVerbatim() {
+        // "νερό" is in commonWords AND the test fixture. The fast path should
+        // short-circuit: only the verbatim slot is returned, no autocorrect
+        // candidates pestering the user about a word they typed correctly.
+        let result = collectSuggestions(for: "νερό")
+        XCTAssertEqual(result.count, 1, "common word should return verbatim only; got \(result.map { $0.text })")
+        XCTAssertEqual(result[0].text, "νερό")
+        XCTAssertTrue(result[0].isUnknown)
+    }
+
+    func testGreeklishCommonWordIsNotShortCircuited() {
+        // The fast path requires text == greek (pure-Greek input). Greeklish
+        // input that happens to greekify to a common word should still go
+        // through the lookup pipeline so the user sees the canonical form.
+        // (The test fixture has "νερό" but typing "nero" is Greeklish.)
+        let result = collectSuggestions(for: "nero")
+        XCTAssertGreaterThanOrEqual(result.count, 2,
+                                    "Greeklish input should produce a candidate; got \(result.map { $0.text })")
+    }
+
+    func testRandomGreekDoesNotForceReplace() {
+        // shouldReplace gate: low-syllable Greek input ("νεο" — 2 syllables
+        // but no diacritic-only candidate in the fixture) should produce
+        // candidates without willReplace=true, so spacebar doesn't yank
+        // the user's input.
+        let result = collectSuggestions(for: "ξψδγ")
+        // Either no candidate (nothing close), or a candidate without
+        // willReplace. The forbidden state is "willReplace=true on a
+        // candidate that isn't a near-match".
+        if result.count >= 2 {
+            XCTAssertNil(result[1].additionalInfo["willReplace"],
+                         "random Greek input must not force-replace; got willReplace on \(result[1].text)")
+        }
+    }
+
+    func testPunctuationPrefixIsPreservedOnSuggestion() {
+        // Hunspell parity: leading punct gets stripped before lookup and
+        // re-prepended to each suggestion so the user's surface form is
+        // preserved.
+        let result = collectSuggestions(for: ".καλος")
+        guard result.count >= 2 else {
+            XCTFail("expected ≥ 2 slots for .καλος; got \(result.count)")
+            return
+        }
+        XCTAssertEqual(result[0].text, ".καλος", "verbatim slot must echo the input as typed")
+        XCTAssertTrue(result[1].text.hasPrefix("."),
+                      "candidate must keep the leading '.' prefix; got \(result[1].text)")
+    }
+
     func testSingleDigitReturnsNoSuggestions() {
         // Regression: typing "8" used to greekify to "" and then the suggester
         // returned single-character Greek letters (η, ο) as edit-1 neighbors.
