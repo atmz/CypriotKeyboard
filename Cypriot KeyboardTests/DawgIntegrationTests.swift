@@ -210,6 +210,49 @@ class DawgIntegrationTests: XCTestCase {
                                  "short input should cap at 4 slots; got \(result.count)")
     }
 
+    // MARK: - greekifyAlternatives (θ ⇄ τη branching)
+
+    func testGreekifyAlternativesNoThetaIsSingleton() {
+        let variants = DawgAutocompleteSuggestionProvider.greekifyAlternatives("καλος")
+        XCTAssertEqual(variants, ["καλος"])
+    }
+
+    func testGreekifyAlternativesBranchesOnTheta() {
+        // "θελω" should yield both "θελω" (theta) and "τηελω" (tau+eta).
+        let variants = DawgAutocompleteSuggestionProvider.greekifyAlternatives("θελω")
+        XCTAssertEqual(variants.count, 2)
+        XCTAssertTrue(variants.contains("θελω"))
+        XCTAssertTrue(variants.contains("τηελω"))
+    }
+
+    func testGreekifyAlternativesBranchesOnCapitalTheta() {
+        let variants = DawgAutocompleteSuggestionProvider.greekifyAlternatives("Θελω")
+        XCTAssertEqual(variants.count, 2)
+        XCTAssertTrue(variants.contains("Θελω"))
+        XCTAssertTrue(variants.contains("Τηελω"))
+    }
+
+    func testGreekifyAlternativesEnumeratesMultipleThetas() {
+        // Two θs → 4 variants: keep/keep, keep/expand, expand/keep, expand/expand.
+        let variants = DawgAutocompleteSuggestionProvider.greekifyAlternatives("θαθα")
+        XCTAssertEqual(variants.count, 4)
+        XCTAssertTrue(variants.contains("θαθα"))
+        XCTAssertTrue(variants.contains("θατηα"))
+        XCTAssertTrue(variants.contains("τηαθα"))
+        XCTAssertTrue(variants.contains("τηατηα"))
+    }
+
+    func testGreekifyAlternativesRespectsMaxCap() {
+        // Three θs would produce 8 without a cap. Cap at 3 → 3 returned.
+        let variants = DawgAutocompleteSuggestionProvider.greekifyAlternatives("θθθ", maxVariants: 3)
+        XCTAssertEqual(variants.count, 3)
+    }
+
+    func testGreekifyAlternativesPureGreekWithoutThetaIsIdentity() {
+        let variants = DawgAutocompleteSuggestionProvider.greekifyAlternatives("σπίτι")
+        XCTAssertEqual(variants, ["σπίτι"])
+    }
+
     private func collectSuggestions(for text: String) -> [CypriotAutocompleteSuggestion] {
         var captured: [CypriotAutocompleteSuggestion] = []
         provider.autocompleteSuggestions(for: text) { result in

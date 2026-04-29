@@ -117,10 +117,29 @@ final class DawgAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
             lookupGreek = greek
         }
 
+        // Greekify alternatives: Greeklish "th" is mapped greedily to θ,
+        // but the user might have meant τη (e.g. "afth" → αυτή, not αυθ).
+        // Branch at each θ in the greekified form when the input was
+        // Greeklish, so the lookup considers both interpretations. Pure
+        // Greek input means the user typed the spelling they wanted, so
+        // we don't second-guess.
+        let isGreeklish = textForGreekify != greek
+        let greekVariants: [String] = isGreeklish
+            ? Self.greekifyAlternatives(lookupGreek)
+            : [lookupGreek]
+
         // Multi-fold lookup: branch at digraph positions so e.g. `νοιμα`
         // probes both `νoıμα` (οι→ı) and `νoıμα` (ο→o, ι→ı), giving the
         // suggester a chance to find both `νήμα` and `νόημα`.
-        let foldKeys = folder.foldVariants(lookupGreek)
+        var seenFoldKeys = Set<String>()
+        var foldKeys: [String] = []
+        for variant in greekVariants {
+            for key in folder.foldVariants(variant) {
+                if seenFoldKeys.insert(key).inserted {
+                    foldKeys.append(key)
+                }
+            }
+        }
         // Match the Hunspell provider's length-aware cap so the suggestion
         // bar stays readable: long inputs leave less room per slot, so we
         // show fewer alternatives. Total bar slots = verbatim + candidates.
@@ -177,6 +196,42 @@ final class DawgAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
             ))
         }
         return result
+    }
+}
+
+extension DawgAutocompleteSuggestionProvider {
+    /// Generate alternative Greek interpretations for ambiguous Greeklish
+    /// transliterations. Today: branch on θ ⇄ τη because Greeklish "th"
+    /// can mean either letter sequence (compare "thelo" → θέλω vs "afth"
+    /// → αυτή — both spell "th" the same in Latin).
+    ///
+    /// Returns at least the input itself; capped at `maxVariants` to keep
+    /// combinatorial explosion in check when many θs appear in one word.
+    static func greekifyAlternatives(_ greek: String, maxVariants: Int = 8) -> [String] {
+        let chars = Array(greek)
+        var out: [String] = []
+        var seen = Set<String>()
+
+        func helper(_ i: Int, _ acc: String) {
+            if out.count >= maxVariants { return }
+            if i >= chars.count {
+                if seen.insert(acc).inserted { out.append(acc) }
+                return
+            }
+            let c = chars[i]
+            switch c {
+            case "θ":
+                helper(i + 1, acc + "θ")
+                helper(i + 1, acc + "τη")
+            case "Θ":
+                helper(i + 1, acc + "Θ")
+                helper(i + 1, acc + "Τη")
+            default:
+                helper(i + 1, acc + String(c))
+            }
+        }
+        helper(0, "")
+        return out
     }
 }
 
