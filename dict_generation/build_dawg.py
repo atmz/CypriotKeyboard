@@ -95,7 +95,7 @@ def build_dawg_to(
         if freq < freq_threshold:
             continue
         n_kept += 1
-        key = folder.fold(surface)
+        key = folder.fold(surface.lower())
         # Use DEFAULT_FREQ as the stored frequency for unattested forms so
         # they still appear in ranked output when threshold==0.
         stored_freq = freq if freq > 0 else DEFAULT_FREQ
