@@ -59,6 +59,12 @@ final class DawgAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
     // MARK: - Suggestion construction
 
     private func buildSuggestions(for text: String) -> [CypriotAutocompleteSuggestion] {
+        // Skip purely-numeric / punctuation tokens — otherwise typing "8"
+        // greekifies to nothing useful and the suggester returns Greek
+        // letters that fold to the empty key (η, ο, …) as edit-1 neighbors.
+        // Mirrors the Hunspell provider's identical guard.
+        guard CypriotKeyboardHelper.shouldAttemptAutocomplete(text: text) else { return [] }
+
         let greek = CypriotKeyboardHelper.greekify(text: text)
 
         // Capitalization handling, mirroring the Hunspell path:

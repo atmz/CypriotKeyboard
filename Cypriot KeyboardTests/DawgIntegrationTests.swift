@@ -132,6 +132,17 @@ class DawgIntegrationTests: XCTestCase {
                           "expected mixed case, not all-caps; got \(slot1)")
     }
 
+    func testSingleDigitReturnsNoSuggestions() {
+        // Regression: typing "8" used to greekify to "" and then the suggester
+        // returned single-character Greek letters (η, ο) as edit-1 neighbors.
+        // Number-only / punctuation-only tokens should suppress autocomplete
+        // entirely, matching the Hunspell provider's behavior.
+        XCTAssertTrue(collectSuggestions(for: "8").isEmpty)
+        XCTAssertTrue(collectSuggestions(for: "30").isEmpty)
+        XCTAssertTrue(collectSuggestions(for: ".").isEmpty)
+        XCTAssertTrue(collectSuggestions(for: "8!").isEmpty)
+    }
+
     func testLongInputCapsAtThreeSlots() {
         // Inputs over 5 chars get at most 2 candidates → 3 slots total
         // (verbatim + 2). Mirrors the Hunspell provider's length-aware sizing
