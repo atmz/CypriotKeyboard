@@ -1,5 +1,6 @@
 package cy.cypriotkeyboard.ime.ui
 
+import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -188,6 +190,7 @@ private fun RowScope.KeyButton(
     val hasPopup = key.popupChars.size > 1
 
     var keyCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
+    val view = LocalView.current
 
     Box(
         modifier = Modifier
@@ -198,8 +201,15 @@ private fun RowScope.KeyButton(
             .onGloballyPositioned { keyCoords = it }
             .pointerInput(key) {
                 detectTapGestures(
-                    onTap = { onTap() },
+                    onTap = {
+                        // System haptic feedback on every key tap. Respects the
+                        // user's "haptic feedback" toggle (Settings → Sound),
+                        // requires no permission, and matches the Gboard cadence.
+                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                        onTap()
+                    },
                     onLongPress = {
+                        view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                         if (hasPopup) {
                             keyCoords?.let { onPopupRequested(key.popupChars, it) }
                         } else {
@@ -226,6 +236,7 @@ private fun DiacriticOverlay(
     onPick: (String) -> Unit
 ) {
     val density = LocalDensity.current
+    val view = LocalView.current
     val popupKeyWidthPx = with(density) { POPUP_KEY_WIDTH.toPx() }
     val popupKeyHeightPx = with(density) { POPUP_KEY_HEIGHT.toPx() }
     val gapPx = with(density) { POPUP_GAP.toPx() }
@@ -261,7 +272,10 @@ private fun DiacriticOverlay(
                         .clip(RoundedCornerShape(KEY_CORNER))
                         .background(MaterialTheme.colorScheme.surfaceContainer)
                         .pointerInput(ch) {
-                            detectTapGestures(onTap = { onPick(ch) })
+                            detectTapGestures(onTap = {
+                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                onPick(ch)
+                            })
                         },
                     contentAlignment = Alignment.Center
                 ) {
