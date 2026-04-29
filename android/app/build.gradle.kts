@@ -21,6 +21,9 @@ android {
         applicationId = "cy.cypriotkeyboard.app"
         minSdk = 24
         targetSdk = 36
+        // Per-release bookkeeping. versionCode MUST increase strictly per
+        // upload to Play; versionName is for humans. Bump both in lock-step
+        // with each release in store/RELEASE.md's per-release flow.
         versionCode = 1
         versionName = "1.0.0"
     }

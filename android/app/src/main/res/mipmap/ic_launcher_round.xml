@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Fallback round launcher icon for API 24-25. Same content as
+  ic_launcher.xml; circular masking is handled by the launcher.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:fillColor="#D47600"
+        android:pathData="M0,0 H108 V108 H0 Z" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 38,32 L 50,32 L 50,76 L 38,76 Z" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 50,54 L 70,32 L 78,40 L 58,62 Z" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 50,54 L 78,76 L 70,82 L 50,62 Z" />
+</vector>

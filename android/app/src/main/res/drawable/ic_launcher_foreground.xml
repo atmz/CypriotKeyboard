@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Adaptive icon foreground: a stylised white "Κ" (Greek capital kappa).
+  Drawn in a 108dp viewport. The system masks the outer 18dp on each side,
+  so the visible safe zone is the central 66dp x 66dp; we keep the glyph
+  comfortably inside that.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Vertical stroke of the kappa. -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 38,32 L 50,32 L 50,76 L 38,76 Z" />
+
+    <!-- Upper diagonal stroke. -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 50,54 L 70,32 L 78,40 L 58,62 Z" />
+
+    <!-- Lower diagonal stroke. -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 50,54 L 78,76 L 70,82 L 50,62 Z" />
+</vector>

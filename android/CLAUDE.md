@@ -245,3 +245,17 @@ read the spec section "Out of scope" first:
 
 Spec: `docs/superpowers/specs/2026-04-27-android-port-design.md`
 Plan: `docs/superpowers/plans/2026-04-27-android-port.md`
+
+## Releasing
+
+Play Store flow + per-release checklist live in `android/store/RELEASE.md`.
+Privacy policy in `android/store/privacy.md`, listing copy in
+`android/store/listing-en.md` and `android/store/listing-el.md`. The
+release keystore (`cypriot-release.jks`) and `keystore.properties` are
+gitignored — losing them = losing the ability to ship updates ever again.
+
+Per release:
+1. Bump `versionCode` and `versionName` in `app/build.gradle.kts`
+2. `./gradlew :app:bundleRelease` produces the AAB at
+   `app/build/outputs/bundle/release/app-release.aab`
+3. Upload to Play Console → Internal/Closed/Open/Production track
