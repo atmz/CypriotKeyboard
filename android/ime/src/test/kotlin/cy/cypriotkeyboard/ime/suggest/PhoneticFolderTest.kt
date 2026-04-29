@@ -1,6 +1,7 @@
 package cy.cypriotkeyboard.ime.suggest
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class PhoneticFolderTest {
@@ -51,5 +52,48 @@ class PhoneticFolderTest {
     @Test fun `final-sigma folds to medial sigma`() {
         assertEquals("φıσ", folder.fold("φησ"))
         assertEquals("φıσ", folder.fold("φης"))   // ς → σ rule
+    }
+
+    // -- foldVariants --
+
+    @Test fun `foldVariants no digraph returns one variant`() {
+        // "νερα" — ν passes through, ε→e, ρ passes through, α passes through.
+        // No multi-char rule fires. Single variant only.
+        val variants = folder.foldVariants("νερα")
+        assertEquals(listOf("νeρα"), variants)
+    }
+
+    @Test fun `foldVariants one digraph returns two variants`() {
+        // "νοιμα" has οι at position 1. Two branches:
+        //   (a) digraph fires: ν + (οι→ı) + μ + α = "νıμα"
+        //   (b) digraph skipped, single-char rules apply: ν + (ο→o) + (ι→ı) + μ + α = "νoıμα"
+        val variants = folder.foldVariants("νοιμα")
+        assertTrue("expected νıμα in $variants", variants.contains("νıμα"))
+        assertTrue("expected νoıμα in $variants", variants.contains("νoıμα"))
+        assertEquals(2, variants.size)
+    }
+
+    @Test fun `foldVariants first variant matches greedy fold`() {
+        for (word in listOf("καλημερα", "νοιμα", "ποικιλια", "αιθερα", "νερα")) {
+            val variants = folder.foldVariants(word)
+            assertEquals(
+                "first variant must match greedy fold for '$word'",
+                folder.fold(word),
+                variants.first()
+            )
+        }
+    }
+
+    @Test fun `foldVariants two digraphs returns up to four variants`() {
+        // "ποικιλεια" has οι at 1 and ει at 6. 2 × 2 = up to 4 variants.
+        val variants = folder.foldVariants("ποικιλεια")
+        assertTrue("expected at least 2 variants, got ${variants.size}", variants.size >= 2)
+        assertTrue("expected at most 4 variants, got ${variants.size}", variants.size <= 4)
+    }
+
+    @Test fun `foldVariants caps growth at maxVariants`() {
+        val text = "οι".repeat(8)  // 8 digraphs → up to 256 raw variants
+        val variants = folder.foldVariants(text, maxVariants = 4)
+        assertEquals(4, variants.size)
     }
 }

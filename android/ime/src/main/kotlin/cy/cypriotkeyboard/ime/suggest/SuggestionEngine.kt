@@ -34,8 +34,12 @@ class SuggestionEngine(
 
         val greek = greekify(input)
         val (casing, lookup) = detectCasing(greek)
-        val key = folder.fold(lookup)
-        val candidates = suggester.suggest(key, limit = limit)
+        // Multi-fold lookup: digraphs like ει/οι/αι can be intentional or
+        // accidental; folding both branches and merging by canonical avoids
+        // ranking a rare exact-match (νήμα for "noima") above the user's
+        // likely intent (νόημα). See dawg_suggester.suggest_multi.
+        val keys = folder.foldVariants(lookup)
+        val candidates = suggester.suggestMulti(keys, limit = limit)
 
         val out = ArrayList<Suggestion>(1 + candidates.size)
         out += Suggestion(text = input, isVerbatim = true, willReplace = false)

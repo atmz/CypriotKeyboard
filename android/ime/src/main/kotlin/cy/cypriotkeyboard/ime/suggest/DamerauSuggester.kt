@@ -41,6 +41,37 @@ class DamerauSuggester(private val reader: DawgReader) {
         return hits.take(limit).map { DawgSuggestion(it.canonical, it.freq, it.distance) }
     }
 
+    /**
+     * Look up multiple fold-key variants, dedupe canonicals by *minimum*
+     * edit distance, rank by (distance asc, frequency desc).
+     *
+     * Used when the input has multiple plausible fold interpretations —
+     * specifically, digraphs like ει / οι / αι that may or may not be
+     * intended as digraphs by the user. Without this, "noima" would
+     * fold-greedily to "νıμα", DAWG-find νήμα at d=0, and rank that above
+     * the user's actual intent νόημα (which sits at d=1 from "νıμα" but
+     * d=0 from the alternate fold "νoıμα").
+     *
+     * Mirrors `DawgSuggester.suggest_multi` in the Python reference
+     * (`dict_generation/eval/dawg_suggester.py`).
+     */
+    fun suggestMulti(keys: List<String>, limit: Int = 5): List<DawgSuggestion> {
+        // canonical -> best DawgSuggestion seen (with min edit distance).
+        val byCanonical = HashMap<String, DawgSuggestion>()
+        for (key in keys) {
+            // Over-fetch since we'll dedupe across variants.
+            for (s in suggest(key, limit = limit * 4)) {
+                val existing = byCanonical[s.canonical]
+                if (existing == null || s.editDistance < existing.editDistance) {
+                    byCanonical[s.canonical] = s
+                }
+            }
+        }
+        return byCanonical.values
+            .sortedWith(compareBy({ it.editDistance }, { -it.frequency }))
+            .take(limit)
+    }
+
     private fun editDistance1Variants(key: String): List<String> {
         val cps = key.codePoints().toArray()
         val n = cps.size
