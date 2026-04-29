@@ -120,9 +120,9 @@ class CypriotInputMethodService :
 
     override fun onStartInputView(info: android.view.inputmethod.EditorInfo?, restarting: Boolean) {
         super.onStartInputView(info, restarting)
-        // First time the keyboard comes up for a field, make sure the active
-        // subtype matches our Greek/Latin state. Apps read this for spell-check.
-        applyCurrentSubtype()
+        // Make sure the host sees el_CY as the active subtype so spell-check
+        // and autocorrect-on-host don't treat our Greek output as English.
+        applyGreekSubtype()
     }
 
     override fun onDestroy() {
@@ -140,24 +140,29 @@ class CypriotInputMethodService :
         isLatin = !isLatin
         prefs.edit().putBoolean(KEY_IS_LATIN, isLatin).apply()
         recomputeLayout()
-        applyCurrentSubtype()
+        // No subtype change here: the OUTPUT is always Cypriot Greek,
+        // regardless of input layout. The Latin row is just a Greeklish
+        // input method whose committed text is Greek after autocorrect.
     }
 
     /**
-     * Tell the IME framework which subtype is currently active (en_US for
-     * Latin/Greeklish input, el_CY for Greek). Apps like Chrome read this
-     * to decide which spell-check dictionary to use; without it, Greek words
-     * get red-underlined as if they were misspelled English.
+     * Tell the IME framework that we're outputting Greek (`el_CY`). Apps
+     * like Chrome read this to pick a spell-check dictionary; without it,
+     * Greek words get red-underlined as if they were misspelled English.
+     *
+     * We always report el_CY — even when the user is on the Latin/Greeklish
+     * input row — because the committed text is Greek either way. The
+     * en_US subtype declared in xml/method.xml is kept only so the system
+     * keyboard picker knows we accept ASCII input.
      */
-    private fun applyCurrentSubtype() {
+    private fun applyGreekSubtype() {
         val imm = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager ?: return
         val ourImi = imm.enabledInputMethodList.firstOrNull { it.packageName == packageName } ?: return
-        val targetLocale = if (isLatin) "en_US" else "el_CY"
         var match: android.view.inputmethod.InputMethodSubtype? = null
         for (i in 0 until ourImi.subtypeCount) {
             val s = ourImi.getSubtypeAt(i)
             @Suppress("DEPRECATION")
-            if (s.locale == targetLocale) {
+            if (s.locale == "el_CY") {
                 match = s
                 break
             }
