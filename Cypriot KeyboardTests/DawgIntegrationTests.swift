@@ -132,6 +132,24 @@ class DawgIntegrationTests: XCTestCase {
                           "expected mixed case, not all-caps; got \(slot1)")
     }
 
+    func testLongInputCapsAtThreeSlots() {
+        // Inputs over 5 chars get at most 2 candidates → 3 slots total
+        // (verbatim + 2). Mirrors the Hunspell provider's length-aware sizing
+        // so suggestions stay readable when each slot is narrow.
+        let result = collectSuggestions(for: "αυτοκίνητο")
+        XCTAssertLessThanOrEqual(result.count, 3,
+                                 "long input should cap at 3 slots; got \(result.count)")
+    }
+
+    func testShortInputCapsAtFourSlots() {
+        // Inputs ≤5 chars get up to 3 candidates → 4 slots total.
+        // Use "καλος" which has multiple canonicals at distance 0 plus an
+        // edit-1 neighbor (νερό-style) so the cap can actually be reached.
+        let result = collectSuggestions(for: "καλος")
+        XCTAssertLessThanOrEqual(result.count, 4,
+                                 "short input should cap at 4 slots; got \(result.count)")
+    }
+
     private func collectSuggestions(for text: String) -> [CypriotAutocompleteSuggestion] {
         var captured: [CypriotAutocompleteSuggestion] = []
         provider.autocompleteSuggestions(for: text) { result in

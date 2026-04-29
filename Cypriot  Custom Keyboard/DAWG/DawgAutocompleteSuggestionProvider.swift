@@ -86,7 +86,11 @@ final class DawgAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
         // probes both `νoıμα` (οι→ı) and `νoıμα` (ο→o, ι→ı), giving the
         // suggester a chance to find both `νήμα` and `νόημα`.
         let foldKeys = folder.foldVariants(lookupGreek)
-        let candidates = suggester.suggest(forKeys: foldKeys, limit: 4)
+        // Match the Hunspell provider's length-aware cap so the suggestion
+        // bar stays readable: long inputs leave less room per slot, so we
+        // show fewer alternatives. Total bar slots = verbatim + candidates.
+        let candidateLimit = text.count > 5 ? 2 : 3
+        let candidates = suggester.suggest(forKeys: foldKeys, limit: candidateLimit)
 
         func displayForm(_ canonical: String) -> String {
             switch casing {
