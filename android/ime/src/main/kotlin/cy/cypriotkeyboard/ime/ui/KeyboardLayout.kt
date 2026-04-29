@@ -10,9 +10,9 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,13 +24,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
+import androidx.compose.ui.zIndex
 import cy.cypriotkeyboard.ime.layout.KeyAction
 import cy.cypriotkeyboard.ime.layout.KeySpec
 import cy.cypriotkeyboard.ime.layout.LayoutSpec
@@ -42,6 +45,21 @@ private val KEY_CORNER = 5.dp
 private val POPUP_KEY_WIDTH = 44.dp
 private val POPUP_KEY_HEIGHT = 50.dp
 private val POPUP_PAD = 6.dp
+private val POPUP_GAP = 6.dp
+
+/**
+ * Active diacritic-popup state, hoisted to the keyboard root so the popup
+ * can render as an in-tree overlay (not a separate Compose `Popup` window —
+ * those steal IME focus and dismiss the keyboard).
+ *
+ * [anchor] is the long-pressed key's bounds expressed in the same coordinate
+ * system as the popup overlay, i.e. relative to the outer Box of
+ * KeyboardLayoutView.
+ */
+private data class ActivePopup(
+    val chars: List<String>,
+    val anchor: Rect
+)
 
 @Composable
 fun KeyboardLayoutView(
@@ -49,14 +67,72 @@ fun KeyboardLayoutView(
     onKeyTap: (KeySpec) -> Unit,
     onKeyLongPress: (KeySpec) -> Unit
 ) {
-    Column(
+    var activePopup by remember { mutableStateOf<ActivePopup?>(null) }
+    // The outer Box's position in window-root coordinates. Used to translate
+    // each key's positionInRoot() into outer-Box-local coordinates so the
+    // popup overlay can be placed via Modifier.offset relative to the Box.
+    var rootCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
+
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 4.dp, vertical = 4.dp),
-        verticalArrangement = Arrangement.spacedBy(ROW_GAP)
+            .onGloballyPositioned { rootCoords = it }
     ) {
-        for (row in spec.rows) {
-            KeyRow(row, onKeyTap, onKeyLongPress)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 4.dp, vertical = 4.dp),
+            verticalArrangement = Arrangement.spacedBy(ROW_GAP)
+        ) {
+            for (row in spec.rows) {
+                KeyRow(
+                    keys = row,
+                    onKeyTap = { k ->
+                        // A normal tap dismisses any open popup first.
+                        activePopup = null
+                        onKeyTap(k)
+                    },
+                    onKeyLongPress = onKeyLongPress,
+                    onPopupRequested = { chars, keyCoords ->
+                        val root = rootCoords
+                        if (root != null) {
+                            // Translate the key's bounds into outer-Box-local coords.
+                            val keyTopLeft = root.localPositionOf(keyCoords, Offset.Zero)
+                            val anchor = Rect(
+                                offset = keyTopLeft,
+                                size = androidx.compose.ui.geometry.Size(
+                                    keyCoords.size.width.toFloat(),
+                                    keyCoords.size.height.toFloat()
+                                )
+                            )
+                            activePopup = ActivePopup(chars, anchor)
+                        }
+                    }
+                )
+            }
+        }
+
+        // When a popup is open, lay a tap-eating scrim over the keys so taps
+        // outside the popup dismiss it without firing key actions.
+        val popup = activePopup
+        if (popup != null) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .zIndex(1f)
+                    .pointerInput(popup) {
+                        detectTapGestures(onTap = { activePopup = null })
+                    }
+            )
+            DiacriticOverlay(
+                popup = popup,
+                onPick = { picked ->
+                    activePopup = null
+                    // Synthesise a Character key tap so the popup pick goes
+                    // through the same commit + final-sigma + suggest pipeline.
+                    onKeyTap(KeySpec(action = KeyAction.Character(picked), label = picked))
+                }
+            )
         }
     }
 }
@@ -65,7 +141,8 @@ fun KeyboardLayoutView(
 private fun KeyRow(
     keys: List<KeySpec>,
     onKeyTap: (KeySpec) -> Unit,
-    onKeyLongPress: (KeySpec) -> Unit
+    onKeyLongPress: (KeySpec) -> Unit,
+    onPopupRequested: (List<String>, LayoutCoordinates) -> Unit
 ) {
     val totalUnits = keys.sumOf { it.widthUnits.toDouble() }.toFloat()
     Row(
@@ -80,11 +157,7 @@ private fun KeyRow(
                 weight = key.widthUnits / totalUnits,
                 onTap = { onKeyTap(key) },
                 onLongPress = { onKeyLongPress(key) },
-                onPopupPick = { ch ->
-                    // Synthesise a Character key tap so the popup pick goes
-                    // through the same commit + final-sigma + suggest pipeline.
-                    onKeyTap(KeySpec(action = KeyAction.Character(ch), label = ch))
-                }
+                onPopupRequested = onPopupRequested
             )
         }
     }
@@ -102,7 +175,7 @@ private fun RowScope.KeyButton(
     weight: Float,
     onTap: () -> Unit,
     onLongPress: () -> Unit,
-    onPopupPick: (String) -> Unit
+    onPopupRequested: (List<String>, LayoutCoordinates) -> Unit
 ) {
     val isFunction = key.action.isFunctionKey()
     val isSpace = key.action is KeyAction.Space
@@ -113,7 +186,8 @@ private fun RowScope.KeyButton(
     }
     val labelColor = MaterialTheme.colorScheme.onSurface
     val hasPopup = key.popupChars.size > 1
-    var popupVisible by remember { mutableStateOf(false) }
+
+    var keyCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
 
     Box(
         modifier = Modifier
@@ -121,17 +195,21 @@ private fun RowScope.KeyButton(
             .fillMaxSize()
             .clip(RoundedCornerShape(KEY_CORNER))
             .background(keyColor)
+            .onGloballyPositioned { keyCoords = it }
             .pointerInput(key) {
                 detectTapGestures(
                     onTap = { onTap() },
                     onLongPress = {
-                        if (hasPopup) popupVisible = true else onLongPress()
+                        if (hasPopup) {
+                            keyCoords?.let { onPopupRequested(key.popupChars, it) }
+                        } else {
+                            onLongPress()
+                        }
                     }
                 )
             },
         contentAlignment = Alignment.Center
     ) {
-        // lineHeight headroom so combining marks render above the base letter.
         Text(
             text = key.label,
             color = labelColor,
@@ -139,66 +217,61 @@ private fun RowScope.KeyButton(
             fontSize = if (isSpace) 13.sp else if (isFunction) 16.sp else 18.sp,
             lineHeight = if (isSpace) 18.sp else if (isFunction) 22.sp else 26.sp
         )
-
-        if (popupVisible && hasPopup) {
-            DiacriticPopup(
-                chars = key.popupChars,
-                onPick = { picked ->
-                    popupVisible = false
-                    onPopupPick(picked)
-                },
-                onDismiss = { popupVisible = false }
-            )
-        }
     }
 }
 
 @Composable
-private fun DiacriticPopup(
-    chars: List<String>,
-    onPick: (String) -> Unit,
-    onDismiss: () -> Unit
+private fun DiacriticOverlay(
+    popup: ActivePopup,
+    onPick: (String) -> Unit
 ) {
-    // Anchor the popup directly above the key. Compose Popup positions itself
-    // relative to the parent; we offset upward by approximately one popup-key
-    // height + a small gap so the row of variants sits on top of the original.
-    val verticalGapPx = with(androidx.compose.ui.platform.LocalDensity.current) {
-        -(POPUP_KEY_HEIGHT + 6.dp).roundToPx()
-    }
-    Popup(
-        alignment = Alignment.TopCenter,
-        offset = IntOffset(0, verticalGapPx),
-        onDismissRequest = onDismiss,
-        properties = PopupProperties(focusable = true)
+    val density = LocalDensity.current
+    val popupKeyWidthPx = with(density) { POPUP_KEY_WIDTH.toPx() }
+    val popupKeyHeightPx = with(density) { POPUP_KEY_HEIGHT.toPx() }
+    val gapPx = with(density) { POPUP_GAP.toPx() }
+    val padPx = with(density) { POPUP_PAD.toPx() }
+    val betweenPx = with(density) { 4.dp.toPx() }
+
+    val n = popup.chars.size
+    val totalWidthPx = padPx * 2 + n * popupKeyWidthPx +
+        (n - 1).coerceAtLeast(0) * betweenPx
+    val totalHeightPx = popupKeyHeightPx + padPx * 2
+
+    // Center the popup over the anchor key, then clamp into the keyboard width.
+    val anchorCenterX = popup.anchor.left + popup.anchor.width / 2f
+    val leftPx = (anchorCenterX - totalWidthPx / 2f).coerceAtLeast(0f)
+    val topPx = (popup.anchor.top - totalHeightPx - gapPx).coerceAtLeast(0f)
+
+    Box(
+        modifier = Modifier
+            .offset(
+                x = with(density) { leftPx.toDp() },
+                y = with(density) { topPx.toDp() }
+            )
+            .zIndex(2f)
+            .clip(RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(POPUP_PAD)
     ) {
-        Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(POPUP_PAD)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                for (ch in chars) {
-                    Box(
-                        modifier = Modifier
-                            .size(POPUP_KEY_WIDTH, POPUP_KEY_HEIGHT)
-                            .clip(RoundedCornerShape(KEY_CORNER))
-                            .background(MaterialTheme.colorScheme.surfaceContainer)
-                            .pointerInput(ch) {
-                                detectTapGestures(onTap = { onPick(ch) })
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = ch,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            fontSize = 22.sp,
-                            lineHeight = 32.sp,
-                            textAlign = TextAlign.Center
-                        )
-                    }
+        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            for (ch in popup.chars) {
+                Box(
+                    modifier = Modifier
+                        .size(POPUP_KEY_WIDTH, POPUP_KEY_HEIGHT)
+                        .clip(RoundedCornerShape(KEY_CORNER))
+                        .background(MaterialTheme.colorScheme.surfaceContainer)
+                        .pointerInput(ch) {
+                            detectTapGestures(onTap = { onPick(ch) })
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = ch,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = 22.sp,
+                        lineHeight = 32.sp,
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }
