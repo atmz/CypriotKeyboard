@@ -18,7 +18,17 @@ import UIKit
  the correct keyboard view.
  */
 struct KeyboardView: View {
-    
+
+    /// Long verbatim inputs (≥ this many chars) get squished in the bar so
+    /// the autocorrect candidates next to them have more room. Inputs at or
+    /// below this length render normally with the standard equal-share slot.
+    static let verbatimSquishThreshold = 9
+    /// How many chars to keep at each end of the squished verbatim title.
+    static let verbatimSquishKeep = 2
+    /// Capped width (points) of the squished verbatim slot. Sized to fit
+    /// `"si…is"` with surrounding quotes at .callout font.
+    static let verbatimSquishWidth: CGFloat = 70
+
     var actionHandler: CypriotKeyboardActionHandler
     var appearance: KeyboardAppearance
     var layoutProvider: KeyboardLayoutProvider
@@ -61,9 +71,21 @@ private extension KeyboardView {
             return AnyView(VStack(spacing: 0) {
                 Text(suggestion.title).font(.callout)
             }.frame(maxWidth: .infinity, maxHeight: 42) .background(RoundedRectangle(cornerRadius: 5.0).fill(highlightColor)))
-        } else {
-            return AutocompleteToolbar.standardButton(for: suggestion)
         }
+        if suggestion.isUnknown && suggestion.title.count > KeyboardView.verbatimSquishThreshold {
+            // Long verbatim input gets a middle-ellipsis squish AND a
+            // constrained slot width. Without the width cap the HStack would
+            // still split the bar evenly and the candidates wouldn't gain
+            // any room — the narrower slot is what frees space for them.
+            let title = suggestion.title
+            let pre = title.prefix(KeyboardView.verbatimSquishKeep)
+            let suf = title.suffix(KeyboardView.verbatimSquishKeep)
+            let squished = "\(pre)…\(suf)"
+            return AnyView(VStack(spacing: 0) {
+                Text("\u{201C}\(squished)\u{201D}").font(.callout).lineLimit(1)
+            }.frame(maxWidth: KeyboardView.verbatimSquishWidth, maxHeight: 42))
+        }
+        return AutocompleteToolbar.standardButton(for: suggestion)
       /*
          guard let subtitle = suggestion.subtitle else { return AutocompleteToolbar.standardButton(for: suggestion) }
          return AnyView(VStack(spacing: 0) {
