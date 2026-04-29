@@ -276,6 +276,12 @@ class DawgIntegrationTests: XCTestCase {
         XCTAssertEqual(variants, ["σπίτι"])
     }
 
+    func testGreekifyAlternativesBranchesOn8AsTheta() {
+        let variants = DawgAutocompleteSuggestionProvider.greekifyAlternatives("8α")
+        XCTAssertTrue(variants.contains("8α"))
+        XCTAssertTrue(variants.contains("θα"))
+    }
+
     private func collectSuggestions(for text: String) -> [CypriotAutocompleteSuggestion] {
         var captured: [CypriotAutocompleteSuggestion] = []
         provider.autocompleteSuggestions(for: text) { result in

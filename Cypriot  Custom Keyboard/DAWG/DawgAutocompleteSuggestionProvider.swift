@@ -233,6 +233,10 @@ extension DawgAutocompleteSuggestionProvider {
     ///   reaches Λευκωσία at edit-2, outside the suggester's edit-1 budget.
     /// - θ ⇄ τη: Greeklish "th" maps greedily to θ but might mean τη
     ///   (e.g. "afth" → αυτή).
+    /// - 8 ⇄ θ: Greeklish convention treats the digit 8 as θ (visual
+    ///   resemblance), e.g. "8a" → θα, "8elw" → θέλω. Bare-numeric tokens
+    ///   ("8") get filtered upstream by shouldAttemptAutocomplete; this
+    ///   rule only fires when the token mixes digits and letters.
     private static let altRules: [(src: String, alts: [String])] = [
         ("αφ", ["αφ", "αυ"]),
         ("Αφ", ["Αφ", "Αυ"]),
@@ -244,6 +248,7 @@ extension DawgAutocompleteSuggestionProvider {
         ("Εβ", ["Εβ", "Ευ"]),
         ("θ", ["θ", "τη"]),
         ("Θ", ["Θ", "Τη"]),
+        ("8", ["8", "θ"]),
     ]
 
     /// Generate alternative Greek interpretations for ambiguous Greeklish

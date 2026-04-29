@@ -51,12 +51,13 @@ _ALT_RULES = [
     ("Εβ", ["Εβ", "Ευ"]),
     ("θ",  ["θ",  "τη"]),
     ("Θ",  ["Θ",  "Τη"]),
+    ("8",  ["8",  "θ"]),
 ]
 
 
 def greekify_alternatives(greek: str, max_variants: int = 8) -> List[str]:
     """Branch on Greeklish → Greek ambiguities (αφ↔αυ, εφ↔ευ, αβ↔αυ, εβ↔ευ,
-    θ↔τη). Mirrors the Swift static of the same name."""
+    θ↔τη, 8↔θ). Mirrors the Swift static of the same name."""
     chars = list(greek)
     out: List[str] = []
     seen = set()
