@@ -1,6 +1,9 @@
 package cy.cypriotkeyboard.ime.suggest
 
+import cy.cypriotkeyboard.ime.input.CommonWords
 import cy.cypriotkeyboard.ime.input.greekify
+import cy.cypriotkeyboard.ime.input.shouldAttemptAutocomplete
+import cy.cypriotkeyboard.ime.input.shouldReplace
 
 /** Public suggestion model. Mirrors slot semantics of iOS provider. */
 data class Suggestion(
@@ -11,12 +14,10 @@ data class Suggestion(
 
 /**
  * Mirrors `DawgAutocompleteSuggestionProvider.swift`. Pipeline:
- *   raw user input → greekify → casing detection → fold → DAWG suggest →
- *   recapitalize → list with verbatim slot 0 and willReplace slot 1.
- *
- * The Android engine ALWAYS Greekifies the input (matching the iOS DAWG path)
- * — even pure-Greek input passes through greekify, which is a no-op for
- * already-Greek characters.
+ *   raw user input → guard non-letter tokens → strip leading punct →
+ *   greekify → common-word fast path → casing detection → fold → DAWG
+ *   suggest → recapitalize + re-prepend punct → list with verbatim slot 0
+ *   and willReplace-gated slot 1.
  */
 class SuggestionEngine(
     private val reader: DawgReader,
@@ -32,26 +33,54 @@ class SuggestionEngine(
     fun suggest(input: String): List<Suggestion> {
         if (input.isEmpty()) return emptyList()
 
-        val greek = greekify(input)
+        // 1. Skip purely-numeric / punctuation tokens. Otherwise typing "8"
+        //    greekifies to "" and the suggester returns single-character
+        //    Greek letters (η, ο, …) as edit-1 neighbors of the empty fold
+        //    key. Mirrors the Hunspell provider's identical guard.
+        if (!shouldAttemptAutocomplete(input)) return emptyList()
+
+        // 2. Strip a leading non-letter (".", "(", etc.) before greekify so
+        //    e.g. ".kalimera" looks up "kalimera" and the punct gets re-
+        //    prepended on the way out. Matches the Hunspell isPunctFirst
+        //    handling.
+        val isPunctFirst = !(input.firstOrNull()?.isLetter() ?: true)
+        val textForGreekify = if (isPunctFirst) input.drop(1) else input
+        val greek = greekify(textForGreekify)
+
+        // 3. Common-word fast path: if the input is pure-Greek (greekify is
+        //    a no-op) and a known common word, return verbatim only — no
+        //    autocorrect alternatives. Matches the Hunspell provider's
+        //    identical short-circuit so users aren't pestered with
+        //    candidates for words they typed correctly.
+        if (!isPunctFirst && input == greek && CommonWords.isCommon(input)) {
+            return listOf(Suggestion(text = input, isVerbatim = true, willReplace = false))
+        }
+
         val (casing, lookup) = detectCasing(greek)
         // Multi-fold lookup: digraphs like ει/οι/αι can be intentional or
         // accidental; folding both branches and merging by canonical avoids
         // ranking a rare exact-match (νήμα for "noima") above the user's
-        // likely intent (νόημα). See dawg_suggester.suggest_multi.
+        // likely intent (νόημα).
         val keys = folder.foldVariants(lookup)
         val candidates = suggester.suggestMulti(keys, limit = limit)
 
         val out = ArrayList<Suggestion>(1 + candidates.size)
         out += Suggestion(text = input, isVerbatim = true, willReplace = false)
         if (candidates.isNotEmpty()) {
+            val displayed = display(candidates[0].canonical, casing, isPunctFirst, input)
+            // 4. Gate willReplace through shouldReplace so spacebar only
+            //    replaces the typed word when the candidate is a close
+            //    diacritics-only or low-Levenshtein match. Without this,
+            //    every edit-1 candidate would force-replace user input.
+            val willReplace = shouldReplace(text = input, greekText = greek, guess = displayed)
             out += Suggestion(
-                text = display(candidates[0].canonical, casing),
+                text = displayed,
                 isVerbatim = false,
-                willReplace = true
+                willReplace = willReplace
             )
             for (i in 1 until candidates.size) {
                 out += Suggestion(
-                    text = display(candidates[i].canonical, casing),
+                    text = display(candidates[i].canonical, casing, isPunctFirst, input),
                     isVerbatim = false,
                     willReplace = false
                 )
@@ -74,10 +103,21 @@ class SuggestionEngine(
         return Casing.LOWERCASE to greek
     }
 
-    private fun display(canonical: String, casing: Casing): String = when (casing) {
-        Casing.LOWERCASE -> canonical
-        Casing.FIRST_LETTER_CAP -> if (canonical.isEmpty()) canonical
-            else canonical.first().uppercaseChar() + canonical.substring(1)
-        Casing.ALL_CAPS -> canonical.uppercase()
+    private fun display(
+        canonical: String,
+        casing: Casing,
+        isPunctFirst: Boolean,
+        originalInput: String
+    ): String {
+        val cased = when (casing) {
+            Casing.LOWERCASE -> canonical
+            Casing.FIRST_LETTER_CAP -> if (canonical.isEmpty()) canonical
+                else canonical.first().uppercaseChar() + canonical.substring(1)
+            Casing.ALL_CAPS -> canonical.uppercase()
+        }
+        // Re-prepend the leading punct stripped for lookup so the suggestion
+        // appears with the same surface form the user typed.
+        return if (isPunctFirst && originalInput.isNotEmpty())
+            originalInput.first() + cased else cased
     }
 }
