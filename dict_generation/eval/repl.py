@@ -12,12 +12,11 @@ Usage:
 import argparse
 import os
 import sys
-from enum import Enum
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 from dict_generation.dawg import DawgReader
-from dict_generation.eval.dawg_suggester import DawgSuggester
+from dict_generation.eval.dawg_suggester import DawgSuggester, _Casing
 from dict_generation.eval.hunspell_runner import (
     analyze_via_hunspell, suggest_via_hunspell, HUNSPELL_CLI_PATH,
 )
@@ -26,10 +25,10 @@ from dict_generation.eval.variants import build_variant
 from dict_generation.phonetic_fold import load_default_folder
 
 
-class _Casing(Enum):
-    LOWERCASE = 1
-    FIRST_LETTER_CAP = 2
-    ALL_CAPS = 3
+# `_Casing` is re-exported from dawg_suggester so existing callers
+# (run_corpus.py, tests) that import it from repl.py keep working.
+__all__ = ["_Casing", "preprocess_input", "postprocess_suggestion",
+           "lookup_one", "lookup_input", "load_engines"]
 
 
 def preprocess_input(text: str) -> tuple:
@@ -155,7 +154,11 @@ def lookup_one(word: str, folder, readers, baseline_suggester, have_hunspell, qu
         lines.append(f"  DAWG baseline    {rendered}")
 
     for budget in (1, 2):
-        suggestions = baseline_suggester.suggest_multi(fold_keys, budget=budget, limit=5)
+        # Pass the input casing through so cap-first inputs prefer cap-first
+        # canonicals at the same edit distance — mirrors the iOS DAWG provider
+        # and run_corpus.py.
+        suggestions = baseline_suggester.suggest_multi(fold_keys, budget=budget, limit=5,
+                                                       input_casing=casing)
         if not suggestions:
             lines.append(f"  DAWG <=edit-{budget}     (none within edit-{budget})")
         else:

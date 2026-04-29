@@ -179,4 +179,33 @@ class DamerauLevenshteinSuggesterTests: XCTestCase {
                        "edit-distance must dominate the casing boost")
         XCTAssertEqual(withCapHint.first?.editDistance, 0)
     }
+
+    func testCasingHintDoesNotPromoteAcrossDistanceBuckets() {
+        // Stronger cross-bucket dominance test: feed two keys to the
+        // multi-key API at once.
+        //   - perturbedKKey "xαλoσ" is edit-1 from καλoσ; the canonicals
+        //     at καλoσ surface here at distance 1 (Καλός included, which
+        //     matches the .firstLetterCap boost).
+        //   - exactNKey is the exact fold key for νερό at distance 0.
+        // suggest(forKeys:) takes the min distance per canonical, so the
+        // merged candidate set has νερό at distance 0 and Καλός/καλός/
+        // καλώς at distance 1. With hint=.firstLetterCap, the cap-favouring
+        // boost would naively pull Καλός to the top — but the boost is
+        // gated below editDistance in the sort key, so distance-0 νερό
+        // must still win even though it loses the casing tiebreak.
+        let perturbedKKey = "xαλoσ"  // edit-1 from καλoσ (substitute κ→x at pos 0)
+        let exactNKey = folder.fold("νερό")
+        let suggestions = suggester.suggest(forKeys: [perturbedKKey, exactNKey],
+                                            limit: 5,
+                                            inputCasingHint: .firstLetterCap)
+        XCTAssertFalse(suggestions.isEmpty)
+        XCTAssertEqual(suggestions.first?.canonical, "νερό",
+                       "distance-0 νερό must beat distance-1 Καλός despite cap-hint match; got \(suggestions.map { ($0.canonical, $0.editDistance) })")
+        XCTAssertEqual(suggestions.first?.editDistance, 0)
+        // Sanity: the cap-first Καλός is in fact present in the merged
+        // set at distance 1, otherwise the test isn't actually exercising
+        // cross-bucket dominance.
+        XCTAssertTrue(suggestions.contains(where: { $0.canonical == "Καλός" && $0.editDistance == 1 }),
+                      "fixture sanity: Καλός should appear at distance 1 from xαλoσ, otherwise this test isn't exercising cross-bucket")
+    }
 }

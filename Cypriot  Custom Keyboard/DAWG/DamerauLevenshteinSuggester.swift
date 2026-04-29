@@ -86,9 +86,14 @@ final class DamerauLevenshteinSuggester {
     func suggest(forKeys keys: [String],
                  limit: Int = 5,
                  inputCasingHint: InputCasingHint) -> [DawgSuggestion] {
-        // Overfetch from the casing-blind path so the re-rank has enough
-        // candidates to pick from within each distance bucket.
-        let raw = suggest(forKeys: keys, limit: limit * 4)
+        // Overfetch and re-rank: the underlying single-arg suggest already
+        // truncates by (distance, freq) before we see candidates. To find
+        // a low-frequency cap-first outlier hidden under high-freq lowercase
+        // distractors, we need enough headroom in the inner fetch. Floor
+        // at 16 so even the long-input branch (limit=2) still pulls 16 —
+        // limit*4 = 8 wouldn't reliably surface a cap-first canonical that
+        // sits behind several high-frequency lowercase neighbours.
+        let raw = suggest(forKeys: keys, limit: max(limit * 4, 16))
         let reranked = raw.sorted { lhs, rhs in
             if lhs.editDistance != rhs.editDistance { return lhs.editDistance < rhs.editDistance }
             let lhsBoost = casingBoost(canonical: lhs.canonical, hint: inputCasingHint)

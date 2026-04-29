@@ -13,9 +13,24 @@ Phase 2.x may switch to a single-pass DAWG-walking automaton for
 efficiency. Candidate enumeration is fast enough for typical inputs
 and far easier to verify correct.
 """
+from enum import Enum
 from typing import List, NamedTuple, Set
 
 from dict_generation.dawg import DawgReader
+
+
+class _Casing(Enum):
+    """Three-state casing of the user's input. Mirrors the Swift
+    DamerauLevenshteinSuggester.InputCasingHint enum.
+
+    Lives here (not in repl.py) because dawg_suggester.suggest_multi
+    accepts it as a parameter, and repl.py already imports this module.
+    Putting it here keeps the import graph acyclic and makes the suggester's
+    public API self-contained.
+    """
+    LOWERCASE = 1
+    FIRST_LETTER_CAP = 2
+    ALL_CAPS = 3
 
 
 class DawgSuggestion(NamedTuple):
@@ -74,24 +89,34 @@ class DawgSuggester:
                 for c, f, d in results[:limit]]
 
     def suggest_multi(self, keys: List[str], budget: int = 1, limit: int = 5,
-                      input_casing_hint: str = "lowercase") -> List[DawgSuggestion]:
+                      input_casing: _Casing = _Casing.LOWERCASE) -> List[DawgSuggestion]:
         """Look up multiple fold-key variants, dedupe canonicals by min edit
         distance, rank by (distance asc, casing-match desc, freq desc).
 
         Used when the input has multiple plausible fold interpretations
         (e.g., digraph that may or may not be intended as a digraph by the user).
 
-        `input_casing_hint` is the casing of the user's input ("lowercase",
-        "first_letter_cap", or "all_caps"). Mirrors the Swift
-        DamerauLevenshteinSuggester.InputCasingHint enum: it's a TIEBREAKER
-        only — edit distance still dominates. Cap-first / all-caps inputs
-        prefer canonicals whose first letter is uppercase; lowercase inputs
-        prefer canonicals whose first letter is lowercase.
+        `input_casing` is the casing of the user's input (a `_Casing` enum
+        value). Mirrors the Swift DamerauLevenshteinSuggester.InputCasingHint
+        enum: it's a TIEBREAKER only — edit distance still dominates.
+        Cap-first / all-caps inputs prefer canonicals whose first letter is
+        uppercase; lowercase inputs prefer canonicals whose first letter is
+        lowercase. The enum (rather than a string) makes typos a TypeError
+        instead of a silent fallthrough into the cap-favouring branch.
         """
+        if not isinstance(input_casing, _Casing):
+            raise TypeError(f"input_casing must be a _Casing enum, got {type(input_casing).__name__}")
         by_canonical = {}  # canonical -> DawgSuggestion (with min distance)
+        # Overfetch and re-rank: the underlying single-arg suggest already
+        # truncates by (distance, freq) before we see candidates. To find
+        # a low-frequency cap-first outlier hidden under high-freq lowercase
+        # distractors, we need enough headroom in the inner fetch. Floor
+        # at 16 so even the long-input branch (limit=1 / limit=2) still
+        # pulls 16 — limit*4 wouldn't reliably surface a cap-first canonical
+        # that sits behind several high-frequency lowercase neighbours.
+        per_key_limit = max(limit * 4, 16)
         for key in keys:
-            # Over-fetch since we'll dedupe across variants.
-            for s in self.suggest(key, budget=budget, limit=limit * 4):
+            for s in self.suggest(key, budget=budget, limit=per_key_limit):
                 existing = by_canonical.get(s.canonical)
                 if existing is None or s.edit_distance < existing.edit_distance:
                     by_canonical[s.canonical] = s
@@ -100,9 +125,9 @@ class DawgSuggester:
             if not canonical:
                 return 0
             first = canonical[0]
-            if input_casing_hint == "lowercase":
+            if input_casing == _Casing.LOWERCASE:
                 return 1 if first.islower() else 0
-            # "first_letter_cap" and "all_caps" both prefer cap-first canonicals.
+            # FIRST_LETTER_CAP and ALL_CAPS both prefer cap-first canonicals.
             return 1 if first.isupper() else 0
 
         merged = sorted(
