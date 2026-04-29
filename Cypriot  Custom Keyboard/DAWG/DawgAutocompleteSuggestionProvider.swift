@@ -178,8 +178,18 @@ final class DawgAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
             // diacritics-only or low-Levenshtein match. Mirrors the
             // Hunspell provider's identical gate; without it, every
             // edit-1 candidate would force-replace the user's input.
+            //
+            // Multi-variant gating: pass every greekify alternative so
+            // greekify-shortening cases (th → θ where the user meant τη,
+            // e.g. "afth" → αυτή) aren't rejected by the distance check
+            // against just the first interpretation. Variants are rooted
+            // at `greek` (case-preserving, post-strip) so the pure-Greek
+            // diacritic-only path still matches uppercase Greek input.
+            let gateVariants: [String] = isGreeklish
+                ? Self.greekifyAlternatives(greek)
+                : [greek]
             let willReplace = CypriotKeyboardHelper.shouldReplace(
-                text: text, greekText: greek, guess: displayed
+                text: text, greekVariants: gateVariants, guess: displayed
             )
             result.append(CypriotAutocompleteSuggestion(
                 text: displayed, isAutocomplete: false, isUnknown: false,

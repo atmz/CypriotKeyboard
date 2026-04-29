@@ -38,4 +38,19 @@ class CypriotKeyboardUtilTests: XCTestCase {
             "distance-3 (after normalization) should still be rejected"
         )
     }
+
+    func testShouldReplaceUsesMinimumDistanceAcrossVariants() {
+        // "afth" greekifies to αφθ. The αυτή candidate is distance 3 from
+        // αφθ but distance 0 from the αυτη greekify-alternative. The gate
+        // must use the minimum across alternatives, otherwise valid Greek
+        // candidates get rejected for greekify-shortening cases (th → θ
+        // where the user meant τη).
+        XCTAssertTrue(
+            CypriotKeyboardHelper.shouldReplace(
+                text: "afth",
+                greekVariants: ["αφθ", "αυτη"],
+                guess: "αυτή"
+            )
+        )
+    }
 }

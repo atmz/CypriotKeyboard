@@ -72,6 +72,19 @@ class CypriotKeyboardHelper {
         return Double(normalizedGreek.levenshtein(normalizedGuess)) < 3.0
     }
 
+    /// Variants overload: passes if ANY of the supplied greekify
+    /// interpretations would gate true. Used by the DAWG provider so that
+    /// greekify-shortening cases (th → θ where the user meant τη) don't
+    /// get rejected by the distance check.
+    static func shouldReplace(text: String, greekVariants: [String], guess: String) -> Bool {
+        for variant in greekVariants {
+            if shouldReplace(text: text, greekText: variant, guess: guess) {
+                return true
+            }
+        }
+        return false
+    }
+
     /// Collapses final ς onto medial σ so the two are treated as equal
     /// during Levenshtein comparison. See `shouldReplace` for rationale.
     private static func normalizeFinalSigma(_ s: String) -> String {

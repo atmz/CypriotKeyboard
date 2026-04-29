@@ -146,6 +146,14 @@ def should_replace(text: str, greek_text: str, guess: str) -> bool:
     return _levenshtein(a, b) < 3
 
 
+def _should_replace_any(text: str, greek_variants: list, guess: str) -> bool:
+    """Mirror of CypriotKeyboardHelper.shouldReplace(text:greekVariants:guess:).
+    Passes if ANY of the supplied greekify interpretations would gate true,
+    so greekify-shortening cases (th → θ where the user meant τη) don't get
+    rejected by the distance check."""
+    return any(should_replace(text, gv, guess) for gv in greek_variants)
+
+
 # --- token-level autocorrect ---
 
 # Whitespace-separated tokens. Trailing punct is peeled off so the lookup
@@ -182,7 +190,14 @@ def correct_token_dawg(token: str, folder, suggester) -> str:
         return token
     top = candidates[0]
     displayed = postprocess_suggestion(top.canonical, casing, leading_punct)
-    if not should_replace(body, greekified, displayed):
+    # Multi-variant gating: pass every greekify alternative so greekify-
+    # shortening cases (th → θ where the user meant τη, e.g. "afth" → αυτή)
+    # aren't rejected by the distance check against the first interpretation.
+    # Variants are rooted at `greekified` (case-preserving, post-strip) so
+    # the pure-Greek diacritic-only path still matches uppercase Greek input.
+    gate_variants = (greekify_alternatives(greekified)
+                     if is_greeklish else [greekified])
+    if not _should_replace_any(body, gate_variants, displayed):
         return token
     return displayed + trailing
 
