@@ -109,3 +109,20 @@ clean_eval:
 # tier-c eval REPL: interactive comparison of Hunspell vs DAWG variants.
 repl: hunspell-cli
 	cd .. && python3 dict_generation/eval/repl.py
+
+# Corpus regression check: re-run the Greeklish corpus through the iOS
+# autocorrect pipeline and diff against the committed baseline. Use
+# eval-corpus-update when an intentional change should be locked in.
+eval-corpus:
+	python3 eval/run_corpus.py --output-md /tmp/corpus_current.md
+	@if diff -q eval/corpus_baseline.md /tmp/corpus_current.md > /dev/null; then \
+	  echo "[eval-corpus] baseline matches"; \
+	else \
+	  echo "[eval-corpus] DIFF detected — review and update corpus_baseline.md if intentional"; \
+	  diff eval/corpus_baseline.md /tmp/corpus_current.md; \
+	  exit 1; \
+	fi
+
+eval-corpus-update:
+	python3 eval/run_corpus.py --output-md eval/corpus_baseline.md
+	@echo "[eval-corpus-update] baseline updated; commit eval/corpus_baseline.md"

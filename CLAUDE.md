@@ -35,6 +35,10 @@ xcodebuild -project "Cypriot Keyboard.xcodeproj" -scheme "Cypriot Keyboard" \
 
 Note: `Cypriot KeyboardTests/Cypriot_KeyboardTests.swift` currently contains only Xcode template stubs — there is no real test suite.
 
+## Corpus regression check
+
+After any DAWG-suggester change, run `cd dict_generation && make eval-corpus`. If the diff is intentional, run `make eval-corpus-update` and commit `eval/corpus_baseline.md` with the rest of your change.
+
 ## Architecture
 
 ### Two-target layout, shared source
