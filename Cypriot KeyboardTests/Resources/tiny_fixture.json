@@ -12,6 +12,10 @@
         "freq": 100
       },
       {
+        "canonical": "Καλός",
+        "freq": 50
+      },
+      {
         "canonical": "καλώς",
         "freq": 5
       }
@@ -35,6 +39,7 @@
       "fold_key": "καλoσ",
       "expect_canonicals": [
         "καλός",
+        "Καλός",
         "καλώς"
       ]
     },
@@ -43,6 +48,7 @@
       "fold_key": "καλoσ",
       "expect_canonicals": [
         "καλός",
+        "Καλός",
         "καλώς"
       ]
     },
@@ -51,6 +57,7 @@
       "fold_key": "καλoσ",
       "expect_canonicals": [
         "καλός",
+        "Καλός",
         "καλώς"
       ]
     },

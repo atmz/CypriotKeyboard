@@ -27,11 +27,21 @@ RES = os.path.join(REPO, "Cypriot KeyboardTests", "Resources")
 
 
 def build_tiny_fixture():
-    """Build a 5-entry DAWG with known canonicals for round-trip tests."""
+    """Build a small DAWG with known canonicals for round-trip tests."""
     folder = load_default_folder()
     # (canonical, frequency) pairs to insert. Pre-folded into keys.
+    # Mirrors production build_dawg.py: fold key is computed on the
+    # lowercased surface form so cap-first proper nouns share a fold key
+    # with their lowercase counterparts. The casing-aware ranker test
+    # (DamerauLevenshteinSuggesterTests) leans on the Καλός/καλός pair
+    # being co-located.
     entries = [
         ("καλός", 100),     # "good" (adjective)
+        ("Καλός", 50),      # Cap-first canonical at the same fold key —
+                            # used by the casing-tiebreak ranker test.
+                            # Frequency is intentionally LOWER than καλός
+                            # so a freq-only ranker would prefer καλός;
+                            # the casing hint must flip it for cap input.
         ("καλώς", 5),       # "well" (adverb) — collides on fold key with καλός
                             # because ο→o and ώ→o both fold to "o"
         ("νερό", 50),
@@ -40,7 +50,7 @@ def build_tiny_fixture():
     ]
     grouped = defaultdict(dict)
     for canonical, freq in entries:
-        key = folder.fold(canonical)
+        key = folder.fold(canonical.lower())
         grouped[key][canonical] = freq
 
     # Build string table + payloads (matches build_dawg.py logic)
@@ -81,11 +91,11 @@ def build_tiny_fixture():
         },
         "lookups": [
             {"input": "καλός", "fold_key": folder.fold("καλός"),
-             "expect_canonicals": ["καλός", "καλώς"]},  # both share fold key
+             "expect_canonicals": ["καλός", "Καλός", "καλώς"]},  # all share fold key
             {"input": "καλος", "fold_key": folder.fold("καλος"),
-             "expect_canonicals": ["καλός", "καλώς"]},  # phonetic match (no accent)
+             "expect_canonicals": ["καλός", "Καλός", "καλώς"]},  # phonetic match (no accent)
             {"input": "καλώς", "fold_key": folder.fold("καλώς"),
-             "expect_canonicals": ["καλός", "καλώς"]},  # accented variant
+             "expect_canonicals": ["καλός", "Καλός", "καλώς"]},  # accented variant
             {"input": "νερό", "fold_key": folder.fold("νερό"),
              "expect_canonicals": ["νερό"]},
             {"input": "δενυπαρχει", "fold_key": folder.fold("δενυπαρχει"),

@@ -144,7 +144,19 @@ final class DawgAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {
         // bar stays readable: long inputs leave less room per slot, so we
         // show fewer alternatives. Total bar slots = verbatim + candidates.
         let candidateLimit = text.count > 5 ? 2 : 3
-        let candidates = suggester.suggest(forKeys: foldKeys, limit: candidateLimit)
+        // Casing-aware ranking: when the input was capitalised, the
+        // suggester should prefer cap-first canonicals at the same edit
+        // distance. Lowercase input gets the lowercase boost — so we don't
+        // surface a proper-noun canonical for a clearly-lowercase typo.
+        let casingHint: DamerauLevenshteinSuggester.InputCasingHint
+        switch casing {
+        case .lowercase:      casingHint = .lowercase
+        case .firstLetterCap: casingHint = .firstLetterCap
+        case .allCaps:        casingHint = .allCaps
+        }
+        let candidates = suggester.suggest(forKeys: foldKeys,
+                                           limit: candidateLimit,
+                                           inputCasingHint: casingHint)
 
         func displayForm(_ canonical: String) -> String {
             let cased: String

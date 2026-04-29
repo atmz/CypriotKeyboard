@@ -60,6 +60,55 @@ final class DamerauLevenshteinSuggester {
         return Array(merged.prefix(limit))
     }
 
+    /// First-letter casing of the user's input. Used as a tiebreak signal
+    /// when multiple candidates share the same edit distance — cap-first
+    /// inputs (e.g. "Pafos") should prefer cap-first canonicals (Πάφος)
+    /// over higher-frequency lowercase neighbours (ποιος) at the same
+    /// distance.
+    enum InputCasingHint {
+        case lowercase
+        case firstLetterCap
+        case allCaps
+    }
+
+    /// Casing-aware ranking: prefer canonicals whose first-letter casing
+    /// matches the input's casing, as a TIEBREAKER only — edit distance
+    /// still dominates. Overfetches and re-ranks the existing single-arg
+    /// `suggest(forKeys:limit:)` so the boost only changes ordering within
+    /// each distance bucket, never across buckets.
+    ///
+    /// Boost direction:
+    ///   - .lowercase       → prefer canonicals whose first char is lowercase
+    ///   - .firstLetterCap  → prefer canonicals whose first char is uppercase
+    ///   - .allCaps         → prefer canonicals whose first char is uppercase
+    ///
+    /// Sort key: (editDistance asc, casingMatch desc, frequency desc).
+    func suggest(forKeys keys: [String],
+                 limit: Int = 5,
+                 inputCasingHint: InputCasingHint) -> [DawgSuggestion] {
+        // Overfetch from the casing-blind path so the re-rank has enough
+        // candidates to pick from within each distance bucket.
+        let raw = suggest(forKeys: keys, limit: limit * 4)
+        let reranked = raw.sorted { lhs, rhs in
+            if lhs.editDistance != rhs.editDistance { return lhs.editDistance < rhs.editDistance }
+            let lhsBoost = casingBoost(canonical: lhs.canonical, hint: inputCasingHint)
+            let rhsBoost = casingBoost(canonical: rhs.canonical, hint: inputCasingHint)
+            if lhsBoost != rhsBoost { return lhsBoost > rhsBoost }
+            return lhs.frequency > rhs.frequency
+        }
+        return Array(reranked.prefix(limit))
+    }
+
+    private func casingBoost(canonical: String, hint: InputCasingHint) -> Int {
+        guard let first = canonical.first else { return 0 }
+        switch hint {
+        case .lowercase:
+            return first.isLowercase ? 1 : 0
+        case .firstLetterCap, .allCaps:
+            return first.isUppercase ? 1 : 0
+        }
+    }
+
     /// Returns up to `limit` ranked candidates within Damerau-Levenshtein
     /// distance ≤ 1 of `key` (in the folded keyspace).
     func suggest(forKey key: String, limit: Int = 5) -> [DawgSuggestion] {

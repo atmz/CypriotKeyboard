@@ -185,7 +185,17 @@ def correct_token_dawg(token: str, folder, suggester) -> str:
             if key not in seen:
                 seen.add(key)
                 fold_keys.append(key)
-    candidates = suggester.suggest_multi(fold_keys, budget=1, limit=1)
+    # Casing-aware ranking: pass the input casing through so cap-first
+    # inputs prefer cap-first canonicals at the same edit distance.
+    # Mirrors DawgAutocompleteSuggestionProvider.swift.
+    if casing == _Casing.FIRST_LETTER_CAP:
+        hint = "first_letter_cap"
+    elif casing == _Casing.ALL_CAPS:
+        hint = "all_caps"
+    else:
+        hint = "lowercase"
+    candidates = suggester.suggest_multi(fold_keys, budget=1, limit=1,
+                                         input_casing_hint=hint)
     if not candidates:
         return token
     top = candidates[0]

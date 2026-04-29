@@ -73,12 +73,20 @@ class DawgSuggester:
         return [DawgSuggestion(canonical=c, frequency=f, edit_distance=d)
                 for c, f, d in results[:limit]]
 
-    def suggest_multi(self, keys: List[str], budget: int = 1, limit: int = 5) -> List[DawgSuggestion]:
+    def suggest_multi(self, keys: List[str], budget: int = 1, limit: int = 5,
+                      input_casing_hint: str = "lowercase") -> List[DawgSuggestion]:
         """Look up multiple fold-key variants, dedupe canonicals by min edit
-        distance, rank by (distance asc, freq desc).
+        distance, rank by (distance asc, casing-match desc, freq desc).
 
         Used when the input has multiple plausible fold interpretations
         (e.g., digraph that may or may not be intended as a digraph by the user).
+
+        `input_casing_hint` is the casing of the user's input ("lowercase",
+        "first_letter_cap", or "all_caps"). Mirrors the Swift
+        DamerauLevenshteinSuggester.InputCasingHint enum: it's a TIEBREAKER
+        only — edit distance still dominates. Cap-first / all-caps inputs
+        prefer canonicals whose first letter is uppercase; lowercase inputs
+        prefer canonicals whose first letter is lowercase.
         """
         by_canonical = {}  # canonical -> DawgSuggestion (with min distance)
         for key in keys:
@@ -87,9 +95,19 @@ class DawgSuggester:
                 existing = by_canonical.get(s.canonical)
                 if existing is None or s.edit_distance < existing.edit_distance:
                     by_canonical[s.canonical] = s
+
+        def casing_boost(canonical: str) -> int:
+            if not canonical:
+                return 0
+            first = canonical[0]
+            if input_casing_hint == "lowercase":
+                return 1 if first.islower() else 0
+            # "first_letter_cap" and "all_caps" both prefer cap-first canonicals.
+            return 1 if first.isupper() else 0
+
         merged = sorted(
             by_canonical.values(),
-            key=lambda s: (s.edit_distance, -s.frequency),
+            key=lambda s: (s.edit_distance, -casing_boost(s.canonical), -s.frequency),
         )
         return merged[:limit]
 

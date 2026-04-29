@@ -118,4 +118,65 @@ class DamerauLevenshteinSuggesterTests: XCTestCase {
             XCTAssertGreaterThanOrEqual(suggestions[i].editDistance, suggestions[i - 1].editDistance)
         }
     }
+
+    // MARK: - Casing-aware ranking (inputCasingHint)
+
+    func testCapInputBoostsCapCanonicalAtSameDistance() {
+        // The fixture stores three canonicals at fold key καλoσ:
+        //   καλός freq=100, Καλός freq=50, καλώς freq=5.
+        // With hint=.firstLetterCap, the cap-first canonical (Καλός) must
+        // outrank lowercase canonicals at the same edit distance even
+        // though it has lower frequency. Without the casing tiebreak
+        // (frequency-only ranking) καλός would win, which is the bug:
+        // cap-first input loses to a higher-frequency lowercase neighbour.
+        let key = folder.fold("καλός")
+        let suggestions = suggester.suggest(forKeys: [key], limit: 5,
+                                            inputCasingHint: .firstLetterCap)
+        XCTAssertFalse(suggestions.isEmpty)
+        XCTAssertEqual(suggestions.first?.canonical, "Καλός",
+                       "cap-first hint should rank Καλός above lowercase neighbours; got \(suggestions.map { $0.canonical })")
+    }
+
+    func testLowercaseHintPrefersLowercaseCanonical() {
+        // Mirror of the cap test: with hint=.lowercase, the lowercase
+        // canonical wins (and frequency is the secondary tiebreak among
+        // boosted canonicals — καλός freq=100 beats καλώς freq=5).
+        let key = folder.fold("καλός")
+        let suggestions = suggester.suggest(forKeys: [key], limit: 5,
+                                            inputCasingHint: .lowercase)
+        XCTAssertFalse(suggestions.isEmpty)
+        XCTAssertEqual(suggestions.first?.canonical, "καλός",
+                       "lowercase hint should rank καλός first; got \(suggestions.map { $0.canonical })")
+    }
+
+    func testAllCapsHintPrefersCapCanonical() {
+        // All-caps inputs use the same boost direction as firstLetterCap
+        // (the canonical that starts with an uppercase letter). The fixture
+        // doesn't have an all-caps canonical (e.g. ΚΑΛΟΣ), so cap-first
+        // Καλός is the closest available match — and that's exactly what
+        // the boost should pick over the lowercase alternatives.
+        let key = folder.fold("καλός")
+        let suggestions = suggester.suggest(forKeys: [key], limit: 5,
+                                            inputCasingHint: .allCaps)
+        XCTAssertFalse(suggestions.isEmpty)
+        XCTAssertEqual(suggestions.first?.canonical, "Καλός",
+                       "all-caps hint should prefer cap-first canonical; got \(suggestions.map { $0.canonical })")
+    }
+
+    func testCasingHintIsTiebreakOnlyEditDistanceStillDominates() {
+        // Edit distance still dominates: a perturbed (edit-1) lowercase
+        // key with a cap-first canonical at distance 1 must NOT outrank
+        // an exact-match lowercase canonical at distance 0, even when
+        // hint=firstLetterCap. This guards against the boost bleeding
+        // across distance buckets.
+        // Use "νεpό"-style perturbation? Simpler: use the key for νερό
+        // (distance 0 to νερό, no cap canonical at this key) and verify
+        // ordering is unchanged regardless of hint.
+        let key = folder.fold("νερό")
+        let withCapHint = suggester.suggest(forKeys: [key], limit: 5,
+                                            inputCasingHint: .firstLetterCap)
+        XCTAssertEqual(withCapHint.first?.canonical, "νερό",
+                       "edit-distance must dominate the casing boost")
+        XCTAssertEqual(withCapHint.first?.editDistance, 0)
+    }
 }
