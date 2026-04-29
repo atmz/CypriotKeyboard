@@ -118,6 +118,13 @@ class CypriotInputMethodService :
         return composeView
     }
 
+    override fun onStartInputView(info: android.view.inputmethod.EditorInfo?, restarting: Boolean) {
+        super.onStartInputView(info, restarting)
+        // First time the keyboard comes up for a field, make sure the active
+        // subtype matches our Greek/Latin state. Apps read this for spell-check.
+        applyCurrentSubtype()
+    }
+
     override fun onDestroy() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         store.clear()
@@ -133,6 +140,32 @@ class CypriotInputMethodService :
         isLatin = !isLatin
         prefs.edit().putBoolean(KEY_IS_LATIN, isLatin).apply()
         recomputeLayout()
+        applyCurrentSubtype()
+    }
+
+    /**
+     * Tell the IME framework which subtype is currently active (en_US for
+     * Latin/Greeklish input, el_CY for Greek). Apps like Chrome read this
+     * to decide which spell-check dictionary to use; without it, Greek words
+     * get red-underlined as if they were misspelled English.
+     */
+    private fun applyCurrentSubtype() {
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager ?: return
+        val ourImi = imm.enabledInputMethodList.firstOrNull { it.packageName == packageName } ?: return
+        val targetLocale = if (isLatin) "en_US" else "el_CY"
+        var match: android.view.inputmethod.InputMethodSubtype? = null
+        for (i in 0 until ourImi.subtypeCount) {
+            val s = ourImi.getSubtypeAt(i)
+            @Suppress("DEPRECATION")
+            if (s.locale == targetLocale) {
+                match = s
+                break
+            }
+        }
+        val target = match ?: return
+        val token = window.window?.attributes?.token ?: return
+        @Suppress("DEPRECATION")
+        imm.setInputMethodAndSubtype(token, ourImi.id, target)
     }
 
     override fun switchToNextIme() {
