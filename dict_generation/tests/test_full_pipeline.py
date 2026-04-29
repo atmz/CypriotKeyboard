@@ -38,7 +38,9 @@ class FullPipelineTests(unittest.TestCase):
     def test_every_sampled_surface_form_resolves(self):
         misses = []
         for form in self.sample:
-            key = self.fold.fold(form)
+            # Runtime always lowercases before fold lookup; the build keys the
+            # DAWG under fold(form.lower()), so this test must mirror that path.
+            key = self.fold.fold(form.lower())
             payload = self.reader.payload_for(key)
             if payload is None:
                 misses.append((form, key))
