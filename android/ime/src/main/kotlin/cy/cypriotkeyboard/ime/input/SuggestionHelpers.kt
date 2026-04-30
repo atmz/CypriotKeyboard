@@ -49,9 +49,30 @@ fun shouldReplace(text: String, greekText: String, guess: String): Boolean {
                 accentlessWord == text
         }
     }
-    // Greeklish branch.
-    return distanceMeasure(transliteratedWord = guess, greekWord = greekText) < 3.0
+    // Greeklish branch. Normalise σ ↔ ς before measuring: greekify outputs
+    // medial σ at word-end, but canonicals use final ς. Without this, every
+    // short Greeklish word with a single other-character mismatch pays a
+    // +1 distance tax that pushes legitimate corrections past the gate.
+    val normalizedGreek = normalizeFinalSigma(stripDiacritics(greekText.lowercase()))
+    val normalizedGuess = normalizeFinalSigma(stripDiacritics(guess.lowercase()))
+    return levenshtein(normalizedGreek, normalizedGuess) < 3
 }
+
+/**
+ * Multi-variant gate: returns true if [shouldReplace] would return true for
+ * ANY of the passed [greekVariants]. Used when the caller has multiple
+ * plausible greekify interpretations (digit/digraph branchings) and wants
+ * the gate measured against the closest one rather than just the greedy
+ * first reading.
+ *
+ * Mirrors `CypriotKeyboardHelper.shouldReplace(text:greekVariants:guess:)`
+ * on iOS.
+ */
+fun shouldReplace(text: String, greekVariants: List<String>, guess: String): Boolean =
+    greekVariants.any { shouldReplace(text = text, greekText = it, guess = guess) }
+
+/** Collapse final ς onto medial σ so they're treated as equal during edit-distance. */
+private fun normalizeFinalSigma(s: String): String = s.replace('ς', 'σ')
 
 /**
  * Count syllables by walking the diacritic-stripped lowercase form and

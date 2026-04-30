@@ -116,4 +116,36 @@ class SuggestionHelpersTest {
     @Test fun `shouldReplace Greeklish far candidate returns false`() {
         assertFalse(shouldReplace(text = "kalos", greekText = "καλος", guess = "ξψδγψ"))
     }
+
+    @Test fun `shouldReplace Greeklish ignores final-sigma vs medial-sigma`() {
+        // greekify produces medial σ at word-end; the canonical uses final ς.
+        // Without normalisation, the σ↔ς "mismatch" pays a +1 distance tax
+        // that pushes legitimate matches just past the budget.
+        // "καλoσ" vs "καλός" — pure σ↔ς + tonos differences, should pass.
+        assertTrue(shouldReplace(text = "kalos", greekText = "καλοσ", guess = "καλός"))
+    }
+
+    @Test fun `shouldReplace variant overload returns true if any matches`() {
+        // First variant is a far candidate; second is close. Result must be true.
+        val result = shouldReplace(
+            text = "kalos",
+            greekVariants = listOf("ξψδγψ", "καλοσ"),
+            guess = "καλός"
+        )
+        assertTrue(result)
+    }
+
+    @Test fun `shouldReplace variant overload returns false if no variant matches`() {
+        // Both variants are >2 edits from the guess.
+        val result = shouldReplace(
+            text = "abc",
+            greekVariants = listOf("αβγδεζη", "ικλμνξο"),
+            guess = "πρστυφχ"
+        )
+        assertFalse(result)
+    }
+
+    @Test fun `shouldReplace variant overload empty list returns false`() {
+        assertFalse(shouldReplace(text = "x", greekVariants = emptyList(), guess = "y"))
+    }
 }

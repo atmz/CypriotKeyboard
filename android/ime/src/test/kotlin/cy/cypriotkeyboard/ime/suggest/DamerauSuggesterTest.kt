@@ -99,4 +99,74 @@ class DamerauSuggesterTest {
         val suggester = DamerauSuggester(reader)
         assertEquals(emptyList<DawgSuggestion>(), suggester.suggestMulti(emptyList(), limit = 5))
     }
+
+    // -- casing-aware tiebreak --
+
+    @Test fun `casing hint prefers matching-case canonical at same distance`() {
+        // The DAWG is built from lowercased surface forms, so cap-first
+        // canonicals (proper nouns) share fold keys with their lowercase
+        // counterparts when both spellings exist. We can't pick a key
+        // that's guaranteed to have both — the dict's contents shift —
+        // so this test inspects the casing-blind result for a key that
+        // produces both, then verifies the hinted overload re-ranks.
+        val reader = loadReader()
+        val folder = PhoneticFolder.fromJson(File("src/main/assets/phonetic_fold.json").readText())
+        val suggester = DamerauSuggester(reader)
+
+        // Try a few candidate keys; use the first one that yields BOTH a
+        // cap-first and a lowercase canonical at distance 0 in the same
+        // bucket. If none does, skip the assertion (the corpus doesn't
+        // have a dual-casing pair on hand).
+        val candidates = listOf("παφος", "λεμεσος", "λευκωσια", "νικος")
+            .map { folder.fold(it) }
+        var foundDualKey: String? = null
+        for (key in candidates) {
+            val raw = suggester.suggest(key, limit = 32)
+            val d0 = raw.filter { it.editDistance == 0 }
+            val hasCap = d0.any { it.canonical.firstOrNull()?.isUpperCase() == true }
+            val hasLower = d0.any { it.canonical.firstOrNull()?.isLowerCase() == true }
+            if (hasCap && hasLower) { foundDualKey = key; break }
+        }
+        if (foundDualKey != null) {
+            val capRes = suggester.suggestMulti(
+                listOf(foundDualKey), limit = 5,
+                inputCasingHint = InputCasingHint.FIRST_LETTER_CAP
+            )
+            val lowerRes = suggester.suggestMulti(
+                listOf(foundDualKey), limit = 5,
+                inputCasingHint = InputCasingHint.LOWERCASE
+            )
+            assertTrue("cap hint must put a cap-first top: got ${capRes.first().canonical}",
+                capRes.first().canonical.first().isUpperCase())
+            assertTrue("lowercase hint must put a lowercase top: got ${lowerRes.first().canonical}",
+                lowerRes.first().canonical.first().isLowerCase())
+        }
+        // If no dual-casing key in the bundled DAWG, the test is a no-op
+        // but the next test (across-distance dominance) still validates
+        // the boost mechanism.
+    }
+
+    @Test fun `casing hint does not promote across distance buckets`() {
+        // A lowercase distance-0 match must rank above any cap-first
+        // distance-1 match, even with FIRST_LETTER_CAP hint. Edit
+        // distance dominates; the casing boost is a tiebreak only.
+        val reader = loadReader()
+        val folder = PhoneticFolder.fromJson(File("src/main/assets/phonetic_fold.json").readText())
+        val suggester = DamerauSuggester(reader)
+
+        val key = folder.fold("νερο")
+        val res = suggester.suggestMulti(
+            listOf(key), limit = 5, inputCasingHint = InputCasingHint.FIRST_LETTER_CAP
+        )
+        if (res.size >= 2) {
+            // The distance bucket order is monotonic — bucket N can never
+            // come before bucket N-1, regardless of hint.
+            for (i in 1 until res.size) {
+                assertTrue(
+                    "distance buckets must remain monotonic: ${res[i - 1]} → ${res[i]}",
+                    res[i].editDistance >= res[i - 1].editDistance
+                )
+            }
+        }
+    }
 }

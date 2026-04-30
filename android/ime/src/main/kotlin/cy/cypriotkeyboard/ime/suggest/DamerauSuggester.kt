@@ -7,6 +7,14 @@ data class DawgSuggestion(
 )
 
 /**
+ * First-letter casing of the user's input. Used as a tiebreak signal in
+ * [DamerauSuggester.suggestMulti]: cap-first inputs ("Pafos") should
+ * prefer cap-first canonicals (Πάφος) over higher-frequency lowercase
+ * neighbours (ποιος) at the same edit distance.
+ */
+enum class InputCasingHint { LOWERCASE, FIRST_LETTER_CAP, ALL_CAPS }
+
+/**
  * Mirrors `DamerauLevenshteinSuggester.swift`. Enumerates all single-edit
  * variants of the input key, looks each one up in the DAWG, collects
  * canonicals, dedupes, ranks by (distance asc, frequency desc).
@@ -70,6 +78,46 @@ class DamerauSuggester(private val reader: DawgReader) {
         return byCanonical.values
             .sortedWith(compareBy({ it.editDistance }, { -it.frequency }))
             .take(limit)
+    }
+
+    /**
+     * Casing-aware ranking: prefer canonicals whose first-letter casing
+     * matches [inputCasingHint], as a TIEBREAKER only — edit distance
+     * still dominates. Overfetches the casing-blind path so the boost
+     * only changes ordering within each distance bucket, never across.
+     *
+     * Sort key: (editDistance asc, casingMatch desc, frequency desc).
+     *
+     * Floor at `max(limit * 4, 16)` for the inner fetch: the long-input
+     * branch passes limit=2, and 8 candidates aren't enough headroom
+     * to surface a low-frequency cap-first canonical hidden behind
+     * several high-frequency lowercase distractors.
+     */
+    fun suggestMulti(
+        keys: List<String>,
+        limit: Int,
+        inputCasingHint: InputCasingHint
+    ): List<DawgSuggestion> {
+        val raw = suggestMulti(keys, limit = maxOf(limit * 4, 16))
+        return raw
+            .sortedWith(
+                compareBy(
+                    { it.editDistance },
+                    { -casingBoost(it.canonical, inputCasingHint) },
+                    { -it.frequency }
+                )
+            )
+            .take(limit)
+    }
+
+    private fun casingBoost(canonical: String, hint: InputCasingHint): Int {
+        if (canonical.isEmpty()) return 0
+        val first = canonical.first()
+        return when (hint) {
+            InputCasingHint.LOWERCASE -> if (first.isLowerCase()) 1 else 0
+            InputCasingHint.FIRST_LETTER_CAP,
+            InputCasingHint.ALL_CAPS -> if (first.isUpperCase()) 1 else 0
+        }
     }
 
     private fun editDistance1Variants(key: String): List<String> {

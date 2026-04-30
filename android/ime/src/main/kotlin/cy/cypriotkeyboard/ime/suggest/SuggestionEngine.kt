@@ -41,6 +41,12 @@ class SuggestionEngine(
 
     private enum class Casing { LOWERCASE, FIRST_LETTER_CAP, ALL_CAPS }
 
+    private fun Casing.toHint(): InputCasingHint = when (this) {
+        Casing.LOWERCASE -> InputCasingHint.LOWERCASE
+        Casing.FIRST_LETTER_CAP -> InputCasingHint.FIRST_LETTER_CAP
+        Casing.ALL_CAPS -> InputCasingHint.ALL_CAPS
+    }
+
     fun suggest(input: String): List<Suggestion> {
         if (input.isEmpty()) return emptyList()
 
@@ -88,7 +94,16 @@ class SuggestionEngine(
                 if (seenFoldKeys.add(key)) keys.add(key)
             }
         }
-        val candidates = suggester.suggestMulti(keys, limit = candidateLimitFor(input))
+        // Casing-aware ranking: a cap-first input ("Pafos") should prefer
+        // cap-first canonicals (Πάφος) at the same edit distance over a
+        // higher-frequency lowercase neighbour. Lowercase input gets the
+        // inverse boost so common-word typos don't surface proper-noun
+        // canonicals.
+        val candidates = suggester.suggestMulti(
+            keys,
+            limit = candidateLimitFor(input),
+            inputCasingHint = casing.toHint()
+        )
 
         val out = ArrayList<Suggestion>(1 + candidates.size)
         out += Suggestion(text = input, isVerbatim = true, willReplace = false)
@@ -98,7 +113,18 @@ class SuggestionEngine(
             //    replaces the typed word when the candidate is a close
             //    diacritics-only or low-Levenshtein match. Without this,
             //    every edit-1 candidate would force-replace user input.
-            val willReplace = shouldReplace(text = input, greekText = greek, guess = displayed)
+            //
+            //    Multi-variant gate: pass every greekify alternative so
+            //    greekify-shortening cases (th → θ where the user meant τη)
+            //    aren't rejected by the distance check against just the
+            //    first interpretation. Variants are rooted at `greek`
+            //    (case-preserving, post-strip) so the pure-Greek
+            //    diacritic-only path still matches uppercase Greek input.
+            val gateVariants: List<String> =
+                if (isGreeklish) greekifyAlternatives(greek) else listOf(greek)
+            val willReplace = shouldReplace(
+                text = input, greekVariants = gateVariants, guess = displayed
+            )
             out += Suggestion(
                 text = displayed,
                 isVerbatim = false,
