@@ -125,4 +125,33 @@ class SuggestionEngineTest {
         assertTrue("short input should cap at 4 slots; got ${res.size}",
             res.size <= 4)
     }
+
+    // -- Greekify alternatives integration --
+
+    @Test fun `Lefkosia reaches Lefkosia at edit-1 via αφ-αυ branching`() {
+        // Greekify maps "Lefkosia" → "Λεφκοσια" char-by-char; the dictionary
+        // form Λευκωσία has αυ instead of αφ. With greekifyAlternatives, the
+        // αφ ⇄ αυ rule should produce the αυ variant whose fold key matches
+        // Λευκωσία at d=1 (single substitution within the budget).
+        val res = engine().suggest("Lefkosia")
+        assertTrue("expected Λευκωσία in candidates; got ${res.map { it.text }}",
+            res.any { it.text.startsWith("Λευκ") })
+    }
+
+    @Test fun `8 as digit-for-theta branches`() {
+        // "8a" enters the suggester as "8α" (digit kept attached by isPunctFirst);
+        // the 8 ⇄ θ rule produces "θα". θα is in CommonWords / DAWG.
+        val res = engine().suggest("8a")
+        assertTrue("expected a θα-prefixed candidate; got ${res.map { it.text }}",
+            res.any { it.text.startsWith("θα") || it.text.startsWith("Θα") })
+    }
+
+    @Test fun `digit prefix isn't stripped by isPunctFirst`() {
+        // The verbatim slot keeps the digit prefix verbatim; what we really
+        // care about is that "8a" doesn't end up empty (as it would if the
+        // digit were stripped and "a" alone made it through to a single-char
+        // suggestion).
+        val res = engine().suggest("8a")
+        assertEquals("8a", res[0].text)
+    }
 }

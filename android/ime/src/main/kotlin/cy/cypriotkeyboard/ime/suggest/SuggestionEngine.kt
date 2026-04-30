@@ -2,6 +2,7 @@ package cy.cypriotkeyboard.ime.suggest
 
 import cy.cypriotkeyboard.ime.input.CommonWords
 import cy.cypriotkeyboard.ime.input.greekify
+import cy.cypriotkeyboard.ime.input.greekifyAlternatives
 import cy.cypriotkeyboard.ime.input.shouldAttemptAutocomplete
 import cy.cypriotkeyboard.ime.input.shouldReplace
 
@@ -49,11 +50,13 @@ class SuggestionEngine(
         //    key. Mirrors the Hunspell provider's identical guard.
         if (!shouldAttemptAutocomplete(input)) return emptyList()
 
-        // 2. Strip a leading non-letter (".", "(", etc.) before greekify so
-        //    e.g. ".kalimera" looks up "kalimera" and the punct gets re-
-        //    prepended on the way out. Matches the Hunspell isPunctFirst
-        //    handling.
-        val isPunctFirst = !(input.firstOrNull()?.isLetter() ?: true)
+        // 2. Strip a leading punctuation character (".", "(", etc.) before
+        //    greekify so e.g. ".kalimera" looks up "kalimera" and the punct
+        //    gets re-prepended on the way out. Digits stay attached so e.g.
+        //    "8a" enters greekifyAlternatives as "8α" and can branch to
+        //    "θα" via the 8 ⇄ θ rule.
+        val firstCh = input.firstOrNull()
+        val isPunctFirst = firstCh != null && !firstCh.isLetter() && !firstCh.isDigit()
         val textForGreekify = if (isPunctFirst) input.drop(1) else input
         val greek = greekify(textForGreekify)
 
@@ -67,11 +70,24 @@ class SuggestionEngine(
         }
 
         val (casing, lookup) = detectCasing(greek)
-        // Multi-fold lookup: digraphs like ει/οι/αι can be intentional or
-        // accidental; folding both branches and merging by canonical avoids
-        // ranking a rare exact-match (νήμα for "noima") above the user's
-        // likely intent (νόημα).
-        val keys = folder.foldVariants(lookup)
+        // Greekify alternatives: when the input was Greeklish, expand
+        // ambiguous transliterations (θ ⇄ τη, αφ ⇄ αυ, 8 ⇄ θ, …) so the
+        // suggester sees both interpretations. Pure-Greek input means the
+        // user typed the spelling they wanted, so we don't second-guess.
+        val isGreeklish = textForGreekify != greek
+        val greekVariants: List<String> =
+            if (isGreeklish) greekifyAlternatives(lookup) else listOf(lookup)
+
+        // Multi-fold lookup: branch at digraph positions so e.g. `νοιμα`
+        // probes both `νıμα` (οι→ı) and `νoıμα` (ο→o, ι→ı), giving the
+        // suggester a chance to find both `νήμα` and `νόημα`.
+        val seenFoldKeys = HashSet<String>()
+        val keys = ArrayList<String>()
+        for (variant in greekVariants) {
+            for (key in folder.foldVariants(variant)) {
+                if (seenFoldKeys.add(key)) keys.add(key)
+            }
+        }
         val candidates = suggester.suggestMulti(keys, limit = candidateLimitFor(input))
 
         val out = ArrayList<Suggestion>(1 + candidates.size)
