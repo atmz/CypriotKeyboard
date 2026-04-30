@@ -33,14 +33,27 @@ class LayoutsShiftedTest {
         }
     }
 
-    @Test fun `shifted preserves widthUnits and popupChars`() {
-        val base = Layouts.greekAlphabetic()
+    @Test fun `shifted preserves widthUnits, popupChars, and enabled`() {
+        val base = Layouts.greekAlphabetic(breveEnabled = false)
         val shifted = base.shifted()
         for ((row, shiftedRow) in base.rows.zip(shifted.rows)) {
             for ((k, sk) in row.zip(shiftedRow)) {
                 assertEquals(k.widthUnits, sk.widthUnits, 0.0001f)
                 assertEquals(k.popupChars, sk.popupChars)
+                assertEquals(k.enabled, sk.enabled)
             }
         }
+    }
+
+    @Test fun `breve key is disabled when context says so`() {
+        val noBreve = Layouts.greekAlphabetic(breveEnabled = false)
+        val withBreve = Layouts.greekAlphabetic(breveEnabled = true)
+        // The last key in row 1 is the breve key.
+        val noBreveKey = noBreve.rows[0].last()
+        val withBreveKey = withBreve.rows[0].last()
+        assertEquals("˘", noBreveKey.label)
+        assertEquals("˘", withBreveKey.label)
+        assertEquals(false, noBreveKey.enabled)
+        assertEquals(true, withBreveKey.enabled)
     }
 }

@@ -181,16 +181,46 @@ private fun RowScope.KeyButton(
 ) {
     val isFunction = key.action.isFunctionKey()
     val isSpace = key.action is KeyAction.Space
+    val isEnabled = key.enabled
     val keyColor = when {
         isSpace -> MaterialTheme.colorScheme.surfaceContainerHigh
         isFunction -> MaterialTheme.colorScheme.surfaceContainerHigh
         else -> MaterialTheme.colorScheme.surface
     }
-    val labelColor = MaterialTheme.colorScheme.onSurface
+    val labelColor = if (isEnabled) MaterialTheme.colorScheme.onSurface
+        // Greek-context disabled state for the breve key when the previous
+        // letter doesn't take a breve. ~38% alpha matches Material's standard
+        // disabled-control opacity.
+        else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
     val hasPopup = key.popupChars.size > 1
 
     var keyCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
     val view = LocalView.current
+
+    val tapModifier = if (isEnabled) {
+        Modifier.pointerInput(key) {
+            detectTapGestures(
+                onTap = {
+                    // System haptic feedback on every key tap. Respects the
+                    // user's "haptic feedback" toggle (Settings → Sound),
+                    // requires no permission, and matches the Gboard cadence.
+                    view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                    onTap()
+                },
+                onLongPress = {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                    if (hasPopup) {
+                        keyCoords?.let { onPopupRequested(key.popupChars, it) }
+                    } else {
+                        onLongPress()
+                    }
+                }
+            )
+        }
+    } else {
+        // No pointerInput → taps and long-presses are silently ignored.
+        Modifier
+    }
 
     Box(
         modifier = Modifier
@@ -199,25 +229,7 @@ private fun RowScope.KeyButton(
             .clip(RoundedCornerShape(KEY_CORNER))
             .background(keyColor)
             .onGloballyPositioned { keyCoords = it }
-            .pointerInput(key) {
-                detectTapGestures(
-                    onTap = {
-                        // System haptic feedback on every key tap. Respects the
-                        // user's "haptic feedback" toggle (Settings → Sound),
-                        // requires no permission, and matches the Gboard cadence.
-                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                        onTap()
-                    },
-                    onLongPress = {
-                        view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-                        if (hasPopup) {
-                            keyCoords?.let { onPopupRequested(key.popupChars, it) }
-                        } else {
-                            onLongPress()
-                        }
-                    }
-                )
-            },
+            .then(tapModifier),
         contentAlignment = Alignment.Center
     ) {
         Text(

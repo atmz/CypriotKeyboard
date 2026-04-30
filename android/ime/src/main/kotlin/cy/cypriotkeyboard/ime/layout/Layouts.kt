@@ -1,22 +1,39 @@
 package cy.cypriotkeyboard.ime.layout
 
 /**
- * Concrete layout instances. Exact 1:1 ports of:
- *   CypriotKeyboardInputSetProvider.alphabeticInputSet (rows 1-3)
- *   CypriotKeyboardiPhoneLayoutProvider.bottomActions (row 4)
+ * Concrete layout instances.
  *
- * The accent key in row 1 is "΄" by default and "˘" (breve) when the previous
- * letter is one of σ ζ ξ ψ ς. The shared [greekAlphabetic] returns the default
- * variant; [greekAlphabeticBreve] returns the breve variant. The IME swaps
- * which it shows based on the previous-letter check (mirrors iOS).
+ * Row 1 ends with TWO accent keys: a tonos key (΄) that's always tappable,
+ * and a breve key (˘) that's only tappable when the previous letter is one
+ * of σ ζ ξ ψ ς (the consonants Cypriot puts a breve on). The IME passes
+ * `breveEnabled` per keystroke; when false, the breve key renders greyed
+ * out and ignores taps.
+ *
+ * Tonos behaves as a PREFIX dead key (tap accent, then vowel → precomposed
+ * single char). Breve stays POST-FIX (tap consonant first, then breve →
+ * combining mark cluster). See ActionHandler for the mechanics.
  */
 object Layouts {
 
     private fun ch(s: String, popups: List<String> = emptyList()): KeySpec =
         KeySpec(action = KeyAction.Character(s), label = s, popupChars = popups)
 
-    fun greekAlphabetic(useBreve: Boolean = false): LayoutSpec {
-        val accent = if (useBreve) ch("˘") else ch("΄", popups = listOf("΄", " ̈", "΅"))
+    fun greekAlphabetic(breveEnabled: Boolean = false): LayoutSpec {
+        // Both accent keys are always present; only the breve key's enabled
+        // state changes with context. Width 0.5 each so the pair occupies
+        // the same horizontal slot as a single full-width key (1.0 unit).
+        val tonosKey = KeySpec(
+            action = KeyAction.Character("΄"),
+            label = "΄",
+            widthUnits = 0.5f,
+            popupChars = listOf("΄", " ̈", "΅")
+        )
+        val breveKey = KeySpec(
+            action = KeyAction.Character("˘"),
+            label = "˘",
+            widthUnits = 0.5f,
+            enabled = breveEnabled
+        )
         return LayoutSpec(
             rows = listOf(
                 listOf(
@@ -28,7 +45,8 @@ object Layouts {
                     ch("ι", listOf("ι", "ί", "ϊ", "ΐ", "ι-")),
                     ch("ο", listOf("ο", "ό", "ὀ", "ὄ")),
                     ch("π"),
-                    accent
+                    tonosKey,
+                    breveKey
                 ),
                 listOf(
                     ch("α", listOf("α", "ά")),

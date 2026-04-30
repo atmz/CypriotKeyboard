@@ -9,7 +9,13 @@ data class KeySpec(
     val action: KeyAction,
     val label: String,
     val widthUnits: Float = 1.0f,
-    val popupChars: List<String> = emptyList()
+    val popupChars: List<String> = emptyList(),
+    /**
+     * Disabled keys render greyed-out and ignore taps and long-presses.
+     * Used by the contextual breve key — visible always so users can find
+     * it, tappable only when the previous letter is one that takes breve.
+     */
+    val enabled: Boolean = true
 )
 
 sealed class KeyAction {

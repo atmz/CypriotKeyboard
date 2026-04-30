@@ -258,7 +258,7 @@ class CypriotInputMethodService :
             KeyboardMode.SYMBOLIC -> Layouts.symbolic()
             KeyboardMode.ALPHABETIC -> {
                 if (isLatin) Layouts.latinAlphabetic()
-                else Layouts.greekAlphabetic(useBreve = previousLetterTakesBreve())
+                else Layouts.greekAlphabetic(breveEnabled = previousLetterTakesBreve())
             }
         }
         val layout = if (shiftActive) base.shifted() else base
