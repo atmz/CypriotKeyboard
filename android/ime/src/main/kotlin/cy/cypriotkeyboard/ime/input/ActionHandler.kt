@@ -48,15 +48,35 @@ class ActionHandler(private val controller: KeyboardController) {
     /** Last user action — used by space-replace to detect "user just hit backspace". */
     @Volatile var lastAction: LastAction? = null
 
+    /**
+     * Armed prefix dead-key, set when the user taps tonos / dialytika /
+     * tonos+dialytika and waiting for the vowel to compose with. Cleared on
+     * the next character (whether or not the composition succeeds) and on
+     * any non-character action.
+     */
+    @Volatile var pendingAccent: PrefixAccent? = null
+
     fun handle(spec: KeySpec) {
         val ic = controller.ic() ?: return
         when (val a = spec.action) {
             is KeyAction.Character -> handleCharacter(ic, a.text)
             // (KeyAction.Accent was removed — accent keys come through Character
             //  with the dead-key text, intercepted by ACCENT_DEAD_KEYS below.)
-            KeyAction.Space -> handleSpaceLike(ic, " ")
-            KeyAction.Return -> handleSpaceLike(ic, "\n")
+            KeyAction.Space -> {
+                pendingAccent = null
+                handleSpaceLike(ic, " ")
+            }
+            KeyAction.Return -> {
+                pendingAccent = null
+                handleSpaceLike(ic, "\n")
+            }
             KeyAction.Backspace -> {
+                // If a prefix dead-key is armed, backspace just disarms it
+                // (matches Windows/Android dead-key UX) — no buffer change.
+                if (pendingAccent != null) {
+                    pendingAccent = null
+                    return
+                }
                 ic.deleteSurroundingText(1, 0)
                 lastAction = LastAction.Backspace
                 controller.requestSuggestions(currentWord(ic))
@@ -89,9 +109,28 @@ class ActionHandler(private val controller: KeyboardController) {
     }
 
     private fun handleCharacter(ic: InputConnection, text: String) {
-        // Accent dead-keys are routed through Character actions per the
-        // current Layouts.greekAlphabetic() definition. Intercept BEFORE
-        // commit so we don't leave a stray "΄" in the buffer.
+        // 1. Armed prefix dead-key (tonos/dialytika)? Try to compose with the
+        //    typed character and emit a single precomposed glyph. If the
+        //    combination has no Unicode precomposed form (e.g. tonos on a
+        //    consonant), fall through and commit the char unchanged. Either
+        //    way, disarm.
+        val pending = pendingAccent
+        if (pending != null) {
+            pendingAccent = null
+            val precomposed = precomposeAccent(pending, text)
+            if (precomposed != null) {
+                ic.commitText(precomposed, 1)
+                applyFinalSigmaRule(ic)
+                lastAction = LastAction.Character
+                controller.consumeShift()
+                controller.requestSuggestions(currentWord(ic))
+                return
+            }
+            // No precomposition; fall through to normal handling for `text`.
+        }
+
+        // 2. Accent dead-keys: tonos/dialytika/tonos-dialytika are PREFIX dead
+        //    keys (commit nothing, arm pendingAccent). Breve stays post-fix.
         if (text in ACCENT_DEAD_KEYS) {
             handleAccentKey(ic, text)
             return
@@ -149,13 +188,21 @@ class ActionHandler(private val controller: KeyboardController) {
     }
 
     private fun handleAccentKey(ic: InputConnection, accentKey: String) {
-        // The accent character was NOT yet committed; we directly emit the
-        // combining diacritic as if the user typed the dead-key.
-        val before = textBeforeCursor(ic, 2)
-        val lastChar = if (before.isEmpty()) "" else {
-            // Take the last character cluster (handle σ̆ / ς̆ as a 2-codepoint cluster).
-            takeLastCluster(before)
+        // Tonos / dialytika / tonos-dialytika are PREFIX dead keys: arm
+        // state, commit nothing. The next handleCharacter call composes
+        // them with the typed vowel into a single precomposed glyph.
+        // Breve stays POST-FIX (consonant first, then breve, emits a
+        // combining mark) — that's how Cypriots type it on Windows too.
+        when (accentKey) {
+            "΄" -> { pendingAccent = PrefixAccent.TONOS; return }
+            " ̈" -> { pendingAccent = PrefixAccent.DIALYTIKA; return }
+            "΅" -> { pendingAccent = PrefixAccent.TONOS_DIALYTIKA; return }
         }
+
+        // Post-fix path (breve only, here): read the previous cluster and
+        // emit the combining mark if it's a valid base for this accent.
+        val before = textBeforeCursor(ic, 2)
+        val lastChar = if (before.isEmpty()) "" else takeLastCluster(before)
         when (val r = applyAccent(accentKey, lastChar)) {
             AccentResult.Reject -> { /* drop the dead-key tap */ }
             is AccentResult.Combine -> ic.commitText(r.combining, 1)
