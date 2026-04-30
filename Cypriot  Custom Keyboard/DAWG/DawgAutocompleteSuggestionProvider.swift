@@ -242,6 +242,14 @@ extension DawgAutocompleteSuggestionProvider {
     ///   resemblance), e.g. "8a" → θα, "8elw" → θέλω. Bare-numeric tokens
     ///   ("8") get filtered upstream by shouldAttemptAutocomplete; this
     ///   rule only fires when the token mixes digits and letters.
+    /// - χ ⇄ ξ: Greeklish "x" maps greedily to χ in greekify, but in modern
+    ///   Greeklish convention "x" often means ξ (e.g. "axia" → αξία, "taxi"
+    ///   → ταξί, "praxh" → πράξη). The branch only fires for Greeklish
+    ///   input (the isGreeklish gate at the call site), so pure-Greek user
+    ///   input that happens to contain χ does NOT branch. Greeklish "ch"
+    ///   maps to τσ̆ (not χ) in greekify, so every χ in the post-greekify
+    ///   output came from Latin "x" — branching here is equivalent to
+    ///   source-position-tracked branching.
     private static let altRules: [(src: String, alts: [String])] = [
         ("αφ", ["αφ", "αυ"]),
         ("Αφ", ["Αφ", "Αυ"]),
@@ -253,6 +261,8 @@ extension DawgAutocompleteSuggestionProvider {
         ("Εβ", ["Εβ", "Ευ"]),
         ("θ", ["θ", "τη"]),
         ("Θ", ["Θ", "Τη"]),
+        ("χ", ["χ", "ξ"]),
+        ("Χ", ["Χ", "Ξ"]),
         ("8", ["8", "θ"]),
     ]
 

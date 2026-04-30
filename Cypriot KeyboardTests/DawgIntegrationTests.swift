@@ -282,6 +282,17 @@ class DawgIntegrationTests: XCTestCase {
         XCTAssertTrue(variants.contains("θα"))
     }
 
+    func testGreekifyAlternativesBranchesOnChiAsXi() {
+        // Greeklish "x" maps greedily to χ in greekify, but in modern
+        // Greeklish convention "x" often means ξ (e.g. "axia" → αξία).
+        // Branch every χ in the post-greekify output to also try ξ. The
+        // isGreeklish gate at the call site keeps pure-Greek χ input
+        // (e.g. "χωρίς") from branching.
+        let variants = DawgAutocompleteSuggestionProvider.greekifyAlternatives("αχια")
+        XCTAssertTrue(variants.contains("αχια"))
+        XCTAssertTrue(variants.contains("αξια"))
+    }
+
     func testLeadingDigitStaysWithBody() {
         // Input "8a" — leading "8" must NOT be stripped as isPunctFirst, so
         // it enters greekifyAlternatives and can branch to "θα". The

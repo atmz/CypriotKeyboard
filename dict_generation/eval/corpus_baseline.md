@@ -66,9 +66,9 @@
 | 64 | `xara` | χαρά | χαρά |
 | 65 | `xarta` | χάρτα | χάρτα |
 | 66 | `ksero` | ξέρω | ξερό |
-| 67 | `xerw` | χαίρω | χαίρω |
+| 67 | `xerw` | ξέρω | χαίρω |
 | 68 | `8 elaies tziai 3 portokalia` | 8 έλεες τζιν ξ πορτοκάλια | 8 ελαίες τζ̆αι 3 πορτοκάλια |
-| 69 | `to taxi kanei 25 evro` | το τάχει κάνει 25 ευρώ | to ταχύ κάνει 25 έβρω |
+| 69 | `to taxi kanei 25 evro` | το τάξη κάνει 25 ευρώ | to ταχύ κάνει 25 έβρω |
 | 70 | `nero kostizei 1.5 evro` | νερό κοστίζει 1.5 ευρώ | νερό κοστίζει 1.5 έβρω |
 | 71 | `o arithmos einai 12345` | ο αριθμός είναι 12345 | o αριθμός είναι 12345 |
 | 72 | `"ti kanis" eipen mou` | "τη κάνεις" είπεν μου | "ti κανίς" είπεν mou |
@@ -78,11 +78,11 @@
 | 76 | `den ksero ti na pw` | δεν ξέρω τη να πω | den ξερό ti na pw |
 | 77 | `ekso einai krio` | έξω είναι κρύο | έξω είναι κρύο |
 | 78 | `agxos sto sxoleio` | άγχος στο σχολείο | άγχος sto σχολείο |
-| 79 | `to taxi ekane mpoxa` | το τάχει έκανε μπόχα | to ταχύ έκανε μπόχα |
+| 79 | `to taxi ekane mpoxa` | το τάξη έκανε μπόχα | to ταχύ έκανε μπόχα |
 | 80 | `i praxh einai diaforetikh apo th theoria` | η πράξη είναι διαφορετική από τη θεωρία | i πραχτώ είναι διαφορετική από th θεωρία |
 | 81 | `3ana to idio sou leo` | ξανά το ίδιο σου λέω | ξάνα to ίδιο sou λέω |
 | 82 | `3afnika exase to dromo` | ξαφνικά έχασε το δρόμο | ξαφνικά έχασε to δρόμο |
-| 83 | `arkheia kai axia` | άρκησα και άδεια | arkheia kai αχινέ |
+| 83 | `arkheia kai axia` | άρκησα και αξία | arkheia kai αχινέ |
 | 84 | `eksi mhnes prin` | έξι μήνες πριν | έξι μήνες prin |
 | 85 | `eksw apo to spiti` | έξω από το σπίτι | έξω από to σπίτι |
 | 86 | `exo poly douleia` | έχω πολύ δουλειά | έχω πολύ δουλειά |
@@ -106,7 +106,7 @@
 | 104 | `theksia sto stenaki` | δεξιά στο στενάκι | theksia sto στενάκι |
 | 105 | `makri pou einai i thalassa` | μακρύ που είναι η θάλασσα | μακρύ pou είναι i thalassa |
 | 106 | `poso konta einai to nosokomeio` | πόσο κοντά είναι το νοσοκομείο | πόσο κοντά είναι to νοσοκομείο |
-| 107 | `8a me pareis ena taxi` | θα με πάρεις ένα τάχει | α me πάρεις ένα ταχύ |
+| 107 | `8a me pareis ena taxi` | θα με πάρεις ένα τάξη | α me πάρεις ένα ταχύ |
 | 108 | `tha ithela ena souvlaki choirino` | θα ήθελα ένα σουβλάκι choirino | tha ήθελα ένα σουβλάκι σ̆οιρινοί |
 | 109 | `mporo na exo ena kafe parakalo` | μπορώ να έχω ένα καφέ παρακαλώ | μπορώ na έχω ένα καφέ παρακαλώ |
 | 110 | `to logariasmo parakalo` | το λογαριασμό παρακαλώ | to λογαριασμό παρακαλώ |
