@@ -28,6 +28,7 @@ import cy.cypriotkeyboard.ime.input.KeyboardMode
 import cy.cypriotkeyboard.ime.layout.KeySpec
 import cy.cypriotkeyboard.ime.layout.LayoutSpec
 import cy.cypriotkeyboard.ime.layout.Layouts
+import cy.cypriotkeyboard.ime.layout.shifted
 import cy.cypriotkeyboard.ime.suggest.DawgReader
 import cy.cypriotkeyboard.ime.suggest.PhoneticFolder
 import cy.cypriotkeyboard.ime.suggest.Suggestion
@@ -76,6 +77,12 @@ class CypriotInputMethodService :
 
     private var mode: KeyboardMode = KeyboardMode.ALPHABETIC
     private var isLatin: Boolean = false
+    /**
+     * Single-shift state. When true, the next Character commit produces an
+     * uppercase letter; the action handler clears this flag via [consumeShift]
+     * after the commit. Caps-lock not implemented for v1.
+     */
+    private var shiftActive: Boolean = false
 
     // ---- Service lifecycle --------------------------------------------
 
@@ -189,6 +196,18 @@ class CypriotInputMethodService :
         recomputeLayout()
     }
 
+    override fun toggleShift() {
+        shiftActive = !shiftActive
+        recomputeLayout()
+    }
+
+    override fun consumeShift() {
+        if (shiftActive) {
+            shiftActive = false
+            recomputeLayout()
+        }
+    }
+
     override fun requestSuggestions(currentWord: String) {
         // Refresh the layout each keystroke so the breve/tonos accent key swap
         // tracks the previous letter (mirrors iOS alphabeticInputSet).
@@ -234,7 +253,7 @@ class CypriotInputMethodService :
     // ---- Helpers -------------------------------------------------------
 
     private fun recomputeLayout() {
-        val layout: LayoutSpec = when (mode) {
+        val base: LayoutSpec = when (mode) {
             KeyboardMode.NUMERIC -> Layouts.numeric()
             KeyboardMode.SYMBOLIC -> Layouts.symbolic()
             KeyboardMode.ALPHABETIC -> {
@@ -242,6 +261,7 @@ class CypriotInputMethodService :
                 else Layouts.greekAlphabetic(useBreve = previousLetterTakesBreve())
             }
         }
+        val layout = if (shiftActive) base.shifted() else base
         uiState.value = uiState.value.copy(layout = layout)
     }
 

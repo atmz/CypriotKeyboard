@@ -116,3 +116,23 @@ object Layouts {
         )
     )
 }
+
+/**
+ * Return a copy of the layout with every Character key uppercased. Used
+ * when single-shift is active. .uppercase() on punctuation, digits, and
+ * the accent dead-keys is a no-op, so this transform is safe across all
+ * layouts without per-layout exemptions.
+ */
+fun LayoutSpec.shifted(): LayoutSpec = LayoutSpec(
+    rows = rows.map { row ->
+        row.map { key ->
+            val action = key.action
+            if (action is KeyAction.Character) {
+                val upper = action.text.uppercase()
+                key.copy(action = KeyAction.Character(upper), label = upper)
+            } else {
+                key
+            }
+        }
+    }
+)

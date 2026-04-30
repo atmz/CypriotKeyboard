@@ -12,6 +12,12 @@ interface KeyboardController {
     fun switchToNextIme()
     fun setMode(mode: KeyboardMode)
     fun requestSuggestions(currentWord: String)
+    /** Toggle single-shift state. Letter keys uppercase for ONE keystroke,
+     *  then auto-reset back to lowercase. */
+    fun toggleShift()
+    /** Called by the action handler after a Character-producing key fires
+     *  so the controller can clear single-shift state. */
+    fun consumeShift()
 }
 
 enum class KeyboardMode { ALPHABETIC, NUMERIC, SYMBOLIC }
@@ -55,7 +61,10 @@ class ActionHandler(private val controller: KeyboardController) {
                 lastAction = LastAction.Backspace
                 controller.requestSuggestions(currentWord(ic))
             }
-            KeyAction.Shift -> { /* shift state lives in service */ }
+            KeyAction.Shift -> {
+                controller.toggleShift()
+                lastAction = LastAction.NonInput
+            }
             KeyAction.SwitchLayout -> {
                 controller.toggleLayoutGreekLatin()
                 lastAction = LastAction.NonInput
@@ -97,6 +106,8 @@ class ActionHandler(private val controller: KeyboardController) {
         // Final-sigma rule on the now-current word.
         applyFinalSigmaRule(ic)
         lastAction = LastAction.Character
+        // Single-shift consumes itself after the letter that follows it.
+        controller.consumeShift()
         controller.requestSuggestions(currentWord(ic))
     }
 
@@ -111,6 +122,7 @@ class ActionHandler(private val controller: KeyboardController) {
         ic.commitText(trigger, 1)
         currentGuess = null
         lastAction = LastAction.Character
+        controller.consumeShift()
         controller.requestSuggestions(currentWord(ic))
     }
 
