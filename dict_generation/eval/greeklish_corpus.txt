@@ -106,3 +106,67 @@ o arithmos einai 12345
 "ti kanis" eipen mou
 (panta) exi diafora
 .kalimera (leading punct)
+
+### χ↔ξ probes (Task 7 follow-up — Greeklish 'x' is sometimes χ, sometimes ξ)
+
+# Common ξ words (Greeklish 'x' or 'ks' — answer is ξ)
+ksero ti thelo
+den ksero ti na pw
+ekso einai krio
+agxos sto sxoleio
+to taxi ekane mpoxa
+i praxh einai diaforetikh apo th theoria
+3ana to idio sou leo
+3afnika exase to dromo
+arkheia kai axia
+eksi mhnes prin
+eksw apo to spiti
+
+# Common χ words (Greeklish 'x' — answer is χ, must NOT autocorrect to ξ)
+exo poly douleia
+exei polles dynatotites
+xara mou na sas dw
+xronos perase grigora
+xilies fores to eipa
+xoris ola auta
+xreiazomai ena leptaki
+xairetismata stin oikogeneia
+mexri pou ftasoume
+
+### Chat shorthand & abbreviations (omilo + wikipedia)
+
+# 'tlm', 'kl', 'kns' shorthand & '8'/'3'/'6' digit-letter substitutes
+ti kns simera
+kl esi pws paei
+poly douleia sto grafeio
+8a se dw to vradi
+ok tlm filakia
+xronia polla agorina mou
+gia sou re m
+ta leme avrio
+sou stelnw mnm meta
+
+### Cypriot tourist phrasebook variants (Cyprus Traveller Guide / RU Cyprus)
+
+# Different transliteration conventions (theksia, gondino, mbirra, ndaksi)
+theksia sto stenaki
+makri pou einai i thalassa
+poso konta einai to nosokomeio
+8a me pareis ena taxi
+tha ithela ena souvlaki choirino
+mporo na exo ena kafe parakalo
+to logariasmo parakalo
+ginito mou exase signal
+xronia polla agapi mou
+
+### Greek interrogatives & sentence types
+
+Pou pas avrio
+Pos pame stin agora
+Ti kanoume to vradi
+Giati egine etsi
+Pote 8a er8eis sto spiti
+Poso kanei to leoforio
+Pia einai i alh8eia tora
+ela edw amesos
+mh fygeis akoma

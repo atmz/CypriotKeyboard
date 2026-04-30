@@ -74,3 +74,50 @@
 | 72 | `"ti kanis" eipen mou` | "τη κάνεις" είπεν μου | "ti κανίς" είπεν mou |
 | 73 | `(panta) exi diafora` | (πάντα) έχει διάφορα | (πάντα) έχη διάφορα |
 | 74 | `.kalimera (leading punct)` | .καλημέρα (leading punct) | .καλήμερα (leading punct) |
+| 75 | `ksero ti thelo` | ξέρω τη θέλω | ξερό ti θέλω |
+| 76 | `den ksero ti na pw` | δεν ξέρω τη να πω | den ξερό ti na pw |
+| 77 | `ekso einai krio` | έξω είναι κρύο | έξω είναι κρύο |
+| 78 | `agxos sto sxoleio` | άγχος στο σχολείο | άγχος sto σχολείο |
+| 79 | `to taxi ekane mpoxa` | το τάχει έκανε μπόχα | to ταχύ έκανε μπόχα |
+| 80 | `i praxh einai diaforetikh apo th theoria` | η πράξη είναι διαφορετική από τη θεωρία | i πραχτώ είναι διαφορετική από th θεωρία |
+| 81 | `3ana to idio sou leo` | ξανά το ίδιο σου λέω | ξάνα to ίδιο sou λέω |
+| 82 | `3afnika exase to dromo` | ξαφνικά έχασε το δρόμο | ξαφνικά έχασε to δρόμο |
+| 83 | `arkheia kai axia` | άρκησα και άδεια | arkheia kai αχινέ |
+| 84 | `eksi mhnes prin` | έξι μήνες πριν | έξι μήνες prin |
+| 85 | `eksw apo to spiti` | έξω από το σπίτι | έξω από to σπίτι |
+| 86 | `exo poly douleia` | έχω πολύ δουλειά | έχω πολύ δουλειά |
+| 87 | `exei polles dynatotites` | έχει πολλές δυνατότητες | έχει πολλές dynatotites |
+| 88 | `xara mou na sas dw` | χαρά μου να σας δω | χαρά mou na σας dw |
+| 89 | `xronos perase grigora` | χρόνος πέρασε γρήγορα | χρόνος πέρασε γρήγορα |
+| 90 | `xilies fores to eipa` | χίλιες φορές το είπα | χίλιες φορές to είπα |
+| 91 | `xoris ola auta` | χωρίς όλα αυτά | χωρίς όλα αυτά |
+| 92 | `xreiazomai ena leptaki` | χρειάζομαι ένα leptaki | χρειάζομαι ένα leptaki |
+| 93 | `xairetismata stin oikogeneia` | χαιρετίσματα στην οικογένεια | χαιρετίσματα στην οικογένεια |
+| 94 | `mexri pou ftasoume` | μέχρι που φτάσουμε | μέχρι pou φτάσουμε |
+| 95 | `ti kns simera` | τη καις σήμερα | ti κνήσω σήμερα |
+| 96 | `kl esi pws paei` | και εσύ πως πάει | κ εσύ πως πάει |
+| 97 | `poly douleia sto grafeio` | πολύ δουλειά στο γραφείο | πολύ δουλειά sto γραφείο |
+| 98 | `8a se dw to vradi` | θα σε δω το βράδυ | α se dw to βράδι |
+| 99 | `ok tlm filakia` | οκ τιμ φιλάκια | ok τιμ φιλάκια |
+| 100 | `xronia polla agorina mou` | χρόνια πολλά αγορίνα μου | χρονιά πολλά αγορίνα mou |
+| 101 | `gia sou re m` | για σου ρε μ | gia sou re m |
+| 102 | `ta leme avrio` | τα λέμε αύριο | ta λέμε αύριο |
+| 103 | `sou stelnw mnm meta` | σου στέλνω μνα μετά | sou στέλνω μνα μετά |
+| 104 | `theksia sto stenaki` | δεξιά στο στενάκι | theksia sto στενάκι |
+| 105 | `makri pou einai i thalassa` | μακρύ που είναι η θάλασσα | μακρύ pou είναι i thalassa |
+| 106 | `poso konta einai to nosokomeio` | πόσο κοντά είναι το νοσοκομείο | πόσο κοντά είναι to νοσοκομείο |
+| 107 | `8a me pareis ena taxi` | θα με πάρεις ένα τάχει | α me πάρεις ένα ταχύ |
+| 108 | `tha ithela ena souvlaki choirino` | θα ήθελα ένα σουβλάκι choirino | tha ήθελα ένα σουβλάκι σ̆οιρινοί |
+| 109 | `mporo na exo ena kafe parakalo` | μπορώ να έχω ένα καφέ παρακαλώ | μπορώ na έχω ένα καφέ παρακαλώ |
+| 110 | `to logariasmo parakalo` | το λογαριασμό παρακαλώ | to λογαριασμό παρακαλώ |
+| 111 | `ginito mou exase signal` | κινητό μου έχασε συγνά | γένοιτο mou έχασε signal |
+| 112 | `xronia polla agapi mou` | χρόνια πολλά αγάπη μου | χρονιά πολλά αγάπη mou |
+| 113 | `Pou pas avrio` | Που πας αύριο | Pou πας αύριο |
+| 114 | `Pos pame stin agora` | Πως πάμε στην αγορά | Πως πάμε στην αγορά |
+| 115 | `Ti kanoume to vradi` | ΤΕΙ κάνουμε το βράδυ | Ti κάνουμε to βράδι |
+| 116 | `Giati egine etsi` | Γιατί έγινε έτσι | Γιατί έγινε έτσι |
+| 117 | `Pote 8a er8eis sto spiti` | Πότε θα έρθεις στο σπίτι | Πότε α er8eis sto σπίτι |
+| 118 | `Poso kanei to leoforio` | Πόσο κάνει το λεωφορείο | Πόσο κάνει to λεωφορείο |
+| 119 | `Pia einai i alh8eia tora` | Πύα είναι η αλήθεια τωρά | Pia είναι i alh8eia τώρα |
+| 120 | `ela edw amesos` | έλα εδώ αμέσως | έλα εδώ αμέσως |
+| 121 | `mh fygeis akoma` | μη φυγής ακόμα | mh φύγεις ακόμα |
