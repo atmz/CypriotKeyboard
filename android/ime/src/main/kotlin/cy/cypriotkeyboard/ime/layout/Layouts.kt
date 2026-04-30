@@ -83,7 +83,7 @@ object Layouts {
     fun numeric(): LayoutSpec = LayoutSpec(
         rows = listOf(
             "1234567890".map { ch(it.toString()) },
-            "-/:·()€&@“".map { ch(it.toString()) },
+            "-/:·()€&@\"".map { ch(it.toString()) },
             buildList {
                 add(KeySpec(KeyAction.SymbolicMode, "#+=", widthUnits = 1.5f))
                 addAll(".,;!’".map { ch(it.toString()) })
