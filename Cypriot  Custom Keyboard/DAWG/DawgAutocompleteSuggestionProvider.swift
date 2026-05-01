@@ -3,7 +3,7 @@
 //  Cypriot  Custom Keyboard
 //
 //  KeyboardKit-facing autocomplete provider backed by the DAWG.
-//  Mirrors the contract of CypriotAutocompleteSuggestionProvider:
+//  Slot layout:
 //    slot 0: verbatim user input (isUnknown=true)
 //    slot 1: top autocorrect candidate (willReplace=true if phonetic match)
 //    slot 2+: extra suggestions
@@ -11,6 +11,20 @@
 
 import Foundation
 import KeyboardKit
+
+
+/// Concrete suggestion struct used by the bar renderer. Lives here because
+/// the DAWG provider is its only producer now that the Hunspell path is
+/// gone; the bar still keys off `additionalInfo["willReplace"]` to highlight
+/// the auto-replace slot.
+public struct CypriotAutocompleteSuggestion: AutocompleteSuggestion {
+    public var text: String
+    public var isAutocomplete: Bool
+    public var isUnknown: Bool
+    public var title: String
+    public var subtitle: String?
+    public var additionalInfo: [String: Any]
+}
 
 
 final class DawgAutocompleteSuggestionProvider: AutocompleteSuggestionProvider {

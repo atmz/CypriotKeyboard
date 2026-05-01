@@ -77,10 +77,6 @@ struct ContentView: View {
             Text(NSLocalizedString("Alex", comment: "Alex")).font(.footnote).multilineTextAlignment(.leading).padding([.top, .leading, .trailing])
             Text(NSLocalizedString("Credits", comment: "Credits")).font(.footnote).multilineTextAlignment(.leading).padding([.top, .leading, .trailing])
         }
-            #if DEBUG
-            Divider().padding(.top)
-            DAWGSuggesterDebugToggle()
-            #endif
         }
     }
 }
@@ -90,23 +86,3 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
-
-#if DEBUG
-private struct DAWGSuggesterDebugToggle: View {
-    @State private var useDAWG: Bool = UserDefaults.standard.bool(forKey: "useDAWGSuggester")
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("DEBUG").font(.caption).foregroundColor(.secondary)
-            Toggle("Use DAWG suggester (experimental)", isOn: $useDAWG)
-                .onChange(of: useDAWG) { newValue in
-                    UserDefaults.standard.set(newValue, forKey: "useDAWGSuggester")
-                }
-            Text("Toggling here only updates the container app's UserDefaults. Long-press the 🔄 key inside the keyboard for live-swap.")
-                .font(.caption)
-                .foregroundColor(.secondary)
-        }
-        .padding()
-    }
-}
-#endif

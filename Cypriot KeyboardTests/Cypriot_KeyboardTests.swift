@@ -186,32 +186,6 @@ class CountSyllablesTests: XCTestCase {
     }
 }
 
-// MARK: - distanceMeasure
-
-class DistanceMeasureTests: XCTestCase {
-
-    func testIdentical() {
-        XCTAssertEqual(CypriotKeyboardHelper.distanceMeasure(transliteratedWord: "hello", greekWord: "hello"), 0.0)
-    }
-
-    func testSingleEdit() {
-        XCTAssertEqual(CypriotKeyboardHelper.distanceMeasure(transliteratedWord: "a", greekWord: "b"), 1.0)
-    }
-
-    func testCaseInsensitive() {
-        XCTAssertEqual(CypriotKeyboardHelper.distanceMeasure(transliteratedWord: "HELLO", greekWord: "hello"), 0.0)
-    }
-
-    func testAccentInsensitive() {
-        // Diacritics are folded before comparing.
-        XCTAssertEqual(CypriotKeyboardHelper.distanceMeasure(transliteratedWord: "καλος", greekWord: "καλός"), 0.0)
-    }
-
-    func testEmptyVsLetter() {
-        XCTAssertEqual(CypriotKeyboardHelper.distanceMeasure(transliteratedWord: "", greekWord: "α"), 1.0)
-    }
-}
-
 // MARK: - shouldReplace
 
 class ShouldReplaceTests: XCTestCase {
@@ -310,62 +284,3 @@ class LevenshteinTests: XCTestCase {
     }
 }
 
-// MARK: - End-to-end autocomplete (real Hunspell)
-
-class SuggestionsE2ETests: XCTestCase {
-
-    static var provider: CypriotAutocompleteSuggestionProvider!
-
-    override class func setUp() {
-        super.setUp()
-        provider = CypriotAutocompleteSuggestionProvider()
-        // Hunspell init runs on a background queue; poll until ready.
-        let deadline = Date().addingTimeInterval(5.0)
-        while provider.speller == nil && Date() < deadline {
-            Thread.sleep(forTimeInterval: 0.05)
-        }
-    }
-
-    override func setUpWithError() throws {
-        try XCTSkipIf(Self.provider.speller == nil, "Hunspell speller failed to initialize")
-    }
-
-    private func suggestions(for text: String) -> [CypriotAutocompleteSuggestion] {
-        var captured: [CypriotAutocompleteSuggestion] = []
-        Self.provider.autocompleteSuggestions(for: text) { result in
-            if case .success(let s) = result {
-                captured = s.compactMap { $0 as? CypriotAutocompleteSuggestion }
-            }
-        }
-        return captured
-    }
-
-    private func willReplaceText(in suggestions: [CypriotAutocompleteSuggestion]) -> String? {
-        return suggestions.first { $0.additionalInfo["willReplace"] as? Bool == true }?.text
-    }
-
-    func testNumber_doesNotAutoreplace() {
-        // Original bug: typing "30" produced "3η" via the Greeklish branch.
-        XCTAssertNil(willReplaceText(in: suggestions(for: "30")))
-    }
-
-    func testGreek_accentOnly_correction() {
-        // Multi-syllable Greek without the accent should suggest an accented form.
-        // Don't pin the exact word — Hunspell may rank "κάλος" (callus) above
-        // "καλός" (good); both are valid accent-only corrections of "καλος".
-        let candidate = willReplaceText(in: suggestions(for: "καλος"))
-        XCTAssertNotNil(candidate)
-        let folded = candidate?.folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR"))
-        XCTAssertEqual(folded, "καλος", "Candidate must differ from input only in accents")
-        XCTAssertNotEqual(candidate, "καλος", "Candidate must actually add accents")
-    }
-
-    func testGreeklish_producesGreekCandidate() {
-        // Don't pin the exact word — dict ordering can change. Just confirm a
-        // Greek (non-ASCII) candidate is offered.
-        let candidate = willReplaceText(in: suggestions(for: "kalos"))
-        XCTAssertNotNil(candidate)
-        XCTAssertTrue(candidate?.contains(where: { !$0.isASCII }) ?? false,
-                      "Expected a Greek candidate for 'kalos', got \(candidate ?? "nil")")
-    }
-}

@@ -24,15 +24,6 @@ class CypriotKeyboardActionHandler: StandardKeyboardActionHandler {
     }
     
     override open func handle(_ gesture: KeyboardGesture, on action: KeyboardAction) {
-
-        // tier-c Phase 2: long-press on 🔄 toggles the suggester engine
-        // (Hunspell ↔ DAWG). Intercept here so the existing tap logic
-        // (handleSwitch — Greek/Latin layout toggle) is unaffected.
-        if gesture == .longPress, action == .character("🔄") {
-            cypriotInputViewController?.toggleSuggesterEngine()
-            return
-        }
-
         guard let gestureAction = self.action(for: gesture, on: action) else { return }
         gestureAction(cypriotInputViewController)
         triggerSpaceAutocomplete(for: gesture, on: action)

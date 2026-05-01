@@ -114,14 +114,6 @@ class CypriotKeyboardHelper {
         return count
     }
 
-    static func distanceMeasure(transliteratedWord: String, greekWord: String) -> Double {
-
-        let a = greekWord.lowercased().folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR"))
-        let b = transliteratedWord.lowercased().folding(options: .diacriticInsensitive, locale: Locale(identifier: "el_GR"))
-        let levenshtein=a.levenshtein(b)
-        return Double(levenshtein)
-    }
-
     static func greekify(text: String) -> String {
         // Single-pass longest-match scanner. Replaces a chain of ~30
         // replacingOccurrences calls (each allocating a fresh String); now
