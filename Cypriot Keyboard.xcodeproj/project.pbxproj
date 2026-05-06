@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F8A67D33CECD7DC395B1032 /* OnboardingStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C8313C488778BCF433CAE88 /* OnboardingStateTests.swift */; };
 		CB0DAB000000000000000000 /* DawgReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000000000000000000 /* DawgReader.swift */; };
 		CB0DAB000001000000000000 /* PhoneticFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000001000000000000 /* PhoneticFolder.swift */; };
 		CB0DAB000002000000000000 /* DamerauLevenshteinSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000002000000000000 /* DamerauLevenshteinSuggester.swift */; };
@@ -57,6 +58,7 @@
 		CBE7B1A2260BEEF2002E58B7 /* CypriotKeyboardInputSetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46BF9F25CD170000E3413A /* CypriotKeyboardInputSetProvider.swift */; };
 		CBE7B1A7260BEEF5002E58B7 /* CypriotSecondaryCalloutActionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB653DA925E33A4700657B82 /* CypriotSecondaryCalloutActionProvider.swift */; };
 		CBE7B1AC260BEEF9002E58B7 /* CypriotKeyboardiPhoneLayoutProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB512F2025E610100063C8D9 /* CypriotKeyboardiPhoneLayoutProvider.swift */; };
+		CD43EF870F0013258218F53E /* OnboardingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A751E4ADAD8C199CD8517EF8 /* OnboardingState.swift */; };
 		EE67A05C6CB81FBF4312CF5C /* BrandTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741105AA8E35D68625F333C9 /* BrandTheme.swift */; };
 /* End PBXBuildFile section */
 
@@ -100,6 +102,8 @@
 
 /* Begin PBXFileReference section */
 		741105AA8E35D68625F333C9 /* BrandTheme.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BrandTheme.swift; sourceTree = "<group>"; };
+		9C8313C488778BCF433CAE88 /* OnboardingStateTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnboardingStateTests.swift; sourceTree = "<group>"; };
+		A751E4ADAD8C199CD8517EF8 /* OnboardingState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnboardingState.swift; sourceTree = "<group>"; };
 		CB0DDF000000000000000000 /* DawgReaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DawgReaderTests.swift; sourceTree = "<group>"; };
 		CB0DDF000001000000000000 /* PhoneticFolderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneticFolderTests.swift; sourceTree = "<group>"; };
 		CB0DDF000002000000000000 /* DamerauLevenshteinSuggesterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DamerauLevenshteinSuggesterTests.swift; sourceTree = "<group>"; };
@@ -182,6 +186,7 @@
 			isa = PBXGroup;
 			children = (
 				741105AA8E35D68625F333C9 /* BrandTheme.swift */,
+				A751E4ADAD8C199CD8517EF8 /* OnboardingState.swift */,
 			);
 			name = Onboarding;
 			path = Onboarding;
@@ -258,6 +263,7 @@
 				CB0DDF000004000000000000 /* GreekifyParityTests.swift */,
 				CB0DDF000005000000000000 /* CypriotKeyboardUtilTests.swift */,
 				CB0DEA0A0000000000000000 /* Resources */,
+				9C8313C488778BCF433CAE88 /* OnboardingStateTests.swift */,
 			);
 			path = "Cypriot KeyboardTests";
 			sourceTree = "<group>";
@@ -495,6 +501,7 @@
 				CB0DAB000002000000000000 /* DamerauLevenshteinSuggester.swift in Sources */,
 				CB0DAB000003000000000000 /* DawgAutocompleteSuggestionProvider.swift in Sources */,
 				EE67A05C6CB81FBF4312CF5C /* BrandTheme.swift in Sources */,
+				CD43EF870F0013258218F53E /* OnboardingState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -510,6 +517,7 @@
 				CB0DDC000003000000000000 /* DawgIntegrationTests.swift in Sources */,
 				CB0DDC000004000000000000 /* GreekifyParityTests.swift in Sources */,
 				CB0DDC000005000000000000 /* CypriotKeyboardUtilTests.swift in Sources */,
+				2F8A67D33CECD7DC395B1032 /* OnboardingStateTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
