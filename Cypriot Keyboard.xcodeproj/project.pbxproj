@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2DB1D556D0DBF3D4A2D74A5A /* DemoLoopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E876E2B62F81DDD04B1A4F /* DemoLoopView.swift */; };
 		2F8A67D33CECD7DC395B1032 /* OnboardingStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C8313C488778BCF433CAE88 /* OnboardingStateTests.swift */; };
+		B12B4F604428F45EA6F04E8D /* BrandWordmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570EA765855303EDBB3D681C /* BrandWordmark.swift */; };
 		CB0DAB000000000000000000 /* DawgReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000000000000000000 /* DawgReader.swift */; };
 		CB0DAB000001000000000000 /* PhoneticFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000001000000000000 /* PhoneticFolder.swift */; };
 		CB0DAB000002000000000000 /* DamerauLevenshteinSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000002000000000000 /* DamerauLevenshteinSuggester.swift */; };
@@ -101,7 +103,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		570EA765855303EDBB3D681C /* BrandWordmark.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BrandWordmark.swift; sourceTree = "<group>"; };
 		741105AA8E35D68625F333C9 /* BrandTheme.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BrandTheme.swift; sourceTree = "<group>"; };
+		88E876E2B62F81DDD04B1A4F /* DemoLoopView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DemoLoopView.swift; sourceTree = "<group>"; };
 		9C8313C488778BCF433CAE88 /* OnboardingStateTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnboardingStateTests.swift; sourceTree = "<group>"; };
 		A751E4ADAD8C199CD8517EF8 /* OnboardingState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnboardingState.swift; sourceTree = "<group>"; };
 		CB0DDF000000000000000000 /* DawgReaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DawgReaderTests.swift; sourceTree = "<group>"; };
@@ -187,9 +191,20 @@
 			children = (
 				741105AA8E35D68625F333C9 /* BrandTheme.swift */,
 				A751E4ADAD8C199CD8517EF8 /* OnboardingState.swift */,
+				63F248F02CD0669A166BD921 /* Components */,
+				88E876E2B62F81DDD04B1A4F /* DemoLoopView.swift */,
 			);
 			name = Onboarding;
 			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		63F248F02CD0669A166BD921 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				570EA765855303EDBB3D681C /* BrandWordmark.swift */,
+			);
+			name = Components;
+			path = Components;
 			sourceTree = "<group>";
 		};
 		CB0DEA0A0000000000000000 /* Resources */ = {
@@ -502,6 +517,8 @@
 				CB0DAB000003000000000000 /* DawgAutocompleteSuggestionProvider.swift in Sources */,
 				EE67A05C6CB81FBF4312CF5C /* BrandTheme.swift in Sources */,
 				CD43EF870F0013258218F53E /* OnboardingState.swift in Sources */,
+				B12B4F604428F45EA6F04E8D /* BrandWordmark.swift in Sources */,
+				2DB1D556D0DBF3D4A2D74A5A /* DemoLoopView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
