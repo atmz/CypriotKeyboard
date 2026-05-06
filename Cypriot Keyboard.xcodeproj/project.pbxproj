@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CB0DAB000000000000000000 /* DAWG/DawgReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000000000000000000 /* DAWG/DawgReader.swift */; };
-		CB0DAB000001000000000000 /* DAWG/PhoneticFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000001000000000000 /* DAWG/PhoneticFolder.swift */; };
-		CB0DAB000002000000000000 /* DAWG/DamerauLevenshteinSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000002000000000000 /* DAWG/DamerauLevenshteinSuggester.swift */; };
-		CB0DAB000003000000000000 /* DAWG/DawgAutocompleteSuggestionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000003000000000000 /* DAWG/DawgAutocompleteSuggestionProvider.swift */; };
+		CB0DAB000000000000000000 /* DawgReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000000000000000000 /* DawgReader.swift */; };
+		CB0DAB000001000000000000 /* PhoneticFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000001000000000000 /* PhoneticFolder.swift */; };
+		CB0DAB000002000000000000 /* DamerauLevenshteinSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000002000000000000 /* DamerauLevenshteinSuggester.swift */; };
+		CB0DAB000003000000000000 /* DawgAutocompleteSuggestionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000003000000000000 /* DawgAutocompleteSuggestionProvider.swift */; };
 		CB0DBA000000000000000000 /* tiny_fixture.dawg in Resources */ = {isa = PBXBuildFile; fileRef = CB0DEA000000000000000000 /* tiny_fixture.dawg */; };
 		CB0DBA000001000000000000 /* tiny_fixture.json in Resources */ = {isa = PBXBuildFile; fileRef = CB0DEA000001000000000000 /* tiny_fixture.json */; };
 		CB0DBA000002000000000000 /* greekify_corpus.json in Resources */ = {isa = PBXBuildFile; fileRef = CB0DEA000002000000000000 /* greekify_corpus.json */; };
@@ -22,10 +22,10 @@
 		CB0DDC000003000000000000 /* DawgIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DDF000003000000000000 /* DawgIntegrationTests.swift */; };
 		CB0DDC000004000000000000 /* GreekifyParityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DDF000004000000000000 /* GreekifyParityTests.swift */; };
 		CB0DDC000005000000000000 /* CypriotKeyboardUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DDF000005000000000000 /* CypriotKeyboardUtilTests.swift */; };
-		CB0DEB000000000000000000 /* DAWG/DawgReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000000000000000000 /* DAWG/DawgReader.swift */; };
-		CB0DEB000001000000000000 /* DAWG/PhoneticFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000001000000000000 /* DAWG/PhoneticFolder.swift */; };
-		CB0DEB000002000000000000 /* DAWG/DamerauLevenshteinSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000002000000000000 /* DAWG/DamerauLevenshteinSuggester.swift */; };
-		CB0DEB000003000000000000 /* DAWG/DawgAutocompleteSuggestionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000003000000000000 /* DAWG/DawgAutocompleteSuggestionProvider.swift */; };
+		CB0DEB000000000000000000 /* DawgReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000000000000000000 /* DawgReader.swift */; };
+		CB0DEB000001000000000000 /* PhoneticFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000001000000000000 /* PhoneticFolder.swift */; };
+		CB0DEB000002000000000000 /* DamerauLevenshteinSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000002000000000000 /* DamerauLevenshteinSuggester.swift */; };
+		CB0DEB000003000000000000 /* DawgAutocompleteSuggestionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0DE5000003000000000000 /* DawgAutocompleteSuggestionProvider.swift */; };
 		CB0DFB000000000000000000 /* el_CY.dawg in Resources */ = {isa = PBXBuildFile; fileRef = CB0DFF000000000000000000 /* el_CY.dawg */; };
 		CB0DFB000001000000000000 /* phonetic_fold.json in Resources */ = {isa = PBXBuildFile; fileRef = CB0DFF000001000000000000 /* phonetic_fold.json */; };
 		CB22288F25D1D91200F0707C /* CypriotKeyboardActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB22288E25D1D91200F0707C /* CypriotKeyboardActionHandler.swift */; };
@@ -57,6 +57,7 @@
 		CBE7B1A2260BEEF2002E58B7 /* CypriotKeyboardInputSetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46BF9F25CD170000E3413A /* CypriotKeyboardInputSetProvider.swift */; };
 		CBE7B1A7260BEEF5002E58B7 /* CypriotSecondaryCalloutActionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB653DA925E33A4700657B82 /* CypriotSecondaryCalloutActionProvider.swift */; };
 		CBE7B1AC260BEEF9002E58B7 /* CypriotKeyboardiPhoneLayoutProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB512F2025E610100063C8D9 /* CypriotKeyboardiPhoneLayoutProvider.swift */; };
+		EE67A05C6CB81FBF4312CF5C /* BrandTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741105AA8E35D68625F333C9 /* BrandTheme.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,16 +99,17 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		741105AA8E35D68625F333C9 /* BrandTheme.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BrandTheme.swift; sourceTree = "<group>"; };
 		CB0DDF000000000000000000 /* DawgReaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DawgReaderTests.swift; sourceTree = "<group>"; };
 		CB0DDF000001000000000000 /* PhoneticFolderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneticFolderTests.swift; sourceTree = "<group>"; };
 		CB0DDF000002000000000000 /* DamerauLevenshteinSuggesterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DamerauLevenshteinSuggesterTests.swift; sourceTree = "<group>"; };
 		CB0DDF000003000000000000 /* DawgIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DawgIntegrationTests.swift; sourceTree = "<group>"; };
 		CB0DDF000004000000000000 /* GreekifyParityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreekifyParityTests.swift; sourceTree = "<group>"; };
 		CB0DDF000005000000000000 /* CypriotKeyboardUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CypriotKeyboardUtilTests.swift; sourceTree = "<group>"; };
-		CB0DE5000000000000000000 /* DAWG/DawgReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAWG/DawgReader.swift; sourceTree = "<group>"; };
-		CB0DE5000001000000000000 /* DAWG/PhoneticFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAWG/PhoneticFolder.swift; sourceTree = "<group>"; };
-		CB0DE5000002000000000000 /* DAWG/DamerauLevenshteinSuggester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAWG/DamerauLevenshteinSuggester.swift; sourceTree = "<group>"; };
-		CB0DE5000003000000000000 /* DAWG/DawgAutocompleteSuggestionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAWG/DawgAutocompleteSuggestionProvider.swift; sourceTree = "<group>"; };
+		CB0DE5000000000000000000 /* DawgReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAWG/DawgReader.swift; sourceTree = "<group>"; };
+		CB0DE5000001000000000000 /* PhoneticFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAWG/PhoneticFolder.swift; sourceTree = "<group>"; };
+		CB0DE5000002000000000000 /* DamerauLevenshteinSuggester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAWG/DamerauLevenshteinSuggester.swift; sourceTree = "<group>"; };
+		CB0DE5000003000000000000 /* DawgAutocompleteSuggestionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAWG/DawgAutocompleteSuggestionProvider.swift; sourceTree = "<group>"; };
 		CB0DEA000000000000000000 /* tiny_fixture.dawg */ = {isa = PBXFileReference; lastKnownFileType = file; path = tiny_fixture.dawg; sourceTree = "<group>"; };
 		CB0DEA000001000000000000 /* tiny_fixture.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tiny_fixture.json; sourceTree = "<group>"; };
 		CB0DEA000002000000000000 /* greekify_corpus.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = greekify_corpus.json; sourceTree = "<group>"; };
@@ -176,6 +178,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5531A5768085AE023C222838 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				741105AA8E35D68625F333C9 /* BrandTheme.swift */,
+			);
+			name = Onboarding;
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
 		CB0DEA0A0000000000000000 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -222,6 +233,7 @@
 				CB46BF1925CCCE2D00E3413A /* Assets.xcassets */,
 				CB46BF1E25CCCE2D00E3413A /* Info.plist */,
 				CB46BF1B25CCCE2D00E3413A /* Preview Content */,
+				5531A5768085AE023C222838 /* Onboarding */,
 			);
 			path = "Cypriot Keyboard";
 			sourceTree = "<group>";
@@ -272,10 +284,10 @@
 				CBD5113C260D8CC300F97392 /* CypriotKeyboardLayoutProvider.swift */,
 				CB369FFE2601C01C00E050D5 /* CypriotKeyboardUtil.swift */,
 				CBD51143260D8E3200F97392 /* CypriotKeyboardiPadLayoutProvider.swift */,
-				CB0DE5000000000000000000 /* DAWG/DawgReader.swift */,
-				CB0DE5000001000000000000 /* DAWG/PhoneticFolder.swift */,
-				CB0DE5000002000000000000 /* DAWG/DamerauLevenshteinSuggester.swift */,
-				CB0DE5000003000000000000 /* DAWG/DawgAutocompleteSuggestionProvider.swift */,
+				CB0DE5000000000000000000 /* DawgReader.swift */,
+				CB0DE5000001000000000000 /* PhoneticFolder.swift */,
+				CB0DE5000002000000000000 /* DamerauLevenshteinSuggester.swift */,
+				CB0DE5000003000000000000 /* DawgAutocompleteSuggestionProvider.swift */,
 			);
 			path = "Cypriot  Custom Keyboard";
 			sourceTree = "<group>";
@@ -478,10 +490,11 @@
 				CBD51110260BF46700F97392 /* KeyboardViewController.swift in Sources */,
 				CB369FFF2601C01C00E050D5 /* CypriotKeyboardUtil.swift in Sources */,
 				CB46BF1625CCCE2C00E3413A /* Cypriot_KeyboardApp.swift in Sources */,
-				CB0DAB000000000000000000 /* DAWG/DawgReader.swift in Sources */,
-				CB0DAB000001000000000000 /* DAWG/PhoneticFolder.swift in Sources */,
-				CB0DAB000002000000000000 /* DAWG/DamerauLevenshteinSuggester.swift in Sources */,
-				CB0DAB000003000000000000 /* DAWG/DawgAutocompleteSuggestionProvider.swift in Sources */,
+				CB0DAB000000000000000000 /* DawgReader.swift in Sources */,
+				CB0DAB000001000000000000 /* PhoneticFolder.swift in Sources */,
+				CB0DAB000002000000000000 /* DamerauLevenshteinSuggester.swift in Sources */,
+				CB0DAB000003000000000000 /* DawgAutocompleteSuggestionProvider.swift in Sources */,
+				EE67A05C6CB81FBF4312CF5C /* BrandTheme.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -521,10 +534,10 @@
 				CB46BF4A25CCCE7200E3413A /* KeyboardViewController.swift in Sources */,
 				CBD5113E260D8CC300F97392 /* CypriotKeyboardLayoutProvider.swift in Sources */,
 				CB653DAA25E33A4700657B82 /* CypriotSecondaryCalloutActionProvider.swift in Sources */,
-				CB0DEB000000000000000000 /* DAWG/DawgReader.swift in Sources */,
-				CB0DEB000001000000000000 /* DAWG/PhoneticFolder.swift in Sources */,
-				CB0DEB000002000000000000 /* DAWG/DamerauLevenshteinSuggester.swift in Sources */,
-				CB0DEB000003000000000000 /* DAWG/DawgAutocompleteSuggestionProvider.swift in Sources */,
+				CB0DEB000000000000000000 /* DawgReader.swift in Sources */,
+				CB0DEB000001000000000000 /* PhoneticFolder.swift in Sources */,
+				CB0DEB000002000000000000 /* DamerauLevenshteinSuggester.swift in Sources */,
+				CB0DEB000003000000000000 /* DawgAutocompleteSuggestionProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
