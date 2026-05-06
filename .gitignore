@@ -1,3 +1,4 @@
 *.Plo
 *.swp
 .worktrees/
+.superpowers/
