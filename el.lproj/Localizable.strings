@@ -1,21 +1,33 @@
-/* 
+/*
   Localizable.strings
   Cypriot Keyboard
 
   Created by Alex Toumazis on 2/16/21.
-  
 */
-"Installation" = "Εφάρμογη";
-"Use" = "Χρήση";
-"1. Open 'Settings'" = "1. Άνοιξε 'Ρυθμίσεις'";
-"2. Tap 'General'" = "2. Θκιάλεξε 'Γενικά'";
-"3. Tap Keyboard" = "3. Θκιάλεξε 'Πληκτρολόγιο'";
-"4. Tap Keyboards" = "4. Θκιάλεξε 'Πληκτρολόγια'";
-"5. Tap Add New Keyboard" = "5. Θκιάλεξε 'Προσθήκη νέου πληκτρολογίου'";
-"6. Tap 'Κυπριακά'" = "6. Θκιάλεξε 'Κυπριακά'";
-"Click 🌐 to switch keyboard to the Cypriot Keyboard" = "Πάτα 🌐 για να αλλάξεις γλώσσα/πληκτρολόγιο";
-"Click 🔄 to switch between Latin and Greek alphabets" = "Πάτα 🔄 για να αλλάξεις μεταξή Ελληνηκό τζαι Λατινικό αλφάβητο";
-"The bar above the keyboard shows the current suggestions. When you pless 'Space', the middle suggestion will be used" = "Η περιοχή πουπάνω που το πληκτρολόγιο δείχνει προτεινόμενες λέξεις. Αν το μόνο λάθος εν ότι λείπει ο τόνος, ή αν γράφεις σε Greeklish, εν να σου το σάσει αυτόματα.";
-"Test Here" = "Δοκιμάστε δαμαί";
-"Credits"="Ευχαριστώ: Σπύρος Αρμοστής, Aceras Anthropophorum, Daniel Saidi";
-"Alex"= "Προγραμματισμός: Αλέξανδρος Τουμαζής";
+
+"onboarding.brand.title" = "Κύπριακο Πληκτρολόγιο";
+"onboarding.brand.tagline" = "Γράφε Ελληνικά εύκολα";
+
+"onboarding.welcome.cta" = "Σε 3 βήματα  →";
+
+"onboarding.install.title" = "Σε 3 βήματα";
+"onboarding.install.step.1" = "Ανοίει τες Ρυθμίσεις για σένα";
+"onboarding.install.step.2" = "Πάτα \"Add New Keyboard\"";
+"onboarding.install.step.3" = "Πάτα \"Κυπριακά\"";
+"onboarding.install.cta" = "Άνοιξε Ρυθμίσεις  →";
+"onboarding.install.dismiss" = "Ακύρωση";
+
+"onboarding.done.title" = "Έτοιμο!";
+"onboarding.done.tryit.placeholder" = "Δοκίμασε δαμαί";
+
+"onboarding.feature.greeklish.title" = "Greeklish → Ελληνικά";
+"onboarding.feature.greeklish.body" = "Γράφε \"Lefkosia\", παίρνεις \"Λευκωσία\".";
+"onboarding.feature.cypriot.title" = "Κυπριακοί ήχοι";
+"onboarding.feature.cypriot.body" = "σ̆ ζ̆ ξ̆ ψ̆ για ήχους που δεν έχει η κοινή.";
+"onboarding.feature.accents.title" = "Τόνοι αυτόματα";
+"onboarding.feature.accents.body" = "Τόνοι τζαι το τελικό σ→ς γίνουνται μόνα τους.";
+
+"onboarding.switchhint" = "Σε άλλη εφαρμογή, πάτα 🌐 για να αλλάξεις πληκτρολόγιο.";
+
+"onboarding.credits" = "Σπύρος Αρμοστής · Aceras Anthropophorum · Daniel Saidi";
+"onboarding.author" = "Αλέξανδρος Τουμαζής";

@@ -1,25 +1,33 @@
-/* 
+/*
   Localizable.strings
   Cypriot Keyboard
 
   Created by Alex Toumazis on 2/16/21.
-  
 */
-"Installation" = "Installation";
-"Use" = "Use";
-"1. Open 'Settings'" =  "1. Open 'Settings'";
-"2. Tap 'General'" = "2. Tap 'General'";
-"3. Tap Keyboard" = "3. Tap Keyboard";
-"4. Tap Keyboards" = "4. Tap Keyboards";
-"5. Tap Add New Keyboard" = "5. Tap Add New Keyboard";
-"6. Tap 'Κυπριακά'" = "6. Tap 'Κυπριακά'";
 
-"Click 🌐 to switch keyboard to the Cypriot Keyboard" = "Click 🌐 to switch keyboard to the Cypriot Keyboard";
-"Click 🔄 to switch between Latin and Greek alphabets" = "Click 🔄 to switch between Latin and Greek alphabets";
+"onboarding.brand.title" = "Cypriot Keyboard";
+"onboarding.brand.tagline" = "Type Greek the easy way";
 
-"The bar above the keyboard shows the current suggestions. When you pless 'Space', the middle suggestion will be used" =  "The bar above the keyboard shows the current suggestions. When you press 'Space', the highlighted suggestion will be used";
+"onboarding.welcome.cta" = "Install in 3 taps  →";
 
-"Test Here"="Test Here";
+"onboarding.install.title" = "In 3 steps";
+"onboarding.install.step.1" = "We'll open Settings for you";
+"onboarding.install.step.2" = "Tap \"Add New Keyboard\"";
+"onboarding.install.step.3" = "Tap \"Κυπριακά\"";
+"onboarding.install.cta" = "Open Settings  →";
+"onboarding.install.dismiss" = "Cancel";
 
-"Alex"= "Created by Alex Toumazis";
-"Credits"="Thanks to: Spyros Armostis, Aceras Anthropophorum, Daniel Saidi";
+"onboarding.done.title" = "All set!";
+"onboarding.done.tryit.placeholder" = "Try it here";
+
+"onboarding.feature.greeklish.title" = "Greeklish → Greek";
+"onboarding.feature.greeklish.body" = "Type \"Lefkosia\", get \"Λευκωσία\".";
+"onboarding.feature.cypriot.title" = "Cypriot sounds";
+"onboarding.feature.cypriot.body" = "σ̆ ζ̆ ξ̆ ψ̆ for sounds standard Greek doesn't have.";
+"onboarding.feature.accents.title" = "Accents handled";
+"onboarding.feature.accents.body" = "Accents and final-σ done automatically.";
+
+"onboarding.switchhint" = "In any app, tap 🌐 to switch to Cypriot.";
+
+"onboarding.credits" = "Spyros Armostis · Aceras Anthropophorum · Daniel Saidi";
+"onboarding.author" = "By Alex Toumazis";
