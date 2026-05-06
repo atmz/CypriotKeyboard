@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0E5944C266237AA87D3C2580 /* SwitchHintBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD4B904AD01AA872BA9E9C9 /* SwitchHintBanner.swift */; };
+		24585BC82856BABE734FC292 /* PostInstallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC706E51171297E948E3274 /* PostInstallView.swift */; };
 		25FED1824341DC4CF45A6233 /* PrimaryCTAButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB70552DD0F4530ABA1ED383 /* PrimaryCTAButton.swift */; };
 		2B44109B46F17EABC6BBC554 /* InstallSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D422DFC957BA69B2CFF613 /* InstallSheetView.swift */; };
 		2DB1D556D0DBF3D4A2D74A5A /* DemoLoopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E876E2B62F81DDD04B1A4F /* DemoLoopView.swift */; };
@@ -159,6 +160,7 @@
 		CBD5113C260D8CC300F97392 /* CypriotKeyboardLayoutProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CypriotKeyboardLayoutProvider.swift; sourceTree = "<group>"; };
 		CBD51143260D8E3200F97392 /* CypriotKeyboardiPadLayoutProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CypriotKeyboardiPadLayoutProvider.swift; sourceTree = "<group>"; };
 		E0C483C6311BBA11544585A1 /* WelcomeHeroView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WelcomeHeroView.swift; sourceTree = "<group>"; };
+		EEC706E51171297E948E3274 /* PostInstallView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PostInstallView.swift; sourceTree = "<group>"; };
 		FB70552DD0F4530ABA1ED383 /* PrimaryCTAButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PrimaryCTAButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -205,6 +207,7 @@
 				88E876E2B62F81DDD04B1A4F /* DemoLoopView.swift */,
 				06D422DFC957BA69B2CFF613 /* InstallSheetView.swift */,
 				E0C483C6311BBA11544585A1 /* WelcomeHeroView.swift */,
+				EEC706E51171297E948E3274 /* PostInstallView.swift */,
 			);
 			name = Onboarding;
 			path = Onboarding;
@@ -539,6 +542,7 @@
 				0E5944C266237AA87D3C2580 /* SwitchHintBanner.swift in Sources */,
 				2B44109B46F17EABC6BBC554 /* InstallSheetView.swift in Sources */,
 				4DBD105FD478769135253D04 /* WelcomeHeroView.swift in Sources */,
+				24585BC82856BABE734FC292 /* PostInstallView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
