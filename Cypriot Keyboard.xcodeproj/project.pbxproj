@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0CF62EA67FCEE903597D3F59 /* OnboardingShell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BFC0F892B20615C7E86D31D /* OnboardingShell.swift */; };
 		0E5944C266237AA87D3C2580 /* SwitchHintBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD4B904AD01AA872BA9E9C9 /* SwitchHintBanner.swift */; };
 		24585BC82856BABE734FC292 /* PostInstallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC706E51171297E948E3274 /* PostInstallView.swift */; };
 		25FED1824341DC4CF45A6233 /* PrimaryCTAButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB70552DD0F4530ABA1ED383 /* PrimaryCTAButton.swift */; };
@@ -115,6 +116,7 @@
 		741105AA8E35D68625F333C9 /* BrandTheme.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BrandTheme.swift; sourceTree = "<group>"; };
 		7E008B294EEF1D6FEA6676DA /* FeatureCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FeatureCard.swift; sourceTree = "<group>"; };
 		88E876E2B62F81DDD04B1A4F /* DemoLoopView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DemoLoopView.swift; sourceTree = "<group>"; };
+		9BFC0F892B20615C7E86D31D /* OnboardingShell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnboardingShell.swift; sourceTree = "<group>"; };
 		9C8313C488778BCF433CAE88 /* OnboardingStateTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnboardingStateTests.swift; sourceTree = "<group>"; };
 		A751E4ADAD8C199CD8517EF8 /* OnboardingState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnboardingState.swift; sourceTree = "<group>"; };
 		CB0DDF000000000000000000 /* DawgReaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DawgReaderTests.swift; sourceTree = "<group>"; };
@@ -208,6 +210,7 @@
 				06D422DFC957BA69B2CFF613 /* InstallSheetView.swift */,
 				E0C483C6311BBA11544585A1 /* WelcomeHeroView.swift */,
 				EEC706E51171297E948E3274 /* PostInstallView.swift */,
+				9BFC0F892B20615C7E86D31D /* OnboardingShell.swift */,
 			);
 			name = Onboarding;
 			path = Onboarding;
@@ -543,6 +546,7 @@
 				2B44109B46F17EABC6BBC554 /* InstallSheetView.swift in Sources */,
 				4DBD105FD478769135253D04 /* WelcomeHeroView.swift in Sources */,
 				24585BC82856BABE734FC292 /* PostInstallView.swift in Sources */,
+				0CF62EA67FCEE903597D3F59 /* OnboardingShell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
