@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cypriot Keyboard — App Store Listing Mockup</title>
+  <style>
+    :root {
+      --copper: #D57800;
+      --copper-darker: #b86600;
+      --olive: #6B7F3A;
+      --label: #1d1d1f;
+      --secondary: #6e6e73;
+      --tertiary: #86868b;
+      --bg: #fbfbfd;
+      --card-bg: #ffffff;
+      --hairline: #d2d2d7;
+      --quaternary: #aeaeb2;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--label);
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--copper); text-decoration: none; }
+
+    .top-bar {
+      position: sticky;
+      top: 0;
+      background: rgba(251, 251, 253, 0.92);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--hairline);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+    }
+    .crumbs {
+      font-size: 13px;
+      color: var(--secondary);
+    }
+    .crumbs strong { color: var(--label); }
+    .locale-toggle {
+      display: inline-flex;
+      gap: 4px;
+      background: #f2f2f7;
+      border-radius: 8px;
+      padding: 3px;
+    }
+    .locale-toggle button {
+      border: none;
+      background: transparent;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--secondary);
+      font-family: inherit;
+    }
+    .locale-toggle button.active {
+      background: white;
+      color: var(--label);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    }
+
+    .container {
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+    }
+
+    /* === HERO === */
+    .hero {
+      display: grid;
+      grid-template-columns: 200px 1fr auto;
+      gap: 28px;
+      align-items: center;
+      padding: 32px 0;
+    }
+    .icon {
+      width: 200px;
+      height: 200px;
+      background: linear-gradient(135deg, var(--copper), #c46a00);
+      border-radius: 44px;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 12px 30px rgba(213, 120, 0, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+    .icon::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18), transparent 60%);
+    }
+    .icon-glyph {
+      font-size: 100px;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.18));
+      line-height: 1;
+    }
+    .hero-text h1 {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+    }
+    .hero-text .subtitle {
+      font-size: 19px;
+      color: var(--secondary);
+      margin-bottom: 16px;
+    }
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-size: 13px;
+      color: var(--secondary);
+    }
+    .hero-meta .stars {
+      color: var(--copper);
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+    .get-btn {
+      background: var(--copper);
+      color: white;
+      border: none;
+      padding: 8px 24px;
+      border-radius: 999px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 2px 6px rgba(213, 120, 0, 0.25);
+    }
+    .get-btn:hover { background: var(--copper-darker); }
+    .get-sub {
+      display: block;
+      font-size: 11px;
+      color: var(--tertiary);
+      text-align: center;
+      margin-top: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* === DIVIDER === */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--hairline);
+      margin: 0;
+    }
+
+    /* === KEY FACTS strip === */
+    .keyfacts {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      padding: 32px 0;
+    }
+    .keyfact {
+      text-align: center;
+      border-right: 1px solid var(--hairline);
+    }
+    .keyfact:last-child { border-right: none; }
+    .keyfact-label {
+      font-size: 11px;
+      color: var(--tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .keyfact-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--label);
+    }
+    .keyfact-value small { font-size: 11px; font-weight: 400; color: var(--secondary); display: block; margin-top: 2px; }
+
+    /* === SCREENSHOTS CAROUSEL === */
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 32px 0 16px;
+    }
+    .carousel {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding: 8px 0 24px;
+      margin: 0 -24px;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+    .carousel::-webkit-scrollbar { height: 6px; }
+    .carousel::-webkit-scrollbar-thumb { background: var(--hairline); border-radius: 3px; }
+    .carousel img {
+      flex: 0 0 auto;
+      width: 280px;
+      height: 608px;
+      object-fit: cover;
+      border-radius: 18px;
+      scroll-snap-align: start;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      background: white;
+    }
+
+    /* === DESCRIPTION === */
+    .description {
+      padding: 24px 0;
+      line-height: 1.55;
+      color: var(--label);
+      font-size: 15px;
+      max-width: 760px;
+    }
+    .description p { margin-bottom: 12px; }
+    .description ul {
+      list-style: none;
+      padding: 0;
+      margin: 12px 0;
+    }
+    .description ul li {
+      padding: 6px 0 6px 24px;
+      position: relative;
+    }
+    .description ul li::before {
+      content: "•";
+      color: var(--copper);
+      position: absolute;
+      left: 8px;
+      font-weight: 700;
+    }
+    .description-collapsed { display: block; }
+    .description-rest { display: none; }
+    .description.expanded .description-rest { display: block; }
+    .more-btn {
+      background: none;
+      border: none;
+      color: var(--copper);
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0;
+      font-size: 15px;
+      font-family: inherit;
+    }
+
+    /* === WHATS NEW === */
+    .whats-new {
+      padding: 24px 0;
+    }
+    .whats-new-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+    .version-tag {
+      font-size: 13px;
+      color: var(--secondary);
+    }
+    .changelog {
+      font-size: 15px;
+      color: var(--label);
+      line-height: 1.55;
+      max-width: 760px;
+    }
+    .changelog ul {
+      list-style: none;
+      padding: 0;
+    }
+    .changelog ul li {
+      padding: 6px 0 6px 24px;
+      position: relative;
+    }
+    .changelog ul li::before {
+      content: "✦";
+      color: var(--olive);
+      position: absolute;
+      left: 0;
+      font-size: 13px;
+      top: 9px;
+    }
+
+    /* === INFORMATION === */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      padding: 24px 0;
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--hairline);
+      font-size: 14px;
+    }
+    .info-row:nth-child(odd) { padding-right: 16px; }
+    .info-row:nth-child(even) { padding-left: 16px; }
+    .info-label { color: var(--secondary); }
+    .info-value { color: var(--label); font-weight: 500; }
+
+    /* === MARKETING SECTION (framed shots) === */
+    .marketing-bleed {
+      background: linear-gradient(180deg, #fff 0%, #faf3ea 100%);
+      margin: 32px -24px;
+      padding: 48px 24px;
+      border-radius: 24px;
+    }
+    .marketing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 32px;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+    .frame-card {
+      text-align: center;
+    }
+    .iphone-frame {
+      border: 3px solid #1d1d1f;
+      border-radius: 44px;
+      padding: 10px;
+      background: #1d1d1f;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+      max-width: 220px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .iphone-frame::before {
+      content: "";
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 22px;
+      background: #1d1d1f;
+      border-radius: 14px;
+      z-index: 2;
+    }
+    .iphone-frame img {
+      display: block;
+      width: 100%;
+      border-radius: 36px;
+    }
+    .frame-caption {
+      margin-top: 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--label);
+    }
+    .frame-caption-sub {
+      font-size: 12px;
+      color: var(--secondary);
+      margin-top: 4px;
+    }
+
+    /* === CARD WRAPPER === */
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px;
+      margin: 16px 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    /* === LOCALE PANEL VISIBILITY === */
+    .locale-panel { display: none; }
+    .locale-panel.active { display: block; }
+
+    /* === FOOTER === */
+    footer {
+      text-align: center;
+      padding: 32px;
+      font-size: 12px;
+      color: var(--tertiary);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    footer a { color: var(--secondary); }
+
+    /* responsive */
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; text-align: center; }
+      .icon { margin: 0 auto; }
+      .keyfacts { grid-template-columns: repeat(2, 1fr); }
+      .keyfact:nth-child(2) { border-right: none; }
+      .keyfact:nth-child(odd) { border-bottom: 1px solid var(--hairline); padding-bottom: 16px; }
+      .info-grid { grid-template-columns: 1fr; }
+      .info-row { padding: 10px 0 !important; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="crumbs"><strong>App Store mockup</strong> · Cypriot Keyboard · v1.9 draft</div>
+  <div class="locale-toggle">
+    <button class="active" onclick="setLocale('en')">English</button>
+    <button onclick="setLocale('el')">Ελληνικά</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ============================================================== -->
+  <!-- ENGLISH PANEL                                                   -->
+  <!-- ============================================================== -->
+  <div class="locale-panel active" id="panel-en">
+
+    <section class="hero">
+      <div class="icon"><div class="icon-glyph">🇨🇾</div></div>
+      <div class="hero-text">
+        <h1>Cypriot Keyboard</h1>
+        <div class="subtitle">Type Greek the easy way</div>
+        <div class="hero-meta">
+          <span class="stars">★★★★★</span>
+          <span>4.9 · 47 ratings</span>
+          <span>·</span>
+          <span>Utilities</span>
+          <span>·</span>
+          <span>4+</span>
+        </div>
+      </div>
+      <div>
+        <button class="get-btn">GET</button>
+        <span class="get-sub">In-App Purchases · None</span>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <section class="keyfacts">
+      <div class="keyfact">
+        <div class="keyfact-label">Age</div>
+        <div class="keyfact-value">4+ <small>Years Old</small></div>
+      </div>
+      <div class="keyfact">
+        <div class="keyfact-label">Category</div>
+        <div class="keyfact-value">#27 <small>Utilities</small></div>
+      </div>
+      <div class="keyfact">
+        <div class="keyfact-label">Developer</div>
+        <div class="keyfact-value">A. Toumazis <small>Independent</small></div>
+      </div>
+      <div class="keyfact">
+        <div class="keyfact-label">Language</div>
+        <div class="keyfact-value">EN, EL <small>+ Cypriot</small></div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <h2 class="section-title">Preview</h2>
+    <div class="carousel">
+      <img src="../screenshots/raw/welcome-en-iphone17promax.png" alt="Welcome screen">
+      <img src="../screenshots/raw/welcome-en-iphone17promax-je.png" alt="je → τζαι">
+      <img src="../screenshots/raw/welcome-en-iphone17promax-allous.png" alt="Multi-word phrase">
+      <img src="../screenshots/raw/postinstall-en-iphone17promax.png" alt="Post install">
+      <img src="../screenshots/raw/welcome-en-ipadpro13.png" alt="iPad welcome">
+    </div>
+
+    <hr class="divider">
+
+    <h2 class="section-title">About this app</h2>
+    <div class="description" id="desc-en">
+      <div class="description-collapsed">
+        <p>Cypriot Keyboard turns "Lefkosia" into "Λευκωσία". Type the way you naturally text — in Greeklish, English-letter shorthand, or full Greek — and let the keyboard do the work.</p>
+        <p>Built specifically for Cypriot Greek, with the characters and conventions that standard Greek keyboards leave out:</p>
+      </div>
+      <div class="description-rest">
+        <ul>
+          <li><strong>Greeklish autocorrect</strong> — type "kalimera", get "καλημέρα"; type "Lefkosia", get "Λευκωσία".</li>
+          <li><strong>Cypriot characters</strong> — σ̆ ζ̆ ξ̆ ψ̆ for the sounds standard Greek doesn't have, on a dedicated breve key.</li>
+          <li><strong>Smart accents</strong> — the keyboard adds the right tonos for you, on multi-syllable words.</li>
+          <li><strong>Final-σ done right</strong> — σ in the middle of a word, ς at the end, automatically.</li>
+          <li><strong>Works everywhere iOS keyboards do</strong> — Messages, Mail, WhatsApp, Notes.</li>
+        </ul>
+        <p><strong>Privacy:</strong></p>
+        <ul>
+          <li>No internet access — the keyboard works fully offline.</li>
+          <li>No tracking, no analytics, no telemetry.</li>
+          <li>Open Access is OFF — your keystrokes never leave the device.</li>
+        </ul>
+        <p>Made in Cyprus by Alex Toumazis. Built on the Cypriot Greek dictionary curated by Dr Spyros Armostis (University of Cyprus), with phonetic corrections from Aceras Anthropophorum, on the KeyboardKit framework by Daniel Saidi.</p>
+        <p>Free, no ads, no in-app purchases. Just a keyboard that gets the language right.</p>
+      </div>
+      <button class="more-btn" onclick="toggleDesc('en')">more</button>
+    </div>
+
+    <hr class="divider">
+
+    <section class="whats-new">
+      <div class="whats-new-head">
+        <h2 class="section-title" style="margin: 0;">What's New</h2>
+        <span class="version-tag">Version 1.9 · 1d ago</span>
+      </div>
+      <div class="changelog">
+        A fresh first-launch experience:
+        <ul>
+          <li>New welcome screen with a live demo of Greeklish autocorrect.</li>
+          <li>Three-tap install — we deep-link straight to the Keyboards screen.</li>
+          <li>Try-it textfield right after install, plus a tour of σ̆ Cypriot characters and automatic accents.</li>
+          <li>Stricter privacy: Hunspell removed, the keyboard now ships with a single optimised dictionary engine. Smaller download, same results.</li>
+        </ul>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <h2 class="section-title">Marketing &amp; press use</h2>
+    <p style="color: var(--secondary); font-size: 14px; max-width: 720px; margin-bottom: 8px;">Framed renders for blog posts, social media, and press kits. Right-click → Save Image.</p>
+    <div class="marketing-bleed">
+      <div class="marketing-grid">
+        <div class="frame-card">
+          <div class="iphone-frame"><img src="../screenshots/raw/welcome-en-iphone17promax.png" alt=""></div>
+          <div class="frame-caption">Type Greeklish, get Greek</div>
+          <div class="frame-caption-sub">Welcome screen, iPhone 17 Pro Max</div>
+        </div>
+        <div class="frame-card">
+          <div class="iphone-frame"><img src="../screenshots/raw/welcome-en-iphone17promax-je.png" alt=""></div>
+          <div class="frame-caption">Cypriot dialect, built in</div>
+          <div class="frame-caption-sub">je → τζαι</div>
+        </div>
+        <div class="frame-card">
+          <div class="iphone-frame"><img src="../screenshots/raw/welcome-en-iphone17promax-allous.png" alt=""></div>
+          <div class="frame-caption">Whole phrases, no fuss</div>
+          <div class="frame-caption-sub">pe je stous allous → πε τζαι στους άλλους</div>
+        </div>
+        <div class="frame-card">
+          <div class="iphone-frame"><img src="../screenshots/raw/postinstall-en-iphone17promax.png" alt=""></div>
+          <div class="frame-caption">All set in 3 taps</div>
+          <div class="frame-caption-sub">Post install state</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <h2 class="section-title">Information</h2>
+    <div class="info-grid">
+      <div class="info-row"><span class="info-label">Provider</span><span class="info-value">Alex Toumazis</span></div>
+      <div class="info-row"><span class="info-label">Size</span><span class="info-value">~12 MB</span></div>
+      <div class="info-row"><span class="info-label">Category</span><span class="info-value">Utilities</span></div>
+      <div class="info-row"><span class="info-label">Compatibility</span><span class="info-value">iPhone, iPad · iOS 14.4+</span></div>
+      <div class="info-row"><span class="info-label">Languages</span><span class="info-value">English, Greek (Cypriot)</span></div>
+      <div class="info-row"><span class="info-label">Age Rating</span><span class="info-value">4+</span></div>
+      <div class="info-row"><span class="info-label">Copyright</span><span class="info-value">© 2026 Alex Toumazis</span></div>
+      <div class="info-row"><span class="info-label">Price</span><span class="info-value">Free</span></div>
+      <div class="info-row"><span class="info-label">Developer Website</span><span class="info-value"><a href="https://github.com/atmz/CypriotKeyboard">github.com/atmz/CypriotKeyboard</a></span></div>
+      <div class="info-row"><span class="info-label">In-App Purchases</span><span class="info-value">None</span></div>
+    </div>
+
+  </div>
+
+
+  <!-- ============================================================== -->
+  <!-- GREEK PANEL                                                     -->
+  <!-- ============================================================== -->
+  <div class="locale-panel" id="panel-el">
+
+    <section class="hero">
+      <div class="icon"><div class="icon-glyph">🇨🇾</div></div>
+      <div class="hero-text">
+        <h1>Κυπριακό Πληκτρολόγιο</h1>
+        <div class="subtitle">Γράφε Ελληνικά εύκολα</div>
+        <div class="hero-meta">
+          <span class="stars">★★★★★</span>
+          <span>4,9 · 47 αξιολογήσεις</span>
+          <span>·</span>
+          <span>Εργαλεία</span>
+          <span>·</span>
+          <span>4+</span>
+        </div>
+      </div>
+      <div>
+        <button class="get-btn">GET</button>
+        <span class="get-sub">Αγορές εντός · Καμμία</span>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <section class="keyfacts">
+      <div class="keyfact">
+        <div class="keyfact-label">Ηλικία</div>
+        <div class="keyfact-value">4+ <small>Ετών</small></div>
+      </div>
+      <div class="keyfact">
+        <div class="keyfact-label">Κατηγορία</div>
+        <div class="keyfact-value">#27 <small>Εργαλεία</small></div>
+      </div>
+      <div class="keyfact">
+        <div class="keyfact-label">Προγραμματιστής</div>
+        <div class="keyfact-value">Α. Τουμαζής <small>Ανεξάρτητος</small></div>
+      </div>
+      <div class="keyfact">
+        <div class="keyfact-label">Γλώσσες</div>
+        <div class="keyfact-value">EN, EL <small>+ Κυπριακά</small></div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <h2 class="section-title">Στιγμιότυπα</h2>
+    <div class="carousel">
+      <img src="../screenshots/raw/welcome-el-iphone17promax.png" alt="Καλωσόρισμα">
+      <img src="../screenshots/raw/postinstall-el-iphone17promax.png" alt="Έτοιμο">
+      <img src="../screenshots/raw/welcome-el-ipadpro13.png" alt="iPad">
+    </div>
+
+    <hr class="divider">
+
+    <h2 class="section-title">Σχετικά με την εφαρμογή</h2>
+    <div class="description" id="desc-el">
+      <div class="description-collapsed">
+        <p>Το Κυπριακό Πληκτρολόγιο μετατρέπει το "Lefkosia" σε "Λευκωσία". Γράφε όπως γράφεις στα μηνύματά σου — σε Greeklish, σε Ελληνικά, ή ανάμεικτα — τζαι το πληκτρολόγιο κάνει την δουλειά για σένα.</p>
+        <p>Φτιαγμένο ειδικά για τα Κυπριακά, με όλα όσα λείπουν από το κοινό Ελληνικό πληκτρολόγιο:</p>
+      </div>
+      <div class="description-rest">
+        <ul>
+          <li><strong>Greeklish autocorrect</strong> — γράφε "kalimera", παίρνεις "καλημέρα"· γράφε "Lefkosia", παίρνεις "Λευκωσία".</li>
+          <li><strong>Κυπριακοί χαρακτήρες</strong> — σ̆ ζ̆ ξ̆ ψ̆ για τους ήχους που δεν έχει η κοινή.</li>
+          <li><strong>Τόνοι αυτόματα</strong> — βάζει τους τόνους σου σε λέξεις με δύο ή περισσότερες συλλαβές.</li>
+          <li><strong>Τελικό σ</strong> — σ στη μέση, ς στο τέλος, αυτόματα.</li>
+          <li><strong>Παντού</strong> — Messages, Mail, WhatsApp, Notes, οπουδήποτε.</li>
+        </ul>
+        <p><strong>Ιδιωτικότητα:</strong></p>
+        <ul>
+          <li>Χωρίς internet — δουλεύει εντελώς offline.</li>
+          <li>Χωρίς tracking, χωρίς analytics, χωρίς telemetry.</li>
+          <li>Open Access OFF — τα γράμματα που πατάς δεν φεύγουν ποτέ από τη συσκευή σου.</li>
+        </ul>
+        <p>Δαμιουργήθηκε στην Κύπρο από τον Αλέξανδρο Τουμαζή. Βασισμένο στο Κυπριακό λεξικό του Δρ Σπύρου Αρμοστή (Πανεπιστήμιο Κύπρου), με φωνητικές διορθώσεις από τον Aceras Anthropophorum, στο framework KeyboardKit του Daniel Saidi.</p>
+        <p>Δωρεάν, χωρίς διαφημίσεις, χωρίς αγορές εντός εφαρμογής.</p>
+      </div>
+      <button class="more-btn" onclick="toggleDesc('el')">περισσότερα</button>
+    </div>
+
+    <hr class="divider">
+
+    <section class="whats-new">
+      <div class="whats-new-head">
+        <h2 class="section-title" style="margin: 0;">Τι νέο</h2>
+        <span class="version-tag">Έκδοση 1.9 · 1 μέρα πριν</span>
+      </div>
+      <div class="changelog">
+        Ολοκαίνουργια εμπειρία πρώτης χρήσης:
+        <ul>
+          <li>Νέα οθόνη καλωσορίσματος με ζωντανό demo του Greeklish autocorrect.</li>
+          <li>Εγκατάσταση σε 3 βήματα — σε πάμε κατευθείαν στην οθόνη Πληκτρολογίων.</li>
+          <li>Πεδίο για δοκιμή αμέσως μετά την εγκατάσταση, τζαι ξενάγηση στους Κυπριακούς χαρακτήρες σ̆.</li>
+          <li>Πιο αυστηρή ιδιωτικότητα: αφαιρέθηκε το Hunspell, το πληκτρολόγιο τρέχει τώρα με μία ενιαία βελτιστοποιημένη μηχανή λεξικού.</li>
+        </ul>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <h2 class="section-title">Πληροφορίες</h2>
+    <div class="info-grid">
+      <div class="info-row"><span class="info-label">Πάροχος</span><span class="info-value">Αλέξανδρος Τουμαζής</span></div>
+      <div class="info-row"><span class="info-label">Μέγεθος</span><span class="info-value">~12 MB</span></div>
+      <div class="info-row"><span class="info-label">Κατηγορία</span><span class="info-value">Εργαλεία</span></div>
+      <div class="info-row"><span class="info-label">Συμβατότητα</span><span class="info-value">iPhone, iPad · iOS 14.4+</span></div>
+      <div class="info-row"><span class="info-label">Γλώσσες</span><span class="info-value">Αγγλικά, Ελληνικά (Κυπριακά)</span></div>
+      <div class="info-row"><span class="info-label">Ηλικία</span><span class="info-value">4+</span></div>
+      <div class="info-row"><span class="info-label">Πνευματικά δικαιώματα</span><span class="info-value">© 2026 Αλέξανδρος Τουμαζής</span></div>
+      <div class="info-row"><span class="info-label">Τιμή</span><span class="info-value">Δωρεάν</span></div>
+      <div class="info-row"><span class="info-label">Ιστοσελίδα</span><span class="info-value"><a href="https://github.com/atmz/CypriotKeyboard">github.com/atmz/CypriotKeyboard</a></span></div>
+      <div class="info-row"><span class="info-label">Αγορές εντός</span><span class="info-value">Καμμία</span></div>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  <p>Mockup of how the Cypriot Keyboard App Store listing would look with the v1.9 marketing assets.</p>
+  <p style="margin-top: 8px;">Source assets in <code>app-store/</code>. Toggle EN/EL at top. Star ratings, install count, and "1d ago" are placeholder; everything else comes from <code>app-store/copy/{en,el}.md</code>.</p>
+</footer>
+
+<script>
+  function setLocale(loc) {
+    document.querySelectorAll('.locale-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-' + loc).classList.add('active');
+    document.querySelectorAll('.locale-toggle button').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    document.documentElement.lang = loc;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function toggleDesc(loc) {
+    const d = document.getElementById('desc-' + loc);
+    d.classList.toggle('expanded');
+    const btn = d.querySelector('.more-btn');
+    btn.textContent = d.classList.contains('expanded')
+      ? (loc === 'en' ? 'less' : 'λιγότερα')
+      : (loc === 'en' ? 'more' : 'περισσότερα');
+  }
+</script>
+
+</body>
+</html>

@@ -10,14 +10,19 @@ app-store/
 ├── copy/
 │   ├── en.md            # English: name, subtitle, promo, description, keywords, what's new
 │   └── el.md            # Cypriot dialect
+├── mockup/
+│   ├── README.md        # how to view
+│   └── index.html       # interactive App Store listing preview
 ├── screenshots/
 │   ├── raw/             # direct simulator captures (source material)
-│   └── edited/          # framed / captioned final assets, per device size
+│   └── edited/          # staged for fastlane frameit (en-US/, el-CY/)
 └── videos/
     ├── README.md        # spec for the App Store preview video
     ├── raw/             # screen recordings before editing
     └── edited/          # final ≤30s previews per device size
 ```
+
+**Want to see what the App Store listing will look like?** Open `app-store/mockup/index.html` (see `mockup/README.md` — it needs a local HTTP server to load the screenshots).
 
 ## Why this lives in the repo
 

@@ -2,3 +2,4 @@
 *.swp
 .worktrees/
 .superpowers/
+.DS_Store
