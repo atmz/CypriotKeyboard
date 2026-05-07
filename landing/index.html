@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="en" data-locale="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cypriot Keyboard — Type Greek the easy way</title>
+<meta name="description" content="A Cypriot Greek keyboard for iPhone and iPad. Greeklish autocorrect, Cypriot characters σ̆ ζ̆ ξ̆ ψ̆, automatic accents. Free, offline, no tracking.">
+<meta name="theme-color" content="#D57800">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Cypriot Keyboard — Type Greek the easy way">
+<meta property="og:description" content="Type 'Lefkosia', get 'Λευκωσία'. A Cypriot Greek keyboard for iPhone and iPad. Free, offline, no tracking.">
+<meta property="og:image" content="./icon/icon-1024.png">
+<meta property="og:url" content="https://atmz.github.io/CypriotKeyboard/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- iOS Smart App Banner -->
+<meta name="apple-itunes-app" content="app-id=1553811546">
+
+<!-- Favicon (uses the icon) -->
+<link rel="icon" type="image/png" href="./icon/icon-512.png">
+<link rel="apple-touch-icon" href="./icon/icon-1024.png">
+
+<style>
+:root {
+  --copper: #D57800;
+  --copper-dark: #b86600;
+  --copper-tint: #faf3ea;
+  --olive: #6B7F3A;
+  --olive-dark: #56672e;
+  --ink: #1a3a1a;          /* matches the icon's dark-green text */
+  --ink-soft: #2c4030;
+  --secondary: #5d6e5f;
+  --tertiary: #8a988b;
+  --hairline: rgba(26, 58, 26, 0.12);
+  --bg: #fefcf9;            /* warm white, complements the icon */
+  --bg-alt: #f7f0e6;
+  --card: #ffffff;
+  --shadow-sm: 0 1px 2px rgba(26, 58, 26, 0.06), 0 4px 12px rgba(26, 58, 26, 0.05);
+  --shadow-md: 0 4px 16px rgba(26, 58, 26, 0.08), 0 12px 32px rgba(26, 58, 26, 0.08);
+  --shadow-lg: 0 12px 32px rgba(213, 120, 0, 0.18), 0 24px 64px rgba(26, 58, 26, 0.12);
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 28px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #f0eadf;
+    --ink-soft: #d5cdb7;
+    --secondary: #9b9583;
+    --tertiary: #6e6957;
+    --hairline: rgba(240, 234, 223, 0.12);
+    --bg: #14110b;
+    --bg-alt: #1d1814;
+    --card: #1c1812;
+    --copper-tint: rgba(213, 120, 0, 0.08);
+  }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, "Helvetica Neue", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+img { display: block; max-width: 100%; height: auto; }
+a { color: var(--copper); text-decoration: none; transition: color 0.15s; }
+a:hover { color: var(--copper-dark); }
+button { font-family: inherit; cursor: pointer; }
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ============== NAV ============== */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(254, 252, 249, 0.85);
+  backdrop-filter: saturate(180%) blur(16px);
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  border-bottom: 1px solid var(--hairline);
+}
+@media (prefers-color-scheme: dark) {
+  nav { background: rgba(20, 17, 11, 0.85); }
+}
+.nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+}
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.nav-brand img {
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+}
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.locale-switch {
+  display: inline-flex;
+  background: var(--bg-alt);
+  border-radius: 8px;
+  padding: 3px;
+  border: 1px solid var(--hairline);
+}
+.locale-switch button {
+  border: none;
+  background: transparent;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  color: var(--secondary);
+}
+.locale-switch button.active {
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+}
+.nav-cta {
+  background: var(--ink);
+  color: var(--bg);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.1s, background 0.15s;
+}
+.nav-cta:hover {
+  background: var(--ink-soft);
+  color: var(--bg);
+  transform: translateY(-1px);
+}
+
+/* ============== HERO ============== */
+.hero {
+  padding: 64px 0 80px;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+@media (max-width: 880px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 48px 0;
+    gap: 48px;
+    text-align: center;
+  }
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--copper-tint);
+  color: var(--copper-dark);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  letter-spacing: -0.01em;
+}
+.hero-eyebrow::before {
+  content: "🇨🇾";
+}
+
+.hero h1 {
+  font-size: clamp(36px, 5.4vw, 60px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  margin-bottom: 20px;
+  color: var(--ink);
+}
+.hero h1 .accent {
+  color: var(--copper);
+  background: linear-gradient(180deg, var(--copper), var(--copper-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero p.lead {
+  font-size: 19px;
+  color: var(--secondary);
+  margin-bottom: 32px;
+  max-width: 520px;
+  line-height: 1.55;
+}
+@media (max-width: 880px) {
+  .hero p.lead { margin-left: auto; margin-right: auto; }
+}
+.hero-cta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+@media (max-width: 880px) {
+  .hero-cta { justify-content: center; }
+}
+.appstore-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 12px 24px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: var(--shadow-sm);
+}
+.appstore-btn:hover {
+  color: var(--bg);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.appstore-btn .apple {
+  font-size: 22px;
+  line-height: 1;
+}
+.appstore-btn .label .small {
+  font-size: 10px;
+  font-weight: 500;
+  display: block;
+  text-transform: uppercase;
+  opacity: 0.7;
+  letter-spacing: 0.05em;
+  margin-bottom: 1px;
+}
+.appstore-btn .label .big {
+  font-size: 17px;
+  font-weight: 600;
+  display: block;
+}
+.hero-meta {
+  font-size: 13px;
+  color: var(--tertiary);
+  margin-top: 14px;
+}
+
+/* ============== HERO PHONE WITH ANIMATED DEMO ============== */
+.hero-phone-wrap {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+.hero-phone-wrap::before {
+  content: "";
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle, rgba(213, 120, 0, 0.18), transparent 70%);
+  z-index: 0;
+  filter: blur(40px);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.phone {
+  position: relative;
+  z-index: 1;
+  width: 290px;
+  height: 600px;
+  background: #1d1d1f;
+  border-radius: 50px;
+  padding: 12px;
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.06) inset,
+    0 30px 60px rgba(26, 58, 26, 0.25),
+    0 60px 120px rgba(213, 120, 0, 0.15);
+}
+.phone-screen {
+  background: white;
+  border-radius: 38px;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.phone-notch {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 96px;
+  height: 26px;
+  background: #1d1d1f;
+  border-radius: 14px;
+  z-index: 5;
+}
+.demo-app {
+  padding: 64px 22px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  background: white;
+  color: #1d1d1f;
+}
+.demo-flag { font-size: 32px; margin-top: 14px; }
+.demo-title {
+  font-size: 22px;
+  font-weight: 800;
+  margin-top: 8px;
+  letter-spacing: -0.02em;
+}
+.demo-tagline {
+  font-size: 13px;
+  color: #777;
+  margin-top: 4px;
+  margin-bottom: 22px;
+}
+
+/* The animated demo card itself */
+.demo-card {
+  width: 100%;
+  background: white;
+  border: 1px solid #e2e2e7;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+.demo-suggbar {
+  height: 36px;
+  background: #f2f2f5;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  gap: 4px;
+  border-bottom: 1px solid #e2e2e7;
+}
+.demo-pill {
+  font-size: 12px;
+  padding: 4px 9px;
+  border-radius: 5px;
+  background: white;
+  border: 1px solid #e2e2e7;
+  color: #333;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+.demo-pill.highlight {
+  background: var(--copper);
+  color: white;
+  border-color: var(--copper);
+  font-weight: 600;
+}
+.demo-textfield {
+  height: 130px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  font-size: 17px;
+  color: #1d1d1f;
+  position: relative;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+.demo-textfield .typed,
+.demo-textfield .replacement {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.demo-textfield .cursor {
+  display: inline-block;
+  width: 2px;
+  height: 22px;
+  background: var(--copper);
+  margin-left: 1px;
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+}
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.demo-cta {
+  margin-top: auto;
+  width: 100%;
+  background: var(--copper);
+  color: white;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 8px;
+}
+.demo-credit {
+  font-size: 9px;
+  color: #999;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+/* ============== Demo animation: drives 3 phrases through 1 cycle ==== */
+/* Total cycle: ~15s. 3 phrases × 5s each. */
+@keyframes demoPhraseSwap {
+  /* Phrase 1: Lefkosia (0-33%) */
+  0%, 33%   { --p-typed: "Lefkosia"; --p-greek: "Λευκωσία"; }
+  /* Phrase 2: je (33-66%) */
+  33.01%, 66% { --p-typed: "je"; --p-greek: "τζαι"; }
+  /* Phrase 3: pe je stous allous (66-100%) */
+  66.01%, 100% { --p-typed: "pe je stous allous"; --p-greek: "πε τζαι στους άλλους"; }
+}
+/* CSS doesn't quite let us animate string content via @property in older browsers,
+   so we do the cycle via JS instead, applying per-phrase animations to .typed and .replacement. */
+
+.suggbar-row {
+  display: flex;
+  gap: 4px;
+  width: 100%;
+  align-items: center;
+}
+.suggbar-row .pill-typed {
+  opacity: 1;
+  animation: pillTypedFade 5s linear infinite;
+}
+.suggbar-row .pill-greek {
+  opacity: 0;
+  animation: pillGreekShow 5s linear infinite;
+}
+@keyframes pillTypedFade {
+  0%, 30% { opacity: 1; }
+  35%, 75% { opacity: 0.4; }
+  85%, 100% { opacity: 1; }
+}
+@keyframes pillGreekShow {
+  0%, 25% { opacity: 0; transform: translateY(-4px); }
+  30%, 80% { opacity: 1; transform: translateY(0); }
+  90%, 100% { opacity: 0; transform: translateY(-4px); }
+}
+
+.demo-textfield .typed {
+  animation: typedFade 5s linear infinite;
+}
+.demo-textfield .replacement {
+  opacity: 0;
+  animation: replacementShow 5s linear infinite;
+}
+@keyframes typedFade {
+  0%, 50% { opacity: 1; }
+  56%, 88% { opacity: 0; }
+  94%, 100% { opacity: 1; }
+}
+@keyframes replacementShow {
+  0%, 50% { opacity: 0; }
+  56%, 88% { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+
+/* ============== FEATURES ============== */
+.section {
+  padding: 80px 0;
+}
+.section-eyebrow {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--olive);
+  margin-bottom: 12px;
+}
+.section h2 {
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  color: var(--ink);
+}
+.section p.lead {
+  font-size: 18px;
+  color: var(--secondary);
+  max-width: 640px;
+  margin-bottom: 48px;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+@media (max-width: 880px) {
+  .features { grid-template-columns: 1fr; }
+}
+.feature {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 28px;
+  border: 1px solid var(--hairline);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.feature:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+.feature .glyph {
+  font-size: 32px;
+  color: var(--olive);
+  margin-bottom: 16px;
+  line-height: 1;
+  font-weight: 600;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: rgba(107, 127, 58, 0.1);
+  display: grid;
+  place-items: center;
+}
+.feature h3 {
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.feature p {
+  font-size: 15px;
+  color: var(--secondary);
+  line-height: 1.55;
+}
+
+/* ============== SCREENSHOT GALLERY ============== */
+.gallery-section {
+  background: var(--bg-alt);
+  border-radius: var(--radius-lg);
+  padding: 64px 32px;
+  margin: 0 24px;
+}
+@media (min-width: 1148px) {
+  .gallery-section {
+    margin: 0 calc((100vw - 1100px) / 2 + 24px);
+  }
+}
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 32px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+.shot {
+  text-align: center;
+}
+.shot-frame {
+  background: #1d1d1f;
+  border-radius: 38px;
+  padding: 8px;
+  margin: 0 auto;
+  max-width: 200px;
+  position: relative;
+  box-shadow: 0 16px 40px rgba(26, 58, 26, 0.15);
+  transition: transform 0.25s;
+}
+.shot-frame:hover { transform: translateY(-6px); }
+.shot-frame::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 64px;
+  height: 18px;
+  background: #1d1d1f;
+  border-radius: 11px;
+  z-index: 2;
+}
+.shot-frame img {
+  width: 100%;
+  border-radius: 32px;
+  display: block;
+}
+.shot-label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 18px;
+  color: var(--ink);
+}
+.shot-sub {
+  font-size: 12px;
+  color: var(--secondary);
+  margin-top: 4px;
+}
+
+/* ============== HOW IT WORKS ============== */
+.how-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+@media (max-width: 880px) {
+  .how-grid { grid-template-columns: 1fr; gap: 48px; }
+}
+.steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.steps li {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+.step-num {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--copper);
+  color: white;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 16px;
+}
+.step-content h4 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--ink);
+}
+.step-content p {
+  font-size: 15px;
+  color: var(--secondary);
+}
+.step-content code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  background: var(--bg-alt);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--ink);
+  border: 1px solid var(--hairline);
+}
+
+/* ============== PRIVACY ============== */
+.privacy-card {
+  background: linear-gradient(135deg, rgba(107, 127, 58, 0.08), rgba(213, 120, 0, 0.05));
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  padding: 48px;
+}
+@media (max-width: 880px) {
+  .privacy-card { padding: 32px 24px; }
+}
+.privacy-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-top: 32px;
+}
+@media (max-width: 700px) {
+  .privacy-list { grid-template-columns: 1fr; }
+}
+.priv-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.priv-check {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--olive);
+  color: white;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 16px;
+}
+.priv-item h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: 4px;
+}
+.priv-item p {
+  font-size: 14px;
+  color: var(--secondary);
+}
+
+/* ============== ABOUT ============== */
+.about-text {
+  max-width: 720px;
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+.about-text p { margin-bottom: 18px; }
+.about-text p:last-child { margin-bottom: 0; }
+.credits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 32px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--hairline);
+  font-size: 14px;
+  color: var(--secondary);
+}
+.credits .credit-item strong { color: var(--ink); }
+
+/* ============== CTA STRIP ============== */
+.cta-strip {
+  background: var(--ink);
+  color: var(--bg);
+  border-radius: var(--radius-lg);
+  padding: 64px 48px;
+  text-align: center;
+  margin: 0 24px;
+}
+@media (min-width: 1148px) {
+  .cta-strip {
+    margin: 0 calc((100vw - 1100px) / 2 + 24px);
+  }
+}
+.cta-strip h2 {
+  color: var(--bg);
+  margin-bottom: 12px;
+}
+.cta-strip p {
+  color: rgba(254, 252, 249, 0.75);
+  max-width: 480px;
+  margin: 0 auto 32px;
+  font-size: 17px;
+}
+.cta-strip .appstore-btn {
+  background: var(--bg);
+  color: var(--ink);
+}
+.cta-strip .appstore-btn:hover {
+  color: var(--ink);
+  background: white;
+}
+
+/* ============== FOOTER ============== */
+footer {
+  padding: 48px 0;
+  border-top: 1px solid var(--hairline);
+  margin-top: 80px;
+  font-size: 13px;
+  color: var(--tertiary);
+}
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-links {
+  display: flex;
+  gap: 24px;
+}
+.footer-links a {
+  color: var(--secondary);
+}
+.footer-links a:hover { color: var(--copper); }
+
+/* ============== LOCALE PANELS ============== */
+.locale-panel { display: none; }
+.locale-panel.active { display: block; }
+
+/* ============== UTIL ============== */
+.center { text-align: center; }
+
+/* Print/screenshot friendly */
+@media print {
+  nav, .cta-strip, footer { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ================ NAV ================ -->
+<nav>
+  <div class="container nav-row">
+    <div class="nav-brand">
+      <img src="./icon/icon-512.png" alt="">
+      <span data-en="Cypriot Keyboard" data-el="Κυπριακό Πληκτρολόγιο">Cypriot Keyboard</span>
+    </div>
+    <div class="nav-actions">
+      <div class="locale-switch">
+        <button class="active" onclick="setLocale('en', this)">EN</button>
+        <button onclick="setLocale('el', this)">EL</button>
+      </div>
+      <a href="https://apps.apple.com/us/app/cypriot-keyboard/id1553811546" class="nav-cta" data-en="Get it" data-el="Κατέβασε">Get it</a>
+    </div>
+  </div>
+</nav>
+
+<!-- =============== EN PANEL =============== -->
+<div class="locale-panel active" id="panel-en" lang="en">
+
+<header class="hero container">
+  <div>
+    <div class="hero-eyebrow">Made for Cypriot Greek</div>
+    <h1>Type "Lefkosia",<br>get <span class="accent">"Λευκωσία".</span></h1>
+    <p class="lead">A Cypriot Greek keyboard for iPhone and iPad. Type the way you naturally text — Greeklish, English-letter shorthand, or full Greek — and the keyboard does the work.</p>
+    <div class="hero-cta">
+      <a href="https://apps.apple.com/us/app/cypriot-keyboard/id1553811546" class="appstore-btn">
+        <span class="apple"></span>
+        <span class="label">
+          <span class="small">Download on the</span>
+          <span class="big">App Store</span>
+        </span>
+      </a>
+    </div>
+    <div class="hero-meta">Free · No ads · No tracking · iPhone &amp; iPad</div>
+  </div>
+
+  <div class="hero-phone-wrap">
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="demo-app">
+          <div class="demo-flag">🇨🇾</div>
+          <div class="demo-title">Cypriot Keyboard</div>
+          <div class="demo-tagline">Type Greek the easy way</div>
+          <div class="demo-card">
+            <div class="demo-suggbar">
+              <span class="demo-pill pill-typed">Lefkosia</span>
+              <span class="demo-pill highlight pill-greek">Λευκωσία</span>
+            </div>
+            <div class="demo-textfield">
+              <span class="typed">Lefkosia<span class="cursor"></span></span>
+              <span class="replacement">Λευκωσία</span>
+            </div>
+          </div>
+          <div class="demo-cta">Install in 3 taps  →</div>
+          <div class="demo-credit">By Alex Toumazis</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- =============== FEATURES =============== -->
+<section class="section container">
+  <div class="section-eyebrow">What it does</div>
+  <h2>Built for Cypriot Greek<br>from first principles.</h2>
+  <p class="lead">Stuff a standard Greek keyboard leaves out, and the daily annoyances it doesn't.</p>
+
+  <div class="features">
+    <div class="feature">
+      <div class="glyph">✦</div>
+      <h3>Greeklish autocorrect</h3>
+      <p>Type "kalimera" — get "καλημέρα". Type "Lefkosia" — get "Λευκωσία". Built on a real Cypriot dictionary, not a transliteration table.</p>
+    </div>
+    <div class="feature">
+      <div class="glyph">σ̆</div>
+      <h3>Cypriot characters</h3>
+      <p>σ̆ ζ̆ ξ̆ ψ̆ for the sounds standard Greek doesn't have. A dedicated breve key, in the right place. Final-σ flips to ς automatically.</p>
+    </div>
+    <div class="feature">
+      <div class="glyph">´</div>
+      <h3>Tonos done right</h3>
+      <p>The keyboard places the tonos for multi-syllable words while you type. No more accent menus, no more long-press combos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- =============== GALLERY =============== -->
+<section class="gallery-section">
+  <div class="container center" style="margin-bottom: 32px; padding: 0 16px;">
+    <div class="section-eyebrow">See it in action</div>
+    <h2 style="font-size: clamp(26px, 3.6vw, 34px);">One hand, one tap, one word.</h2>
+  </div>
+
+  <div class="gallery">
+    <div class="shot">
+      <div class="shot-frame"><img src="./screenshots/welcome-en.png" alt="Welcome screen"></div>
+      <div class="shot-label">Type Greeklish, get Greek</div>
+      <div class="shot-sub">Lefkosia → Λευκωσία</div>
+    </div>
+    <div class="shot">
+      <div class="shot-frame"><img src="./screenshots/welcome-en-je.png" alt="je → τζαι"></div>
+      <div class="shot-label">Cypriot dialect, built in</div>
+      <div class="shot-sub">je → τζαι</div>
+    </div>
+    <div class="shot">
+      <div class="shot-frame"><img src="./screenshots/welcome-en-allous.png" alt="Whole phrase"></div>
+      <div class="shot-label">Whole phrases, no fuss</div>
+      <div class="shot-sub">pe je stous allous → πε τζαι στους άλλους</div>
+    </div>
+    <div class="shot">
+      <div class="shot-frame"><img src="./screenshots/postinstall-en.png" alt="Post install"></div>
+      <div class="shot-label">All set in 3 taps</div>
+      <div class="shot-sub">Try it the moment you install</div>
+    </div>
+  </div>
+</section>
+
+<!-- =============== HOW IT WORKS =============== -->
+<section class="section container">
+  <div class="how-grid">
+    <div>
+      <div class="section-eyebrow">Setup</div>
+      <h2>30 seconds.</h2>
+      <p class="lead">Three taps in Settings, and the keyboard is yours wherever iOS lets you type — Messages, Mail, WhatsApp, Notes, Twitter, Slack.</p>
+    </div>
+    <ol class="steps">
+      <li>
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Open the app</h4>
+          <p>Tap "Install in 3 taps" — it'll deep-link straight to the Keyboards screen in iOS Settings.</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Add the keyboard</h4>
+          <p>Tap <code>Add New Keyboard</code> → <code>Κυπριακά</code>.</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Tap 🌐 anywhere</h4>
+          <p>In any app, tap the globe icon on your keyboard to switch to Cypriot. That's it.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- =============== PRIVACY =============== -->
+<section class="section container">
+  <div class="privacy-card">
+    <div class="section-eyebrow">Privacy</div>
+    <h2>Your typing stays on your device.</h2>
+    <p class="lead">No internet permissions. No tracking. No analytics. Apple's "Open Access" toggle is OFF — your keystrokes never leave your device, and we couldn't see them if we wanted to.</p>
+    <div class="privacy-list">
+      <div class="priv-item">
+        <div class="priv-check">✓</div>
+        <h4>Fully offline</h4>
+        <p>The keyboard works the same on the train as on Wi-Fi. No connection required, ever.</p>
+      </div>
+      <div class="priv-item">
+        <div class="priv-check">✓</div>
+        <h4>No SDKs</h4>
+        <p>No Firebase, no Mixpanel, no Sentry. We don't know how often you use it.</p>
+      </div>
+      <div class="priv-item">
+        <div class="priv-check">✓</div>
+        <h4>Open source</h4>
+        <p>The whole repo is on <a href="https://github.com/atmz/CypriotKeyboard">GitHub</a>. Audit it yourself.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============== ABOUT =============== -->
+<section class="section container">
+  <div class="section-eyebrow">Made in Cyprus</div>
+  <h2>A keyboard, by a Cypriot, for the language we actually speak.</h2>
+  <div class="about-text">
+    <p>Standard Greek keyboards don't have the characters Cypriot Greek uses every day. They don't know that "Lefkosia" should auto-correct to "Λευκωσία", or that "je" is "τζαι". This one does.</p>
+    <p>Built on top of a Cypriot Greek dictionary curated by <strong>Dr Spyros Armostis</strong> (University of Cyprus), with phonetic refinements from Aceras Anthropophorum, on the <strong>KeyboardKit</strong> framework by Daniel Saidi.</p>
+  </div>
+  <div class="credits">
+    <div class="credit-item"><strong>Author</strong> · Alex Toumazis</div>
+    <div class="credit-item"><strong>Linguistic data</strong> · Dr Spyros Armostis (UCY)</div>
+    <div class="credit-item"><strong>Phonetic corrections</strong> · Aceras Anthropophorum</div>
+    <div class="credit-item"><strong>Keyboard framework</strong> · Daniel Saidi (KeyboardKit)</div>
+  </div>
+</section>
+
+<!-- =============== CTA STRIP =============== -->
+<section class="cta-strip">
+  <h2>Get it on the App Store.</h2>
+  <p>Free, no ads, no in-app purchases. Just a keyboard that gets the language right.</p>
+  <a href="https://apps.apple.com/us/app/cypriot-keyboard/id1553811546" class="appstore-btn">
+    <span class="apple"></span>
+    <span class="label">
+      <span class="small">Download on the</span>
+      <span class="big">App Store</span>
+    </span>
+  </a>
+</section>
+
+</div> <!-- /panel-en -->
+
+
+<!-- =============== EL PANEL =============== -->
+<div class="locale-panel" id="panel-el" lang="el">
+
+<header class="hero container">
+  <div>
+    <div class="hero-eyebrow">Φτιαγμένο για τα Κυπριακά</div>
+    <h1>Γράφε "Lefkosia",<br>παίρνεις <span class="accent">"Λευκωσία".</span></h1>
+    <p class="lead">Ένα Κυπριακό πληκτρολόγιο για iPhone τζαι iPad. Γράφε όπως γράφεις στα μηνύματα — σε Greeklish, σε Ελληνικά, ή ανάμεικτα — τζαι το πληκτρολόγιο κάνει τη δουλειά για σένα.</p>
+    <div class="hero-cta">
+      <a href="https://apps.apple.com/gr/app/cypriot-keyboard/id1553811546" class="appstore-btn">
+        <span class="apple"></span>
+        <span class="label">
+          <span class="small">Διαθέσιμο στο</span>
+          <span class="big">App Store</span>
+        </span>
+      </a>
+    </div>
+    <div class="hero-meta">Δωρεάν · Χωρίς διαφημίσεις · Χωρίς tracking · iPhone &amp; iPad</div>
+  </div>
+
+  <div class="hero-phone-wrap">
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="demo-app">
+          <div class="demo-flag">🇨🇾</div>
+          <div class="demo-title">Κυπριακό</div>
+          <div class="demo-tagline">Γράφε Ελληνικά εύκολα</div>
+          <div class="demo-card">
+            <div class="demo-suggbar">
+              <span class="demo-pill pill-typed">Lefkosia</span>
+              <span class="demo-pill highlight pill-greek">Λευκωσία</span>
+            </div>
+            <div class="demo-textfield">
+              <span class="typed">Lefkosia<span class="cursor"></span></span>
+              <span class="replacement">Λευκωσία</span>
+            </div>
+          </div>
+          <div class="demo-cta">Σε 3 βήματα  →</div>
+          <div class="demo-credit">Αλέξανδρος Τουμαζής</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="section container">
+  <div class="section-eyebrow">Τι κάνει</div>
+  <h2>Φτιαγμένο για τα Κυπριακά<br>από την αρχή.</h2>
+  <p class="lead">Ό,τι λείπει από το κοινό Ελληνικό πληκτρολόγιο, τζαι τα μικρά εκνευριστικά της καθημερινής γραφής.</p>
+
+  <div class="features">
+    <div class="feature">
+      <div class="glyph">✦</div>
+      <h3>Greeklish autocorrect</h3>
+      <p>Γράφε "kalimera" — παίρνεις "καλημέρα". Γράφε "Lefkosia" — παίρνεις "Λευκωσία". Βασισμένο σε πραγματικό Κυπριακό λεξικό, όχι σε απλή μεταγραφή.</p>
+    </div>
+    <div class="feature">
+      <div class="glyph">σ̆</div>
+      <h3>Κυπριακοί χαρακτήρες</h3>
+      <p>σ̆ ζ̆ ξ̆ ψ̆ για τους ήχους που δεν έχει η κοινή. Ξεχωριστό πλήκτρο για το breve, στη σωστή θέση. Το τελικό σ γίνεται ς αυτόματα.</p>
+    </div>
+    <div class="feature">
+      <div class="glyph">´</div>
+      <h3>Τόνοι αυτόματα</h3>
+      <p>Το πληκτρολόγιο βάζει τον τόνο σε λέξεις με δύο ή περισσότερες συλλαβές. Όχι menu για τόνους, όχι long-press.</p>
+    </div>
+  </div>
+</section>
+
+<section class="gallery-section">
+  <div class="container center" style="margin-bottom: 32px; padding: 0 16px;">
+    <div class="section-eyebrow">Δες το</div>
+    <h2 style="font-size: clamp(26px, 3.6vw, 34px);">Ένα χέρι, ένα tap, μία λέξη.</h2>
+  </div>
+
+  <div class="gallery">
+    <div class="shot">
+      <div class="shot-frame"><img src="./screenshots/welcome-el.png" alt="Καλωσόρισμα"></div>
+      <div class="shot-label">Greeklish → Ελληνικά</div>
+      <div class="shot-sub">Γρήγορα τζαι σωστά</div>
+    </div>
+    <div class="shot">
+      <div class="shot-frame"><img src="./screenshots/postinstall-el.png" alt="Έτοιμο"></div>
+      <div class="shot-label">Έτοιμο σε 3 βήματα</div>
+      <div class="shot-sub">Δοκίμασε αμέσως</div>
+    </div>
+    <div class="shot">
+      <div class="shot-frame"><img src="./screenshots/ipad-en.png" alt="iPad"></div>
+      <div class="shot-label">Τζαι στο iPad</div>
+      <div class="shot-sub">Ένα app, δύο συσκευές</div>
+    </div>
+  </div>
+</section>
+
+<section class="section container">
+  <div class="how-grid">
+    <div>
+      <div class="section-eyebrow">Εγκατάσταση</div>
+      <h2>30 δευτερόλεπτα.</h2>
+      <p class="lead">Τρία βήματα στις Ρυθμίσεις, τζαι το πληκτρολόγιο είναι σου παντού όπου γράφεις iOS — Messages, Mail, WhatsApp, Notes, Twitter, Slack.</p>
+    </div>
+    <ol class="steps">
+      <li>
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Άνοιξε την εφαρμογή</h4>
+          <p>Πάτα "Σε 3 βήματα" — σε πάει κατευθείαν στις Ρυθμίσεις πληκτρολογίου.</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Πρόσθεσε το πληκτρολόγιο</h4>
+          <p>Πάτα <code>Add New Keyboard</code> → <code>Κυπριακά</code>.</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Πάτα 🌐 οπουδήποτε</h4>
+          <p>Σε όποια εφαρμογή γράφεις, πάτα τη σφαίρα στο πληκτρολόγιο για να αλλάξεις στα Κυπριακά. Αυτό ήταν.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="section container">
+  <div class="privacy-card">
+    <div class="section-eyebrow">Ιδιωτικότητα</div>
+    <h2>Ό,τι γράφεις, μένει στη συσκευή σου.</h2>
+    <p class="lead">Χωρίς δικαιώματα internet. Χωρίς tracking. Χωρίς analytics. Το "Open Access" της Apple είναι OFF — τα γράμματα που πατάς δεν φεύγουν ποτέ από τη συσκευή σου, τζαι δεν θα μπορούσαμε να τα δούμε ούτε να θέλαμε.</p>
+    <div class="privacy-list">
+      <div class="priv-item">
+        <div class="priv-check">✓</div>
+        <h4>Εντελώς offline</h4>
+        <p>Το πληκτρολόγιο δουλεύει το ίδιο στο τραίνο όπως στο Wi-Fi.</p>
+      </div>
+      <div class="priv-item">
+        <div class="priv-check">✓</div>
+        <h4>Χωρίς SDKs</h4>
+        <p>Χωρίς Firebase, Mixpanel, Sentry. Δεν ξέρουμε πόσο συχνά το χρησιμοποιείς.</p>
+      </div>
+      <div class="priv-item">
+        <div class="priv-check">✓</div>
+        <h4>Open source</h4>
+        <p>Όλο το repo στο <a href="https://github.com/atmz/CypriotKeyboard">GitHub</a>. Δες μόνος σου.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section container">
+  <div class="section-eyebrow">Από την Κύπρο</div>
+  <h2>Ένα πληκτρολόγιο, από Κύπριο, για τη γλώσσα που πραγματικά μιλάμε.</h2>
+  <div class="about-text">
+    <p>Τα κοινά Ελληνικά πληκτρολόγια δεν έχουν τους χαρακτήρες που χρησιμοποιούμε στα Κυπριακά. Δεν ξέρουν ότι το "Lefkosia" είναι "Λευκωσία", ή ότι το "je" είναι "τζαι". Αυτό ξέρει.</p>
+    <p>Βασισμένο στο Κυπριακό λεξικό του <strong>Δρ Σπύρου Αρμοστή</strong> (Πανεπιστήμιο Κύπρου), με φωνητικές διορθώσεις από τον Aceras Anthropophorum, στο framework <strong>KeyboardKit</strong> του Daniel Saidi.</p>
+  </div>
+  <div class="credits">
+    <div class="credit-item"><strong>Δημιουργός</strong> · Αλέξανδρος Τουμαζής</div>
+    <div class="credit-item"><strong>Λεξιλογικά δεδομένα</strong> · Δρ Σπύρος Αρμοστής (UCY)</div>
+    <div class="credit-item"><strong>Φωνητικές διορθώσεις</strong> · Aceras Anthropophorum</div>
+    <div class="credit-item"><strong>Keyboard framework</strong> · Daniel Saidi (KeyboardKit)</div>
+  </div>
+</section>
+
+<section class="cta-strip">
+  <h2>Κατέβασε το από το App Store.</h2>
+  <p>Δωρεάν, χωρίς διαφημίσεις, χωρίς αγορές εντός εφαρμογής. Απλά ένα πληκτρολόγιο που σέβεται τη γλώσσα.</p>
+  <a href="https://apps.apple.com/gr/app/cypriot-keyboard/id1553811546" class="appstore-btn">
+    <span class="apple"></span>
+    <span class="label">
+      <span class="small">Διαθέσιμο στο</span>
+      <span class="big">App Store</span>
+    </span>
+  </a>
+</section>
+
+</div> <!-- /panel-el -->
+
+
+<!-- =============== FOOTER =============== -->
+<footer>
+  <div class="container footer-row">
+    <div>© 2026 Alex Toumazis · Made in Cyprus</div>
+    <div class="footer-links">
+      <a href="https://github.com/atmz/CypriotKeyboard">GitHub</a>
+      <a href="https://apps.apple.com/us/app/cypriot-keyboard/id1553811546">App Store</a>
+      <a href="mailto:alex.toumazis@gmail.com">Email</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+function setLocale(loc, btn) {
+  document.querySelectorAll('.locale-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + loc).classList.add('active');
+  document.querySelectorAll('.locale-switch button').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.documentElement.setAttribute('data-locale', loc);
+  document.documentElement.lang = loc;
+  // Update brand text + nav CTA
+  document.querySelectorAll('[data-en]').forEach(el => {
+    el.textContent = loc === 'el' ? el.dataset.el : el.dataset.en;
+  });
+  window.scrollTo({ top: 0 });
+}
+
+// Apple-glyph fallback if not rendering: add a unicode character via JS
+document.querySelectorAll('.apple').forEach(el => { el.textContent = ''; });
+
+// === Phrase cycler — swaps the demo loop strings every 5s
+(function() {
+  const phrases = [
+    { typed: 'Lefkosia', greek: 'Λευκωσία' },
+    { typed: 'je', greek: 'τζαι' },
+    { typed: 'pe je stous allous', greek: 'πε τζαι στους άλλους' }
+  ];
+  let idx = 0;
+  function applyPhrase(p, root) {
+    root.querySelectorAll('.pill-typed').forEach(el => el.textContent = p.typed);
+    root.querySelectorAll('.pill-greek').forEach(el => el.textContent = p.greek);
+    root.querySelectorAll('.demo-textfield .typed').forEach(el => {
+      // preserve the cursor span at end
+      const cursor = el.querySelector('.cursor');
+      el.textContent = p.typed;
+      if (cursor) el.appendChild(cursor);
+    });
+    root.querySelectorAll('.demo-textfield .replacement').forEach(el => el.textContent = p.greek);
+    // Re-trigger CSS animations by toggling a key class
+    root.querySelectorAll('.demo-card').forEach(card => {
+      card.classList.remove('demo-running');
+      void card.offsetWidth; // reflow
+      card.classList.add('demo-running');
+    });
+  }
+  function tick() {
+    const active = document.querySelector('.locale-panel.active') || document;
+    applyPhrase(phrases[idx % phrases.length], active);
+    idx++;
+  }
+  // Apply initial then cycle every 5s
+  setTimeout(() => {
+    tick();
+    setInterval(tick, 5000);
+  }, 100);
+})();
+</script>
+
+</body>
+</html>
