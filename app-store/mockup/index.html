@@ -85,24 +85,15 @@
     .icon {
       width: 200px;
       height: 200px;
-      background: linear-gradient(135deg, var(--copper), #c46a00);
       border-radius: 44px;
-      display: grid;
-      place-items: center;
-      box-shadow: 0 12px 30px rgba(213, 120, 0, 0.25);
-      position: relative;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
       overflow: hidden;
+      background: white;
     }
-    .icon::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18), transparent 60%);
-    }
-    .icon-glyph {
-      font-size: 100px;
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.18));
-      line-height: 1;
+    .icon img {
+      width: 100%;
+      height: 100%;
+      display: block;
     }
     .hero-text h1 {
       font-size: 32px;
@@ -417,7 +408,7 @@
   <div class="locale-panel active" id="panel-en">
 
     <section class="hero">
-      <div class="icon"><div class="icon-glyph">🇨🇾</div></div>
+      <div class="icon"><img src="../icon/app-icon-1024.png" alt="Cypriot Keyboard"></div>
       <div class="hero-text">
         <h1>Cypriot Keyboard</h1>
         <div class="subtitle">Type Greek the easy way</div>
@@ -568,7 +559,7 @@
   <div class="locale-panel" id="panel-el">
 
     <section class="hero">
-      <div class="icon"><div class="icon-glyph">🇨🇾</div></div>
+      <div class="icon"><img src="../icon/app-icon-1024.png" alt="Cypriot Keyboard"></div>
       <div class="hero-text">
         <h1>Κυπριακό Πληκτρολόγιο</h1>
         <div class="subtitle">Γράφε Ελληνικά εύκολα</div>
