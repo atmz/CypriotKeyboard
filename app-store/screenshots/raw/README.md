@@ -25,18 +25,22 @@ App Store Connect groups by display size class. Apple downsamples for smaller cl
 
 ## Current contents (captured 2026-05-07)
 
-All captured at the "hold replaced" phase of the demo loop animation (clean frame, no transition overlap).
+All captured at the "hold replaced" phase of the demo loop animation (clean frame, no transition overlap, with the new opacity-stacking demo loop).
 
-| File                                       | State        | Locale | Device              |
-|--------------------------------------------|--------------|--------|---------------------|
-| `welcome-en-iphone17pro.png`               | Welcome      | en     | iPhone 17 Pro (6.3") |
-| `welcome-el-iphone17pro.png`               | Welcome      | el     | iPhone 17 Pro (6.3") |
-| `welcome-en-iphone16e.png`                 | Welcome      | en     | iPhone 16e (6.1")   |
-| `welcome-el-iphone16e.png`                 | Welcome      | el     | iPhone 16e (6.1")   |
-| `postinstall-en-iphone17promax.png`        | Post-install | en     | iPhone 17 Pro Max (6.9") |
-| `postinstall-el-iphone17promax.png`        | Post-install | el     | iPhone 17 Pro Max (6.9") |
-| `postinstall-en-iphone17.png`              | Post-install | en     | iPhone 17 (6.1")    |
-| `postinstall-el-iphone17.png`              | Post-install | el     | iPhone 17 (6.1")    |
+| File                                          | State        | Locale | Device                | Demo phrase shown |
+|-----------------------------------------------|--------------|--------|-----------------------|-------------------|
+| `welcome-en-iphone17promax.png`               | Welcome      | en     | iPhone 17 Pro Max (6.9") | Lefkosia → Λευκωσία |
+| `welcome-el-iphone17promax.png`               | Welcome      | el     | iPhone 17 Pro Max (6.9") | Lefkosia → Λευκωσία |
+| `welcome-en-iphone17promax-je.png`            | Welcome      | en     | iPhone 17 Pro Max (6.9") | je → τζαι |
+| `welcome-en-iphone17promax-allous.png`        | Welcome      | en     | iPhone 17 Pro Max (6.9") | pe je stous allous → πε τζαι στους άλλους |
+| `welcome-en-iphone17pro.png`                  | Welcome      | en     | iPhone 17 Pro (6.3")  | Lefkosia |
+| `welcome-el-iphone17pro.png`                  | Welcome      | el     | iPhone 17 Pro (6.3")  | Lefkosia |
+| `welcome-en-iphone16e.png`                    | Welcome      | en     | iPhone 16e (6.1")     | Lefkosia |
+| `welcome-el-iphone16e.png`                    | Welcome      | el     | iPhone 16e (6.1")     | Lefkosia |
+| `postinstall-en-iphone17.png`                 | Post-install | en     | iPhone 17 (6.1")      | Lefkosia |
+| `postinstall-el-iphone17.png`                 | Post-install | el     | iPhone 17 (6.1")      | Lefkosia |
+
+The 3 phrase variants on iPhone 17 Pro Max give you a carousel option for the App Store: lead with `Lefkosia` (canonical hook), follow with `je` (showcases Cypriot dialect), close with the full phrase (showcases multi-word handling).
 
 ## Capture command
 
@@ -60,6 +64,7 @@ To capture the **post-install** state, the Cypriot keyboard must be added in iOS
 
 ## Still missing
 
-- **Welcome** state on iPhone 17 Pro Max — that sim has the keyboard installed. Erase content first (Device menu → Erase All Content and Settings) or use a fresh sim of the same class.
+- **Post-install on iPhone 17 Pro Max (6.9")** — that sim was erased to capture welcome state. Re-add the Cypriot keyboard in iOS Settings on it (Settings → General → Keyboard → Keyboards → Add → Κυπριακά), then re-launch and capture.
 - **iPad Pro 13"** captures — both states. Universal app supports iPad; Apple requires at least one iPad screenshot.
 - **Install sheet open** state — needs a tap mid-launch. Easiest by hand in the simulator: launch app, tap "Install in 3 taps" CTA, then `xcrun simctl io booted screenshot ...` from another terminal.
+- **el (Cypriot dialect) variants of the phrase carousel** — only `Lefkosia` was captured in el. The `je` and `allous` variants on iPhone 17 Pro Max are en only.
