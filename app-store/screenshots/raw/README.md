@@ -41,6 +41,8 @@ All captured at the "hold replaced" phase of the demo loop animation (clean fram
 | `postinstall-el-iphone17promax.png`           | Post-install | el     | iPhone 17 Pro Max (6.9") | Lefkosia |
 | `postinstall-en-iphone17.png`                 | Post-install | en     | iPhone 17 (6.1")      | Lefkosia |
 | `postinstall-el-iphone17.png`                 | Post-install | el     | iPhone 17 (6.1")      | Lefkosia |
+| `welcome-en-ipadpro13.png`                    | Welcome      | en     | iPad Pro 13" (M4)     | Lefkosia |
+| `welcome-el-ipadpro13.png`                    | Welcome      | el     | iPad Pro 13" (M4)     | Lefkosia |
 
 The 3 phrase variants on iPhone 17 Pro Max give you a carousel option for the App Store: lead with `Lefkosia` (canonical hook), follow with `je` (showcases Cypriot dialect), close with the full phrase (showcases multi-word handling).
 
@@ -66,6 +68,6 @@ To capture the **post-install** state, the Cypriot keyboard must be added in iOS
 
 ## Still missing
 
-- **iPad Pro 13"** captures — both states. Universal app supports iPad; Apple requires at least one iPad screenshot.
+- **iPad Pro 13" post-install** — needs the Cypriot keyboard added to the iPad sim manually (simctl can't tap UI). Add it (Settings → General → Keyboard → Keyboards → Add → Κυπριακά) on the iPad sim, then re-launch and capture.
 - **Install sheet open** state — needs a tap mid-launch. Easiest by hand in the simulator: launch app, tap "Install in 3 taps" CTA, then `xcrun simctl io booted screenshot ...` from another terminal.
-- **el (Cypriot dialect) variants of the phrase carousel** — only `Lefkosia` was captured in el. The `je` and `allous` variants on iPhone 17 Pro Max are en only.
+- **el variants of the `je` and `allous` phrase carousel** — only `Lefkosia` was captured in el. The other two on iPhone 17 Pro Max are en only.
