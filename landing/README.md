@@ -72,7 +72,19 @@ The main marketing copy is duplicated from `app-store/copy/{en,el}.md`. If you t
 
 ## Open Graph / sharing
 
-The `og:image` meta tag points at `./icon/icon-1024.png` — when the URL is shared on Slack/Twitter/iMessage, the icon previews. For a richer share image (a "card" with title and tagline), generate one and replace the meta tag — `og:image` should ideally be 1200×630 for Twitter / OG card consumers.
+The `og:image` meta tag currently points at `./icon/icon-1024.png` — when the URL is shared on Slack/Twitter/iMessage, the icon previews (platforms crop the 1024×1024 to the 1.91:1 ratio they want, which works fine for an app icon).
+
+For a richer share image (a "card" with title, tagline, and icon), `landing/og-card.html` is a **render-ready template** designed at exactly 1200×630. To export it as a PNG:
+
+```bash
+# headless Chrome — works on macOS with Chrome installed
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --headless --disable-gpu --window-size=1200,630 \
+  --screenshot=landing/og-card.png \
+  http://localhost:8765/landing/og-card.html
+```
+
+Then update the `og:image` meta tag in `index.html` to `./og-card.png`.
 
 ## What's not included
 

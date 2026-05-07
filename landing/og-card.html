@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OG Card — Cypriot Keyboard</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 1200px;
+    height: 630px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #faf3ea 0%, #fefcf9 50%, #fbf6ee 100%);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    color: #1a3a1a;
+  }
+  .stage {
+    width: 1200px;
+    height: 630px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 48px;
+    padding: 48px 64px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .stage::before {
+    content: "";
+    position: absolute;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(213, 120, 0, 0.18), transparent 60%);
+    bottom: -300px;
+    right: -200px;
+    filter: blur(40px);
+    pointer-events: none;
+  }
+  .text-col { z-index: 2; }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(213, 120, 0, 0.12);
+    color: #b86600;
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 22px;
+  }
+  h1 {
+    font-size: 70px;
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    margin-bottom: 18px;
+  }
+  .accent {
+    background: linear-gradient(180deg, #D57800, #b86600);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .lead {
+    font-size: 22px;
+    color: #5d6e5f;
+    line-height: 1.4;
+    max-width: 560px;
+    margin-bottom: 20px;
+  }
+  .badge-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    background: #1a3a1a;
+    color: #fefcf9;
+    padding: 14px 24px;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(26, 58, 26, 0.18);
+  }
+  .badge-row .label .small {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.75;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .badge-row .label .big {
+    font-size: 22px;
+    font-weight: 700;
+    display: block;
+    line-height: 1.05;
+  }
+  .badge-row .apple { font-size: 26px; }
+
+  .visual-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+  }
+  .icon-wrap {
+    width: 280px;
+    height: 280px;
+    border-radius: 60px;
+    overflow: hidden;
+    box-shadow:
+      0 30px 60px rgba(26, 58, 26, 0.18),
+      0 50px 120px rgba(213, 120, 0, 0.18);
+    background: white;
+  }
+  .icon-wrap img {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="text-col">
+    <div class="eyebrow">🇨🇾 Cypriot Keyboard</div>
+    <h1>Type "Lefkosia",<br>get <span class="accent">"Λευκωσία".</span></h1>
+    <div class="lead">A Cypriot Greek keyboard for iPhone &amp; iPad. Greeklish autocorrect, Cypriot characters σ̆ ζ̆ ξ̆ ψ̆, automatic accents.</div>
+    <div class="badge-row">
+      <span class="apple"></span>
+      <div class="label">
+        <span class="small">Download on the</span>
+        <span class="big">App Store</span>
+      </div>
+    </div>
+  </div>
+  <div class="visual-col">
+    <div class="icon-wrap">
+      <img src="./icon/icon-1024.png" alt="Cypriot Keyboard">
+    </div>
+  </div>
+</div>
+</body>
+</html>
