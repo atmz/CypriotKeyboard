@@ -47,7 +47,7 @@ Privacy:
   • No tracking, no analytics, no telemetry.
   • Open Access is OFF — your keystrokes never leave the device.
 
-Made in Cyprus by Alex Toumazis. Built on the Cypriot Greek dictionary curated by Dr Spyros Armostis (University of Cyprus), with phonetic corrections from Aceras Anthropophorum, on the KeyboardKit framework by Daniel Saidi.
+Made in Cyprus by Alex Toumazis. Built on the Cypriot Greek dictionary curated by Dr Spyros Armostis (University of Cyprus), on the KeyboardKit framework by Daniel Saidi.
 
 Free, no ads, no in-app purchases. Just a keyboard that gets the language right.
 ```

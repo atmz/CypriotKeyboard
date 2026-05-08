@@ -25,7 +25,7 @@ python3 -m http.server 8765 --directory app-store
 
 ## Editing
 
-Everything is in one `index.html`. Copy comes from `app-store/copy/{en,el}.md` — edit there first, then sync the mockup so they don't drift. Star ratings, install count, "1d ago" are placeholder.
+Everything is in one `index.html`. Copy comes from `app-store/copy/{en,el}.md` — edit there first, then sync the mockup so they don't drift. The "1d ago" timestamp is placeholder.
 
 ## Why not Frameit?
 
