@@ -25,9 +25,9 @@
 "onboarding.feature.cypriot.title" = "Κυπριακοί ήχοι";
 "onboarding.feature.cypriot.body" = "σ̆ ζ̆ ξ̆ ψ̆ για ήχους που δεν έχει η κοινή.";
 "onboarding.feature.accents.title" = "Τόνοι αυτόματα";
-"onboarding.feature.accents.body" = "Τόνοι τζαι το τελικό σ→ς γίνουνται μόνα τους.";
+"onboarding.feature.accents.body" = "Τόνοι τζ̆αι το τελικό σ→ς γίνουνται μόνα τους.";
 
 "onboarding.switchhint" = "Σε άλλη εφαρμογή, πάτα 🌐 για να αλλάξεις πληκτρολόγιο.";
 
-"onboarding.credits" = "Σπύρος Αρμοστής · Aceras Anthropophorum · Daniel Saidi";
+"onboarding.credits" = "Σπύρος Αρμοστής · Daniel Saidi";
 "onboarding.author" = "Αλέξανδρος Τουμαζής";

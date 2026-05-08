@@ -16,8 +16,8 @@ struct DemoLoopView: View {
 
     private let phrases: [DemoPhrase] = [
         .init(typed: "Lefkosia",           replacement: "Λευκωσία"),
-        .init(typed: "je",                 replacement: "τζαι"),
-        .init(typed: "pe je stous allous", replacement: "πε τζαι στους άλλους"),
+        .init(typed: "je",                 replacement: "τζ̆αι"),
+        .init(typed: "pe je stous allous", replacement: "πε τζ̆αι στους άλλους"),
     ]
 
     private var currentPhrase: DemoPhrase {
