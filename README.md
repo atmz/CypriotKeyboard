@@ -22,10 +22,10 @@ A Cypriot Greek keyboard for iPhone and iPad. Type "Lefkosia", get "Λευκωσ
 | `Cypriot KeyboardTests/` | Unit + UI tests |
 | `dict_generation/` | DAWG-based dictionary build pipeline (Python) |
 | `dict/` | Generated `el_CY.dawg` shipped to the extension |
+| `docs/` | Marketing landing page (deploy via GitHub Pages from `/docs`) + privacy policy |
 | `docs/superpowers/specs/` | Design specs |
 | `docs/superpowers/plans/` | Implementation plans |
 | `app-store/` | App Store listing copy, screenshots, mockup |
-| `landing/` | Marketing one-pager (deploy via GitHub Pages from `landing/`) |
 | `hunspell_src/` | Vendored Hunspell — kept for the eval pipeline only, no longer shipped |
 
 ## Build & run
@@ -46,7 +46,7 @@ For the test destination, pick a sim from `xcrun simctl list devices available`.
 ## Marketing & assets
 
 - **App Store listing mockup**: `app-store/mockup/index.html` (preview the listing locally before uploading; see `app-store/mockup/README.md`).
-- **Marketing landing page**: `landing/index.html` (single-page site; see `landing/README.md` to deploy on GitHub Pages).
+- **Marketing landing page**: `docs/index.html` (single-page site; see `docs/landing.md` to deploy on GitHub Pages).
 - **Copy drafts**: `app-store/copy/{en,el}.md` (English + Cypriot Greek).
 - **Screenshots**: `app-store/screenshots/raw/` (native-resolution, ready to upload).
 
