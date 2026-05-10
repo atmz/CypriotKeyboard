@@ -23,22 +23,20 @@ App Store Connect groups by display size class. Apple downsamples for smaller cl
 | iPhone 16e / 17      | 1170×2532     | 6.1"                    |
 | iPad Pro 13" (M4)    | 2064×2752     | iPad 13"                |
 
-## Current contents (captured 2026-05-07)
+## Current contents (captured 2026-05-10)
 
-All captured at the "hold replaced" phase of the demo loop animation (clean frame, no transition overlap, with the new opacity-stacking demo loop).
+All captured at the "hold replaced" phase of the demo loop animation (clean frame, no transition overlap), against the v1.9 onboarding with the **new copy**: hero CTA "Set up the keyboard →" (was "Install in 3 taps"), install sheet "Add the keyboard" with breadcrumb steps, and `UIApplication.openSettingsURLString` as the underlying deep link. **Re-capture if the install copy changes again** — the previous v1.8/v1.9-pre captures had the old "Install in 3 taps" text and are obsolete.
 
 | File                                          | State        | Locale | Device                | Demo phrase shown |
 |-----------------------------------------------|--------------|--------|-----------------------|-------------------|
-| `welcome-en-iphone17promax.png`               | Welcome      | en     | iPhone 17 Pro (6.3")  | Lefkosia → Λευκωσία |
+| `welcome-en-iphone17promax.png`               | Welcome      | en     | iPhone 17 Pro Max (6.9") | Lefkosia → Λευκωσία |
 | `welcome-el-iphone17promax.png`               | Welcome      | el     | iPhone 17 Pro Max (6.9") | Lefkosia → Λευκωσία |
-| `welcome-en-iphone17promax-je.png`            | Welcome      | en     | iPhone 17 Pro (6.3")  | je → τζ̆αι |
-| `welcome-en-iphone17promax-allous.png`        | Welcome      | en     | iPhone 17 Pro (6.3")  | pe je stous allous → πε τζ̆αι στους άλλους |
+| `welcome-en-iphone17promax-je.png`            | Welcome      | en     | iPhone 17 Pro Max (6.9") | je → τζ̆αι |
+| `welcome-en-iphone17promax-allous.png`        | Welcome      | en     | iPhone 17 Pro Max (6.9") | pe je stous allous → πε τζ̆αι στους άλλους |
 | `welcome-en-iphone17pro.png`                  | Welcome      | en     | iPhone 17 Pro (6.3")  | Lefkosia |
 | `welcome-el-iphone17pro.png`                  | Welcome      | el     | iPhone 17 Pro (6.3")  | Lefkosia |
 | `welcome-en-iphone16e.png`                    | Welcome      | en     | iPhone 16e (6.1")     | Lefkosia |
 | `welcome-el-iphone16e.png`                    | Welcome      | el     | iPhone 16e (6.1")     | Lefkosia |
-| `postinstall-en-iphone17promax.png`           | Post-install | en     | iPhone 17 Pro Max (6.9") | Lefkosia |
-| `postinstall-el-iphone17promax.png`           | Post-install | el     | iPhone 17 Pro Max (6.9") | Lefkosia |
 | `postinstall-en-iphone17.png`                 | Post-install | en     | iPhone 17 (6.1")      | Lefkosia |
 | `postinstall-el-iphone17.png`                 | Post-install | el     | iPhone 17 (6.1")      | Lefkosia |
 | `welcome-en-ipadpro13.png`                    | Welcome      | en     | iPad Pro 13" (M4)     | Lefkosia |
@@ -68,7 +66,7 @@ To capture the **post-install** state, the Cypriot keyboard must be added in iOS
 
 ## Still missing
 
-- **iPhone 17 Pro Max (6.9") en welcome captures** — the sim has the keyboard installed (was needed for the post-install captures), so it can't show welcome state again without an "Erase All Content and Settings". The en welcome variants currently filed under `iphone17promax` are actually iPhone 17 Pro (6.3") — text-correct (τζ̆αι, credits without Aceras), just lower resolution. Re-capture at 6.9" by erasing the Pro Max sim, then re-add the keyboard for post-install captures again.
-- **iPad Pro 13" post-install** — needs the Cypriot keyboard added to the iPad sim manually (simctl can't tap UI). Add it (Settings → General → Keyboard → Keyboards → Add → Κυπριακά) on the iPad sim, then re-launch and capture.
-- **Install sheet open** state — needs a tap mid-launch. Easiest by hand in the simulator: launch app, tap "Install in 3 taps" CTA, then `xcrun simctl io booted screenshot ...` from another terminal.
+- **iPhone 17 Pro Max (6.9") post-install captures** — the sim was erased to capture welcome state, so it no longer has the Cypriot keyboard installed. Re-add the keyboard manually (Settings → General → Keyboard → Keyboards → Add → Κυπριακά) on that sim, then re-launch and capture for both en and el.
+- **iPad Pro 13" post-install** — needs the Cypriot keyboard added to the iPad sim manually (simctl can't tap UI).
+- **Install sheet open state** — needs a tap mid-launch (simctl has no tap subcommand). Easiest by hand: launch app in the simulator, tap "Set up the keyboard" CTA to open the sheet, then run `xcrun simctl io booted screenshot ...` from another terminal.
 - **el variants of the `je` and `allous` phrase carousel** — only `Lefkosia` was captured in el. The other two are en only.

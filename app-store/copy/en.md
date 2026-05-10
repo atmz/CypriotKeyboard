@@ -70,8 +70,8 @@ greek,greeklish,πληκτρολόγιο,ελληνικά,κύπρος,κυπρ�
 ```
 A fresh first-launch experience:
 
-  • New welcome screen with a live demo of Greeklish autocorrect.
-  • Three-tap install — we deep-link straight to the Keyboards screen.
+  • New welcome screen with a live demo cycling through Greeklish, Cypriot dialect, and full-phrase autocorrect.
+  • Clearer setup walkthrough — step-by-step path from app to Settings to active keyboard.
   • Try-it textfield right after install, plus a tour of σ̆ Cypriot characters and automatic accents.
   • Stricter privacy: Hunspell removed, the keyboard now ships with a single optimised dictionary engine. Smaller download, same results.
 ```

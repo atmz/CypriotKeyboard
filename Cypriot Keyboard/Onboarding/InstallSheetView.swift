@@ -26,7 +26,14 @@ struct InstallSheetView: View {
             Spacer()
 
             PrimaryCTAButton(titleKey: "onboarding.install.cta") {
-                if let url = URL(string: "App-prefs:root=General&path=Keyboard/KEYBOARDS") {
+                // Apple's UIApplication.openSettingsURLString is the only
+                // sanctioned and future-proof way to launch Settings from a
+                // container app. It lands on the app's own Settings page,
+                // so the install sheet shows the breadcrumb the user must
+                // follow from there. The undocumented App-prefs:root=… deep
+                // links were broken on iOS 18+ and never officially supported
+                // for container apps anyway. (See QA1924.)
+                if let url = URL(string: UIApplication.openSettingsURLString) {
                     UIApplication.shared.open(url)
                 }
             }

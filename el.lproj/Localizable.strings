@@ -8,12 +8,12 @@
 "onboarding.brand.title" = "Κύπριακο Πληκτρολόγιο";
 "onboarding.brand.tagline" = "Γράφε Ελληνικά εύκολα";
 
-"onboarding.welcome.cta" = "Σε 3 βήματα  →";
+"onboarding.welcome.cta" = "Στήσε το πληκτρολόγιο  →";
 
-"onboarding.install.title" = "Σε 3 βήματα";
-"onboarding.install.step.1" = "Ανοίει τες Ρυθμίσεις για σένα";
-"onboarding.install.step.2" = "Πάτα \"Add New Keyboard\"";
-"onboarding.install.step.3" = "Πάτα \"Κυπριακά\"";
+"onboarding.install.title" = "Πρόσθεσε το πληκτρολόγιο";
+"onboarding.install.step.1" = "Άνοιξε τες Ρυθμίσεις (κουμπί πιο κάτω)";
+"onboarding.install.step.2" = "Γενικές → Πληκτρολόγιο → Πληκτρολόγια";
+"onboarding.install.step.3" = "Προσθήκη νέου πληκτρολογίου → Κυπριακά";
 "onboarding.install.cta" = "Άνοιξε Ρυθμίσεις  →";
 "onboarding.install.dismiss" = "Ακύρωση";
 

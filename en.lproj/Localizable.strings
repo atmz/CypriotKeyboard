@@ -8,12 +8,12 @@
 "onboarding.brand.title" = "Cypriot Keyboard";
 "onboarding.brand.tagline" = "Type Greek the easy way";
 
-"onboarding.welcome.cta" = "Install in 3 taps  →";
+"onboarding.welcome.cta" = "Set up the keyboard  →";
 
-"onboarding.install.title" = "In 3 steps";
-"onboarding.install.step.1" = "We'll open Settings for you";
-"onboarding.install.step.2" = "Tap \"Add New Keyboard\"";
-"onboarding.install.step.3" = "Tap \"Κυπριακά\"";
+"onboarding.install.title" = "Add the keyboard";
+"onboarding.install.step.1" = "Open Settings (button below)";
+"onboarding.install.step.2" = "General → Keyboard → Keyboards";
+"onboarding.install.step.3" = "Add New Keyboard → Κυπριακά";
 "onboarding.install.cta" = "Open Settings  →";
 "onboarding.install.dismiss" = "Cancel";
 
