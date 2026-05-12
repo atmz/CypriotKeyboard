@@ -23,9 +23,9 @@ App Store Connect groups by display size class. Apple downsamples for smaller cl
 | iPhone 16e / 17      | 1170×2532     | 6.1"                    |
 | iPad Pro 13" (M4)    | 2064×2752     | iPad 13"                |
 
-## Current contents (captured 2026-05-10)
+## Current contents (captured 2026-05-12)
 
-All captured at the "hold replaced" phase of the demo loop animation (clean frame, no transition overlap), against the v1.9 onboarding with the **new copy**: hero CTA "Set up the keyboard →" (was "Install in 3 taps"), install sheet "Add the keyboard" with breadcrumb steps, and `UIApplication.openSettingsURLString` as the underlying deep link. **Re-capture if the install copy changes again** — the previous v1.8/v1.9-pre captures had the old "Install in 3 taps" text and are obsolete.
+All captured at the "hold replaced" phase of the demo loop animation (clean frame, no transition overlap), against the v1.9 onboarding with the **3-tap copy**: hero CTA "Install in 3 taps →", install sheet "Install in 3 taps" with the verified path (Open Settings · Tap Keyboards · Toggle Κυπριακό Keyboard on), and `UIApplication.openSettingsURLString` as the underlying deep link. Real-device testing confirmed the 3-tap promise — Apple shows a "Keyboards" entry directly on the app's per-app Settings page that lets users toggle the keyboard on without further navigation.
 
 | File                                          | State        | Locale | Device                | Demo phrase shown |
 |-----------------------------------------------|--------------|--------|-----------------------|-------------------|
@@ -64,9 +64,11 @@ DEVELOPER_DIR=$DEV xcrun simctl io booted screenshot \
 
 To capture the **post-install** state, the Cypriot keyboard must be added in iOS Settings on that simulator first (Settings → General → Keyboard → Keyboards → Add → Κυπριακά). The state is per-simulator, so once added it persists.
 
-## Still missing
+## Still missing or pending re-capture against the 3-tap copy
 
-- **iPhone 17 Pro Max (6.9") post-install captures** — the sim was erased to capture welcome state, so it no longer has the Cypriot keyboard installed. Re-add the keyboard manually (Settings → General → Keyboard → Keyboards → Add → Κυπριακά) on that sim, then re-launch and capture for both en and el.
-- **iPad Pro 13" post-install** — needs the Cypriot keyboard added to the iPad sim manually (simctl can't tap UI).
-- **Install sheet open state** — needs a tap mid-launch (simctl has no tap subcommand). Easiest by hand: launch app in the simulator, tap "Set up the keyboard" CTA to open the sheet, then run `xcrun simctl io booted screenshot ...` from another terminal.
+- **iPhone 16e (6.1") welcome captures** — sim display didn't initialise during the May 12 batch run (every `simctl io screenshot` against it returned a 0-byte file). Existing files in this folder for that device still have the old "Set up the keyboard" CTA. Re-capture once the sim display is back: shut down + reboot the sim, ensure Simulator.app is foregrounded showing it, then run the capture script.
+- **iPad Pro 13" welcome captures** — same display issue as 16e. Same fix.
+- **iPhone 17 (6.1") post-install captures** — same display issue. Existing files don't show the welcome CTA so they're still visually accurate even pre-fix.
+- **iPhone 17 Pro Max (6.9") post-install** — sim was erased to capture welcome state, so it no longer has the Cypriot keyboard installed. Re-add the keyboard manually (Settings → General → Keyboard → Keyboards → Add → Κυπριακά) on that sim, then re-launch and capture for both en and el.
+- **Install sheet open state** — needs a tap mid-launch (simctl has no tap subcommand). Easiest by hand: launch app in the simulator, tap "Install in 3 taps" CTA to open the sheet, then run `xcrun simctl io booted screenshot ...` from another terminal.
 - **el variants of the `je` and `allous` phrase carousel** — only `Lefkosia` was captured in el. The other two are en only.

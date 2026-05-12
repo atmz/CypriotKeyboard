@@ -71,7 +71,7 @@ greek,greeklish,πληκτρολόγιο,ελληνικά,κύπρος,κυπρ�
 A fresh first-launch experience:
 
   • New welcome screen with a live demo cycling through Greeklish, Cypriot dialect, and full-phrase autocorrect.
-  • Clearer setup walkthrough — step-by-step path from app to Settings to active keyboard.
+  • Three-tap install — open Settings, tap Keyboards, toggle on. The app auto-detects the install and switches to a try-it screen.
   • Try-it textfield right after install, plus a tour of σ̆ Cypriot characters and automatic accents.
   • Stricter privacy: Hunspell removed, the keyboard now ships with a single optimised dictionary engine. Smaller download, same results.
 ```
