@@ -49,6 +49,13 @@ fun greekifyAlternatives(greek: String, maxVariants: Int = 8): List<String> {
  *   Λευκωσία at edit-2, outside the suggester's edit-1 budget.
  * - θ ⇄ τη: Greeklish "th" maps greedily to θ but might mean τη
  *   (e.g. "afth" → αυτή).
+ * - χ ⇄ ξ: Greeklish "x" maps greedily to χ in greekify, but in modern
+ *   Greeklish convention "x" often means ξ (e.g. "axia" → αξία, "praxh"
+ *   → πράξη). The branch only fires for Greeklish input (the isGreeklish
+ *   gate at the call site), so pure-Greek input that happens to contain
+ *   χ does NOT branch. Greeklish "ch" maps to τσ̆ (not χ) in greekify,
+ *   so every χ in the post-greekify output came from Latin "x" —
+ *   branching here is equivalent to source-position-tracked branching.
  * - 8 ⇄ θ: Greeklish convention treats the digit 8 as θ (visual
  *   resemblance), e.g. "8a" → θα, "8elw" → θέλω. Bare-numeric tokens
  *   ("8") get filtered upstream by shouldAttemptAutocomplete; this rule
@@ -65,5 +72,7 @@ private val ALT_RULES: List<Pair<String, List<String>>> = listOf(
     "Εβ" to listOf("Εβ", "Ευ"),
     "θ" to listOf("θ", "τη"),
     "Θ" to listOf("Θ", "Τη"),
+    "χ" to listOf("χ", "ξ"),
+    "Χ" to listOf("Χ", "Ξ"),
     "8" to listOf("8", "θ"),
 )

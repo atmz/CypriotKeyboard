@@ -24,6 +24,21 @@ class GreekifyAlternativesTest {
         assertTrue("expected αυτη in $variants", variants.contains("αυτη"))
     }
 
+    @Test fun `chi branches to xi`() {
+        // Greeklish "x" maps greedily to χ in greekify, but in modern
+        // Greeklish convention "x" often means ξ (e.g. "axia" → αξία).
+        // Branch every χ in the post-greekify output to also try ξ.
+        val variants = greekifyAlternatives("αχια")
+        assertTrue("expected αχια in $variants", variants.contains("αχια"))
+        assertTrue("expected αξια in $variants", variants.contains("αξια"))
+    }
+
+    @Test fun `capital chi branches to capital xi`() {
+        val variants = greekifyAlternatives("Χαρα")
+        assertTrue("expected Χαρα in $variants", variants.contains("Χαρα"))
+        assertTrue("expected Ξαρα in $variants", variants.contains("Ξαρα"))
+    }
+
     @Test fun `digit 8 branches to theta`() {
         val variants = greekifyAlternatives("8α")
         assertTrue("expected θα in $variants", variants.contains("θα"))
