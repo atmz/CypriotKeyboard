@@ -2,7 +2,7 @@
 
 Fill in the two links before sending:
 - `https://groups.google.com/g/cypriot-keyboard-testers` — Google Group join link
-- `<OPTIN_LINK>` — Play Console closed-testing opt-in link
+- `https://play.google.com/apps/testing/cy.cypriotkeyboard.app` — Play Console closed-testing opt-in link
 
 Both must be opened with the **same Google account**.
 
@@ -17,7 +17,7 @@ Both must be opened with the **same Google account**.
 χρειάζομαι τη βοήθειά σου — 2 λεπτά:
 
 1. Μπες στο group: https://groups.google.com/g/cypriot-keyboard-testers
-2. Πάτα "Become a tester" εδώ: <OPTIN_LINK>
+2. Πάτα "Become a tester" εδώ: https://play.google.com/apps/testing/cy.cypriotkeyboard.app
 3. Κατέβασέ το από το Play Store (ο σύνδεσμος φαίνεται στο βήμα 2)
 4. Ρυθμίσεις → Σύστημα → Πληκτρολόγιο → ενεργοποίησε το «Κυπριακό
    Πληκτρολόγιο»
@@ -37,7 +37,7 @@ Google Play requires 12 testers before it can go public, and I need your
 help — takes 2 minutes:
 
 1. Join the tester group: https://groups.google.com/g/cypriot-keyboard-testers
-2. Tap "Become a tester": <OPTIN_LINK>
+2. Tap "Become a tester": https://play.google.com/apps/testing/cy.cypriotkeyboard.app
 3. Install it from the Play Store (link shown in step 2)
 4. Settings → System → Keyboard → On-screen keyboards → enable
    "Cypriot Keyboard"
