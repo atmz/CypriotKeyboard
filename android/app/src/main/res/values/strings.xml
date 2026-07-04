@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Cypriot Keyboard</string>
-    <string name="app_title">🇨🇾 Κύπριακο Keyboard</string>
+    <string name="app_title">🇨🇾 Κυπριακό Keyboard</string>
     <string name="install_intro">To finish setup, enable Cypriot Keyboard in your system keyboard settings.</string>
     <string name="open_settings">Open Keyboard Settings</string>
     <string name="install_then">Toggle on \'Cypriot Keyboard\' in the list, then return here.</string>
