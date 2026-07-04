@@ -15,40 +15,39 @@ Small but the audience is exactly right — the sub's own description is
 written in Cypriot dialect. You're already a member.
 
 **Τίτλος:**
-> Έφκαλα το κυπριακό πληκτρολόγιο τζιαι για Android — θέλω 12 δοκιμαστές για να το αφήκει το Google Play να βκει
+> Έφκαλα το κυπριακό πληκτρολόγιο τζιαι για Android — θέλω 12 δοκιμαστές για να το αφήσει το Google Play να βγει
 
 **Κείμενο:**
 
 Καμπόσοι ίσως ξέρετε το [**Cypriot Keyboard** για
-iPhone](https://atmz.github.io/CypriotKeyboard/) — έφκαλά το το 2021
-τζιαι εν πάνω στο App Store μέχρι σήμερα. Ε, επιτέλους έκαμά το τζιαι
-για Android.
+iPhone](https://atmz.github.io/CypriotKeyboard/) που το έκαμα το 2021
+και είναι στο App Store μέχρι σήμερα. Επιτέλους το έκανα και για
+Android.
 
-Ίντα κάμνει:
+Τι κάμνει:
 
-- Γράφεις greeklish — «tziai», «shieri», «inta» — τζιαι βκαίνει **τζ̆αι**,
+- Γράφεις greeklish — «tziai», «shieri», «inta» — και βγαίνει **τζ̆αι**,
   **σ̆ιέρι**, **ίντα**
-- Ξέρει τες λέξεις που εν έσιει κανένα ελληνικό λεξικό: ίντα, λαλώ, εν,
+- Ξέρει τις λέξεις που δεν έχει κανένα ελληνικό λεξικό: ίντα, λαλώ, εν,
   μιτά…
-- Έσιει τα σ̆, ζ̆, τζ̆ κατευθείαν πάνω στο πληκτρολόγιο, τζιαι το τελικό ς
-  κάμνει το μόνο του
+- Έχει τα σ̆, ζ̆, τζ̆ κατευθείαν πάνω στο πληκτρολόγιο, και το τελικό ς
+  γίνεται μόνο του
 - Δωρεάν, open-source, χωρίς διαφημίσεις, **χωρίς internet permission** —
-  ούτε ένα byte εν φεύκει που το τηλέφωνο
+  ούτε ένα byte δεν φεύγει από το τηλέφωνο
 
 Το πρόβλημα: το Google Play θέλει 12 δοκιμαστές εγγεγραμμένους για 2
-βδομάδες πριν αφήκει καινούριο developer να βκάλει εφαρμογή δημόσια. Αν
-έσιεις Android τζιαι 2 λεπτά:
+βδομάδες πριν αφήσει καινούριο developer να βγάλει εφαρμογή δημόσια. Αν
+έχεις Android και 2 λεπτά:
 
 1. Μπες στο group: https://groups.google.com/g/cypriot-keyboard-testers
 2. Πάτα «Become a tester»: https://play.google.com/apps/testing/cy.cypriotkeyboard.app
-3. Κατέβασέ το που το Play Store τζιαι ενεργοποίησέ το στες ρυθμίσεις
+3. Κατέβασέ το από το Play Store και ενεργοποίησέ το στις ρυθμίσεις
    πληκτρολογίου
 
-Κράτα το εγκατεστημένο 2 βδομάδες (έτσι μετρά ο δοκιμαστής για το
-Google) — τζιαι γράφε τζιαι κανένα μήνυμα με τούτο, να δούμε ίντα
-στραβώννει!
+Κράτα το εγκατεστημένο 2 βδομάδες (έτσι μετράει ο δοκιμαστής για το
+Google) — και γράψε κανένα μήνυμα με τούτο, να δούμε τι στραβώννει!
 
-Ο κώδικας εν ούλλος ανοιχτός: https://github.com/atmz/CypriotKeyboard
+Ο κώδικας είναι όλος ανοιχτός στο https://github.com/atmz/CypriotKeyboard
 
 ---
 
@@ -71,44 +70,77 @@ Google) — τζιαι γράφε τζιαι κανένα μήνυμα με το
 > post a call for testers (draft is in Greek, AI-assistance disclosed per
 > the AI content rule). Happy to adjust anything. Thanks!
 
-**Τίτλος (μετά το OK των mods):**
-> Έφτιαξα το πρώτο πληκτρολόγιο για κυπριακά στο Android (τζ̆αι, σ̆ιέρι, ίντα) — θέλω 12 beta testers για το Google Play
+**Τίτλος:**
+> Έφκαλα το κυπριακό πληκτρολόγιο τζιαι για Android — θέλω 12 δοκιμαστές για να το αφήσει το Google Play να βγει
 
-**Κείμενο:**
+**Κείμενο (Greek first, English below):**
 
-Κάθε πληκτρολόγιο που δοκίμασα «διορθώνει» το τζιαι σε και, τζιαι κανένα
-εν έσιει τους ήχους μας — σ̆, ζ̆, τζ̆. Οπότε έφτιαξα δικό μου. Τι κάμνει:
+Καμπόσοι ίσως ξέρετε το [**Cypriot Keyboard** για
+iPhone](https://atmz.github.io/CypriotKeyboard/) που το έκαμα το 2021
+και είναι στο App Store μέχρι σήμερα. Επιτέλους το έκανα και για
+Android.
 
-- **Greeklish → κυπριακά:** γράφεις «tziai» τζιαι βκαίνει τζ̆αι, «shieri»
-  → σ̆ιέρι, «kalimera» → καλημέρα
-- **Λεξικό 49 MB με κυπριακές λέξεις** — ίντα, λαλώ, εν, μιτά — με τους
-  σωστούς τόνους
-- **Τα σ̆, ζ̆, τζ̆ πάνω στο πληκτρολόγιο**, με το τελικό ς αυτόματο
-- **Ιδιωτικότητα:** δωρεάν, open-source (GPL), χωρίς διαφημίσεις, χωρίς
-  internet permission — τίποτε εν φεύκει που τη συσκευή
+Τι κάμνει:
 
-Το Google Play θέλει 12 δοκιμαστές εγγεγραμμένους για 14 μέρες πριν
-επιτρέψει δημόσια κυκλοφορία σε νέο developer. Αν θέλεις να βοηθήσεις
-(2 λεπτά):
+- Γράφεις greeklish — «tziai», «shieri», «inta» — και βγαίνει **τζ̆αι**,
+  **σ̆ιέρι**, **ίντα**
+- Ξέρει τις λέξεις που δεν έχει κανένα ελληνικό λεξικό: ίντα, λαλώ, εν,
+  μιτά…
+- Έχει τα σ̆, ζ̆, τζ̆ κατευθείαν πάνω στο πληκτρολόγιο, και το τελικό ς
+  γίνεται μόνο του
+- Δωρεάν, open-source, χωρίς διαφημίσεις, **χωρίς internet permission** —
+  ούτε ένα byte δεν φεύγει από το τηλέφωνο
+
+Το πρόβλημα: το Google Play θέλει 12 δοκιμαστές εγγεγραμμένους για 2
+βδομάδες πριν αφήσει καινούριο developer να βγάλει εφαρμογή δημόσια. Αν
+έχεις Android και 2 λεπτά:
 
 1. Μπες στο group: https://groups.google.com/g/cypriot-keyboard-testers
 2. Πάτα «Become a tester»: https://play.google.com/apps/testing/cy.cypriotkeyboard.app
-3. Εγκατάστησέ το που το Play Store τζιαι ενεργοποίησέ το στες ρυθμίσεις
+3. Κατέβασέ το από το Play Store και ενεργοποίησέ το στις ρυθμίσεις
+   πληκτρολογίου
 
-Σημαντικό: κράτα το εγκατεστημένο ~2 βδομάδες για να μετρήσει. Feedback
-τζιαι bug reports ευπρόσδεκτα — εδώ ή στο GitHub:
-https://github.com/atmz/CypriotKeyboard
+Κράτα το εγκατεστημένο 2 βδομάδες (έτσι μετράει ο δοκιμαστής για το
+Google) — και γράψε κανένα μήνυμα με τούτο, να δούμε τι στραβώννει!
 
-*(Για το iOS υπάρχει ήδη στο App Store.)*
+Ο κώδικας είναι όλος ανοιχτός στο https://github.com/atmz/CypriotKeyboard
 
-*Δήλωση: το κείμενο της ανάρτησης γράφτηκε με βοήθεια AI, σύμφωνα με τον
-κανόνα του sub. Η εφαρμογή είναι δουλειά μου.*
+---
 
-**TL;DR (EN):** I built a free open-source Cypriot Greek keyboard for
-Android — Greeklish input, dialect autocorrect, the breve sounds (σ̆ ζ̆ τζ̆)
-standard Greek keyboards don't have. Google Play needs 12 testers for 14
-days before it can go public: join the group + tap "Become a tester" via
-the links above.
+**English:**
+
+Some of you might know the [**Cypriot Keyboard** for
+iPhone](https://atmz.github.io/CypriotKeyboard/) I made back in 2021 —
+it's been on the App Store ever since. I've finally made it for Android
+too.
+
+What it does:
+
+- Type Greeklish — "tziai", "shieri", "inta" — and get **τζ̆αι**,
+  **σ̆ιέρι**, **ίντα**
+- It knows the words no standard Greek dictionary has: ίντα, λαλώ, εν,
+  μιτά…
+- The σ̆, ζ̆, τζ̆ sounds are right on the keyboard, and final ς is
+  automatic
+- Free, open-source, no ads, **no internet permission** — not a single
+  byte leaves your phone
+
+The catch: Google Play requires 12 testers enrolled for 2 weeks before
+it lets a new developer publish publicly. If you have an Android and 2
+minutes:
+
+1. Join the group: https://groups.google.com/g/cypriot-keyboard-testers
+2. Tap "Become a tester": https://play.google.com/apps/testing/cy.cypriotkeyboard.app
+3. Install it from the Play Store and enable it in your keyboard
+   settings
+
+Keep it installed for 2 weeks (that's how Google counts a tester) — and
+send a few messages with it, let's see what breaks!
+
+All the code is open at https://github.com/atmz/CypriotKeyboard
+
+*Disclosure: post text drafted with AI assistance, per the sub's AI
+content rule. The app is my own work.*
 
 ---
 
