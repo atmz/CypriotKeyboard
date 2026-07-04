@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cypriot Keyboard — Feature Graphic (1024×500)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #f5f5f5; }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  .feature {
+    /* Exact Play Store feature graphic size */
+    width: 1024px;
+    height: 500px;
+    background: linear-gradient(135deg, #2E3E1A 0%, #3F5024 50%, #2E3E1A 100%);
+    position: relative;
+    overflow: hidden;
+    color: #FFF;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    align-items: center;
+  }
+
+  /* Decorative copper Cyprus-outline echo behind the right side */
+  .feature::after {
+    content: "";
+    position: absolute;
+    right: -120px;
+    top: -80px;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle at 35% 50%, rgba(213, 120, 0, 0.20) 0%, rgba(213, 120, 0, 0) 60%);
+    pointer-events: none;
+  }
+
+  .left {
+    padding: 56px 0 56px 72px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .wordmark {
+    font-size: 76px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1;
+    color: #FFFFFF;
+    margin-bottom: 12px;
+  }
+
+  .greek {
+    font-size: 64px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    line-height: 1;
+    color: #D57800;
+    margin-bottom: 28px;
+  }
+
+  .tagline {
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: rgba(255, 255, 255, 0.92);
+    max-width: 480px;
+  }
+
+  .pills {
+    margin-top: 28px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .pill {
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    font-size: 14px;
+    font-weight: 600;
+    color: #FFFFFF;
+    letter-spacing: 0.3px;
+  }
+
+  /* Right side: stylized "key" mark featuring τζ̆ */
+  .right {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .keymark {
+    width: 340px;
+    height: 340px;
+    background: #FFFFFF;
+    border-radius: 64px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35),
+                0 6px 12px rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transform: rotate(-4deg);
+    overflow: hidden;
+  }
+
+  .keymark img {
+    width: 92%;
+    height: 92%;
+    object-fit: contain;
+  }
+
+  .footnote {
+    position: absolute;
+    bottom: 24px;
+    right: 36px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.55);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+  <div class="feature">
+    <div class="left">
+      <div class="wordmark">Cypriot Keyboard</div>
+      <div class="greek">Κυπριακά</div>
+      <div class="tagline">
+        Native Cypriot Greek input — with the breve sounds standard Greek doesn't have.
+      </div>
+      <div class="pills">
+        <span class="pill">Greek + Greeklish</span>
+        <span class="pill">Autocorrect</span>
+        <span class="pill">On‑device, no ads</span>
+      </div>
+    </div>
+    <div class="right">
+      <div class="keymark">
+        <img src="../../../app-store/icon/app-icon-1024.png" alt="Cypriot Keyboard icon">
+      </div>
+    </div>
+    <div class="footnote">v1.1 · GPL‑3.0</div>
+  </div>
+</body>
+</html>
