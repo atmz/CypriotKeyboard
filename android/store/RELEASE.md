@@ -102,6 +102,25 @@ Play app.
 5. (Optional) From Internal testing, promote to Closed → Open → Production
    when comfortable. Each track adds review time and tester rules.
 
+## F-Droid (planned, after Play production launch)
+
+Requested by testers on Reddit (degoogle crowd). The app is an unusually
+good fit: GPL-3.0, no Google/proprietary dependencies, no Play Services,
+no INTERNET permission. Steps when we get to it:
+
+1. Tag a release in the GitHub repo (e.g. `android_v1.1`) — F-Droid
+   builds from tags, not branches.
+2. Fork <https://gitlab.com/fdroid/fdroiddata>, add
+   `metadata/cy.cypriotkeyboard.app.yml` with `subdir: android/app`,
+   the gradle flavor, and the tag; open a merge request.
+3. F-Droid signs builds with their own key by default — that's fine and
+   independent of our Play keystore. (Reproducible builds + our own
+   signature is optional polish, not required.)
+4. Review queue is typically a few weeks; the 49 MB DAWG asset is fine
+   (F-Droid has no size gate).
+
+Note: F-Droid installs do NOT count toward Play's 12-tester requirement.
+
 ## Things that will fail Play review (and how to avoid)
 
 - **Missing privacy policy URL** for an IME → mandatory. Step 2 above.
