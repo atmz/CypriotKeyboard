@@ -1,0 +1,45 @@
+Categories:
+  - System
+  - Writing
+License: GPL-3.0-only
+AuthorName: Alex Toumazis
+WebSite: https://atmz.github.io/CypriotKeyboard/
+SourceCode: https://github.com/atmz/CypriotKeyboard
+IssueTracker: https://github.com/atmz/CypriotKeyboard/issues
+
+AutoName: Cypriot Keyboard
+
+RepoType: git
+Repo: https://github.com/atmz/CypriotKeyboard.git
+
+Summary: Cypriot Greek keyboard with Greeklish input and on-device autocorrect
+Description: |-
+    The first keyboard built specifically for Cypriot Greek — including the
+    breve sounds (σ̆, ζ̆, τζ̆) that standard Greek doesn't have.
+
+    Two ways to type:
+
+    * Greek layout: the Cypriot Greek alphabet with breve marks. Long-press
+      vowels for accents; the accent key becomes a breve after σ, ζ, ξ, ψ, ς.
+    * Greeklish: type Latin letters and watch them become Cypriot Greek.
+      "kalimera" becomes καλημέρα, "tziai" becomes τζ̆αι. Tap 🔄 to switch.
+
+    Autocorrect is backed by a 49 MB dictionary of Cypriot Greek words —
+    including dialect words (ίντα, λαλώ, εν, μιτά) found in no standard Greek
+    dictionary. Final sigma (σ → ς) is automatic.
+
+    Privacy by design: the app has no INTERNET permission — keystrokes cannot
+    leave the device. No analytics, no telemetry, no ads.
+
+Builds:
+  - versionName: 1.1.0
+    versionCode: 2
+    commit: android_v1.1
+    subdir: android/app
+    gradle:
+      - yes
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags ^android_v
+CurrentVersion: 1.1.0
+CurrentVersionCode: 2
