@@ -1,9 +1,17 @@
-# F-Droid submission — how to file it
+# F-Droid submission
 
-Everything is prepared; the merge request itself needs your GitLab
-account (~5 minutes). Verified locally on 2026-07-05: a clean clone
-builds `app-release-unsigned.apk` with no keystore.properties present,
-which is exactly what F-Droid's build server does.
+**SUBMITTED 2026-07-05:**
+<https://gitlab.com/fdroid/fdroiddata/-/merge_requests/42167>
+(from fork `alex.toumazis/fdroiddata`, branch `cy.cypriotkeyboard.app`)
+
+Note: fork CI can't run (new GitLab account, shared runners want payment
+validation) — the MR asks maintainers to trigger CI, which the template
+explicitly sanctions. Watch the MR for the pipeline result and reviewer
+questions.
+
+Verified locally on 2026-07-05: a clean clone builds
+`app-release-unsigned.apk` with no keystore.properties present, which is
+exactly what F-Droid's build server does.
 
 ## Prerequisites (done)
 
