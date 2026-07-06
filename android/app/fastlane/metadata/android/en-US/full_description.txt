@@ -1,0 +1,19 @@
+<p>The first keyboard built specifically for <b>Cypriot Greek</b> — including the breve sounds (σ̆, ζ̆, τζ̆) that standard Greek doesn't have. Type the way Cypriots actually speak and write.</p>
+
+<p><b>Two ways to type</b></p>
+<ul>
+<li><b>Greek layout:</b> the Cypriot Greek alphabet with breve marks. Long-press any vowel for accent variants (ά, έ, ή, …); after σ, ζ, ξ, ψ or ς the accent key becomes a breve.</li>
+<li><b>Greeklish:</b> type Latin letters and watch them turn into the right Cypriot Greek words. "kalimera" becomes καλημέρα. "tziai" becomes τζ̆αι. Tap 🔄 to swap between Greek and Latin layouts.</li>
+</ul>
+
+<p><b>Autocorrect that knows Cypriot Greek</b></p>
+<p>Backed by a 49 MB dictionary of Cypriot Greek words with their proper diacritics — including dialect words (ίντα, μιτά, λαλώ, εν) that no standard Greek dictionary contains. When you tap space, the highlighted correction is applied; tap backspace once first if you really meant what you typed.</p>
+
+<p><b>Smart Greek touches</b></p>
+<ul>
+<li>Final sigma is automatic: type σ at the end of a word, it becomes ς. Keep typing and it goes back to σ.</li>
+<li>Tonos (΄), dialytika (¨) and combined tonos-dialytika (΅) apply to the previous vowel only when the combination is valid.</li>
+</ul>
+
+<p><b>Privacy by design</b></p>
+<p>Nothing leaves your device. The app has no INTERNET permission — keystrokes cannot be sent anywhere. No analytics, no telemetry, no ads. Free software under GPL-3.0.</p>

@@ -1,0 +1,1 @@
+First F-Droid release. Greek + Greeklish input, Cypriot Greek autocorrect, breve consonants, accent long-press, automatic final sigma.
