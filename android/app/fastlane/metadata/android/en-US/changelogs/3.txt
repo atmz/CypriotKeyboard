@@ -1,0 +1,1 @@
+Fix: on Android 15+ the keyboard rendered behind the system navigation bar, making the bottom row (?123, layout switch) untappable with 3-button navigation. The keyboard now stays above the bar.
