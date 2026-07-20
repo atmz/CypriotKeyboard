@@ -24,8 +24,8 @@ android {
         // Per-release bookkeeping. versionCode MUST increase strictly per
         // upload to Play; versionName is for humans. Bump both in lock-step
         // with each release in store/RELEASE.md's per-release flow.
-        versionCode = 3
-        versionName = "1.1.1"
+        versionCode = 4
+        versionName = "1.1.2"
     }
 
     signingConfigs {

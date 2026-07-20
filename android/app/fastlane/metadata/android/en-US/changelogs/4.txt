@@ -1,0 +1,1 @@
+New: pressing the accent key (΄) now highlights it and previews the accented vowels right on the keycaps (ά, έ, ή, …) — tap the vowel you see, get the accent you saw. Tap the accent key again to cancel.
