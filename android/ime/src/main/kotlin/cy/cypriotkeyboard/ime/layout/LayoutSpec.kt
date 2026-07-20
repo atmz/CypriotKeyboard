@@ -15,7 +15,13 @@ data class KeySpec(
      * Used by the contextual breve key — visible always so users can find
      * it, tappable only when the previous letter is one that takes breve.
      */
-    val enabled: Boolean = true
+    val enabled: Boolean = true,
+    /**
+     * Highlighted keys render with an accent background. Used for the armed
+     * prefix dead-key (tonos/dialytika) so the user can see the keyboard is
+     * waiting for a vowel.
+     */
+    val highlighted: Boolean = false
 )
 
 sealed class KeyAction {

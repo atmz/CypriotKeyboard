@@ -18,6 +18,9 @@ interface KeyboardController {
     /** Called by the action handler after a Character-producing key fires
      *  so the controller can clear single-shift state. */
     fun consumeShift()
+    /** Re-render the layout from current state (breve context, armed prefix
+     *  accent) without touching the suggestion pipeline. */
+    fun refreshLayout()
 }
 
 enum class KeyboardMode { ALPHABETIC, NUMERIC, SYMBOLIC }
@@ -75,6 +78,7 @@ class ActionHandler(private val controller: KeyboardController) {
                 // (matches Windows/Android dead-key UX) — no buffer change.
                 if (pendingAccent != null) {
                     pendingAccent = null
+                    controller.refreshLayout()
                     return
                 }
                 ic.deleteSurroundingText(1, 0)
@@ -109,7 +113,18 @@ class ActionHandler(private val controller: KeyboardController) {
     }
 
     private fun handleCharacter(ic: InputConnection, text: String) {
-        // 1. Armed prefix dead-key (tonos/dialytika)? Try to compose with the
+        // 1. Accent dead-keys must be intercepted BEFORE the pending-accent
+        //    consumption below: tapping an accent key while one is armed is a
+        //    toggle/re-arm, and handleAccentKey needs to see the still-armed
+        //    state to decide which. (Consuming first would clear the state and
+        //    make every second tap silently re-arm — the key could never
+        //    disarm.)
+        if (text in ACCENT_DEAD_KEYS) {
+            handleAccentKey(ic, text)
+            return
+        }
+
+        // 2. Armed prefix dead-key (tonos/dialytika)? Try to compose with the
         //    typed character and emit a single precomposed glyph. If the
         //    combination has no Unicode precomposed form (e.g. tonos on a
         //    consonant), fall through and commit the char unchanged. Either
@@ -129,12 +144,6 @@ class ActionHandler(private val controller: KeyboardController) {
             // No precomposition; fall through to normal handling for `text`.
         }
 
-        // 2. Accent dead-keys: tonos/dialytika/tonos-dialytika are PREFIX dead
-        //    keys (commit nothing, arm pendingAccent). Breve stays post-fix.
-        if (text in ACCENT_DEAD_KEYS) {
-            handleAccentKey(ic, text)
-            return
-        }
         val isPunctOrTrigger = text in PUNCT_TRIGGERS
         if (isPunctOrTrigger) {
             handleSpaceLike(ic, text)
@@ -193,10 +202,19 @@ class ActionHandler(private val controller: KeyboardController) {
         // them with the typed vowel into a single precomposed glyph.
         // Breve stays POST-FIX (consonant first, then breve, emits a
         // combining mark) — that's how Cypriots type it on Windows too.
-        when (accentKey) {
-            "΄" -> { pendingAccent = PrefixAccent.TONOS; return }
-            " ̈" -> { pendingAccent = PrefixAccent.DIALYTIKA; return }
-            "΅" -> { pendingAccent = PrefixAccent.TONOS_DIALYTIKA; return }
+        // Tapping the same armed accent again disarms it (toggle); tapping a
+        // different one re-arms with the new accent. Both re-render the
+        // keycaps so the vowel previews track the armed state.
+        val prefix = when (accentKey) {
+            "΄" -> PrefixAccent.TONOS
+            " ̈" -> PrefixAccent.DIALYTIKA
+            "΅" -> PrefixAccent.TONOS_DIALYTIKA
+            else -> null
+        }
+        if (prefix != null) {
+            pendingAccent = if (pendingAccent == prefix) null else prefix
+            controller.refreshLayout()
+            return
         }
 
         // Post-fix path (breve only, here): read the previous cluster and

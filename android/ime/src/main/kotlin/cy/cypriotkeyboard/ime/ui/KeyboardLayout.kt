@@ -183,11 +183,14 @@ private fun RowScope.KeyButton(
     val isSpace = key.action is KeyAction.Space
     val isEnabled = key.enabled
     val keyColor = when {
+        // Armed prefix dead-key (tonos/dialytika waiting for its vowel).
+        key.highlighted -> MaterialTheme.colorScheme.primaryContainer
         isSpace -> MaterialTheme.colorScheme.surfaceContainerHigh
         isFunction -> MaterialTheme.colorScheme.surfaceContainerHigh
         else -> MaterialTheme.colorScheme.surface
     }
-    val labelColor = if (isEnabled) MaterialTheme.colorScheme.onSurface
+    val labelColor = if (key.highlighted) MaterialTheme.colorScheme.onPrimaryContainer
+        else if (isEnabled) MaterialTheme.colorScheme.onSurface
         // Greek-context disabled state for the breve key when the previous
         // letter doesn't take a breve. ~38% alpha matches Material's standard
         // disabled-control opacity.

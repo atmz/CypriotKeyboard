@@ -1,5 +1,8 @@
 package cy.cypriotkeyboard.ime.layout
 
+import cy.cypriotkeyboard.ime.input.PrefixAccent
+import cy.cypriotkeyboard.ime.input.precomposeAccent
+
 /**
  * Concrete layout instances.
  *
@@ -18,15 +21,27 @@ object Layouts {
     private fun ch(s: String, popups: List<String> = emptyList()): KeySpec =
         KeySpec(action = KeyAction.Character(s), label = s, popupChars = popups)
 
-    fun greekAlphabetic(breveEnabled: Boolean = false): LayoutSpec {
+    fun greekAlphabetic(
+        breveEnabled: Boolean = false,
+        pendingAccent: PrefixAccent? = null
+    ): LayoutSpec {
         // Both accent keys are always present; only the breve key's enabled
         // state changes with context. Width 0.5 each so the pair occupies
         // the same horizontal slot as a single full-width key (1.0 unit).
+        //
+        // When a prefix dead-key is armed (pendingAccent != null), the tonos
+        // key highlights and every vowel keycap that composes with the armed
+        // accent relabels to its precomposed form (ά έ ή … / ϊ ϋ / ΐ ΰ) —
+        // shift-style feedback so the dead key never feels dead. Labels only:
+        // the actions keep the base vowel, and ActionHandler's pendingAccent
+        // path does the actual composition, so keycaps and committed text
+        // can't drift apart (both go through precomposeAccent).
         val tonosKey = KeySpec(
             action = KeyAction.Character("΄"),
             label = "΄",
             widthUnits = 0.5f,
-            popupChars = listOf("΄", " ̈", "΅")
+            popupChars = listOf("΄", " ̈", "΅"),
+            highlighted = pendingAccent != null
         )
         val breveKey = KeySpec(
             action = KeyAction.Character("˘"),
@@ -34,7 +49,7 @@ object Layouts {
             widthUnits = 0.5f,
             enabled = breveEnabled
         )
-        return LayoutSpec(
+        val spec = LayoutSpec(
             rows = listOf(
                 listOf(
                     ch("ε", listOf("ε", "έ")),
@@ -77,6 +92,20 @@ object Layouts {
                     KeySpec(KeyAction.Return, "↵", widthUnits = 1.5f)
                 )
             )
+        )
+        if (pendingAccent == null) return spec
+        return LayoutSpec(
+            rows = spec.rows.map { row ->
+                row.map { key ->
+                    val a = key.action
+                    if (a is KeyAction.Character) {
+                        val composed = precomposeAccent(pendingAccent, a.text)
+                        if (composed != null) key.copy(label = composed) else key
+                    } else {
+                        key
+                    }
+                }
+            }
         )
     }
 
@@ -146,8 +175,14 @@ fun LayoutSpec.shifted(): LayoutSpec = LayoutSpec(
         row.map { key ->
             val action = key.action
             if (action is KeyAction.Character) {
-                val upper = action.text.uppercase()
-                key.copy(action = KeyAction.Character(upper), label = upper)
+                // Uppercase label and action independently: when a prefix
+                // dead-key is armed the label is the accented preview (ά)
+                // while the action stays the base vowel (α) — both must
+                // uppercase without one clobbering the other.
+                key.copy(
+                    action = KeyAction.Character(action.text.uppercase()),
+                    label = key.label.uppercase()
+                )
             } else {
                 key
             }

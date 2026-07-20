@@ -208,6 +208,8 @@ class CypriotInputMethodService :
         }
     }
 
+    override fun refreshLayout() = recomputeLayout()
+
     override fun requestSuggestions(currentWord: String) {
         // Refresh the layout each keystroke so the breve/tonos accent key swap
         // tracks the previous letter (mirrors iOS alphabeticInputSet).
@@ -258,7 +260,10 @@ class CypriotInputMethodService :
             KeyboardMode.SYMBOLIC -> Layouts.symbolic()
             KeyboardMode.ALPHABETIC -> {
                 if (isLatin) Layouts.latinAlphabetic()
-                else Layouts.greekAlphabetic(breveEnabled = previousLetterTakesBreve())
+                else Layouts.greekAlphabetic(
+                    breveEnabled = previousLetterTakesBreve(),
+                    pendingAccent = handler.pendingAccent
+                )
             }
         }
         val layout = if (shiftActive) base.shifted() else base
